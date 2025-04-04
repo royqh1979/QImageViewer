@@ -26,8 +26,8 @@ endif()
 #    endif()
 #endif()
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Svg Multimedia LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Svg Multimedia LinguistTools REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Svg LinguistTools REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Svg LinguistTools REQUIRED)
 
 set(TS_FILES QImageViewer_zh_CN.ts)
 

@@ -19,6 +19,8 @@ public:
     void openFolder(const QString& path);
 private slots:
     void onCurrentFileChanged(int oldFileId, int currentFileId);
+    void onRequestPrevImage(bool scrollToBottom);
+    void onRequestNextImage();
     void on_actionNext_triggered();
 
     void on_actionPrevious_triggered();
@@ -28,6 +30,8 @@ private slots:
     void on_actionLast_triggered();
 
     void on_actionOpen_triggered();
+
+    void on_actionClose_triggered();
 
 private:
     Ui::MainWindow *ui;

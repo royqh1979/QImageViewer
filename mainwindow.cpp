@@ -16,6 +16,11 @@ MainWindow::MainWindow(QWidget *parent)
     QHBoxLayout *layout = new QHBoxLayout(ui->centralwidget);
     layout->setMargin(0);
     layout->addWidget(mImageWidget);
+    connect(mImageWidget, &ImageWidget::requestPrevImage,
+            this, &MainWindow::onRequestPrevImage);
+    connect(mImageWidget, &ImageWidget::requestNextImage,
+            this, &MainWindow::onRequestNextImage);
+
 
     mFileNavigator = new FileNavigator(this);
     connect(mFileNavigator, &FileNavigator::currentFileChanged,
@@ -35,6 +40,19 @@ void MainWindow::openFolder(const QString &path)
 void MainWindow::onCurrentFileChanged(int oldFileId, int currentFileId)
 {
     mImageWidget->setImage(QPixmap(mFileNavigator->currentFileInfo().absoluteFilePath()));
+}
+
+void MainWindow::onRequestPrevImage(bool scrollToBottom)
+{
+    mFileNavigator->toPrevious();
+    if (scrollToBottom) {
+        mImageWidget->scrollToBottom();
+    }
+}
+
+void MainWindow::onRequestNextImage()
+{
+    mFileNavigator->toNext();
 }
 
 
@@ -64,7 +82,14 @@ void MainWindow::on_actionLast_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QFileDialog dialog;
+    QString path = QFileDialog::getExistingDirectory(this, "Choose folder");
+    if (!path.isEmpty())
+        openFolder(path);
+}
 
+
+void MainWindow::on_actionClose_triggered()
+{
+    openFolder("");
 }
 
