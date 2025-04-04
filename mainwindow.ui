@@ -14,8 +14,87 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionClose"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionPrevious"/>
+    <addaction name="actionNext"/>
+    <addaction name="actionFirst"/>
+    <addaction name="actionLast"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuView"/>
+  </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionNext">
+   <property name="text">
+    <string>Next</string>
+   </property>
+   <property name="shortcut">
+    <string>Down</string>
+   </property>
+  </action>
+  <action name="actionPrevious">
+   <property name="text">
+    <string>Previous</string>
+   </property>
+   <property name="shortcut">
+    <string>Up</string>
+   </property>
+  </action>
+  <action name="actionFirst">
+   <property name="text">
+    <string>First</string>
+   </property>
+   <property name="shortcut">
+    <string>Home</string>
+   </property>
+  </action>
+  <action name="actionLast">
+   <property name="text">
+    <string>Last</string>
+   </property>
+   <property name="shortcut">
+    <string>End</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

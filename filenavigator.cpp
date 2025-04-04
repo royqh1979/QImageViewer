@@ -17,6 +17,7 @@ void FileNavigator::open(const QString &path)
     QDir dir{mPath};
     QFileInfoList fileInfos =  dir.entryInfoList(QDir::Filter::Files);
     mFileInfos.clear();
+    qDebug()<<QImageReader::supportedImageFormats();
     foreach(const QFileInfo & info, fileInfos) {
         if (QImageReader::supportedImageFormats().contains(info.suffix().toLower().toLocal8Bit())) {
             mFileInfos.append(info);
@@ -43,6 +44,7 @@ void FileNavigator::setCurrentFileIdx(int fileIdx)
     if (fileIdx == mCurrentFileIdx)
         return;
     int oldIdx = mCurrentFileIdx;
+    mCurrentFileIdx = fileIdx;
     emit currentFileChanged(oldIdx, mCurrentFileIdx);
 }
 
@@ -83,11 +85,3 @@ const QFileInfoList &FileNavigator::fileInfos()
     return mFileInfos;
 }
 
-QImage FileNavigator::currentImage()
-{
-    QFileInfo info = currentFileInfo();
-    if (!info.exists()) {
-        return QImage();
-    }
-    return QImage{currentFileInfo().absoluteFilePath()};
-}
