@@ -20,6 +20,7 @@ public:
     void toLast();
     QFileInfo currentFileInfo();
     const QFileInfoList &fileInfos();
+    int imageCount();
 signals:
     void currentFileChanged(int oldFileId, int currentFileId);
     void pathChanged(const QString& oldPath, const QString& newPath);

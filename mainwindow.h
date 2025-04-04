@@ -9,6 +9,8 @@ QT_END_NAMESPACE
 
 class ImageWidget;
 class FileNavigator;
+class QSpinBox;
+class QLabel;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -32,10 +34,14 @@ private slots:
     void on_actionOpen_triggered();
 
     void on_actionClose_triggered();
-
+private:
+    void updateStatusBar();
 private:
     Ui::MainWindow *ui;
     ImageWidget *mImageWidget;
     FileNavigator *mFileNavigator;
+    QSpinBox *mZoomFactor;
+    QLabel *mImageSizeInfo;
+    QLabel *mPageInfo;
 };
 #endif // MAINWINDOW_H

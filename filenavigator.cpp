@@ -85,3 +85,8 @@ const QFileInfoList &FileNavigator::fileInfos()
     return mFileInfos;
 }
 
+int FileNavigator::imageCount()
+{
+    return mFileInfos.count();
+}
+
