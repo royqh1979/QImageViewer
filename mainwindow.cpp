@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 #include "imagewidget.h"
 #include "filenavigator.h"
+#include "imagemetainfo.h"
 
 #include <QHBoxLayout>
 #include <QDebug>
@@ -58,6 +59,9 @@ void MainWindow::openFolder(const QString &path)
 void MainWindow::onCurrentFileChanged(int oldFileId, int currentFileId)
 {
     mImageWidget->setImage(QPixmap(mFileNavigator->currentFileInfo().absoluteFilePath()));
+    ImageMetaInfo info{mFileNavigator->currentFileInfo().absoluteFilePath()};
+    qDebug()<<info.valid();
+    qDebug()<<info.dateTime()<<info.focalLength()<<info.focalLengthIn35mm();
     updateStatusBar();
 }
 

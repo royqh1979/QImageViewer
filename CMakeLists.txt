@@ -29,17 +29,33 @@ endif()
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Svg LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Svg LinguistTools REQUIRED)
 
+include_directories(SYSTEM libs/tinyxml2 libs/tinyexif)
+
 set(TS_FILES QImageViewer_zh_CN.ts)
+
+set(TINY_XML2_FILES
+    libs/tinyxml2/tinyxml2.h
+    libs/tinyxml2/tinyxml2.cpp
+    )
+
+set(TINY_EXIF_FILES
+    libs/tinyexif/TinyEXIF.h
+    libs/tinyexif/TinyEXIF.cpp
+    )
 
 set(PROJECT_SOURCES
         filenavigator.cpp
         filenavigator.h
+        imagemetainfo.h
+        imagemetainfo.cpp
         imagewidget.cpp
         imagewidget.h
         main.cpp
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        ${TINY_EXIF_FILES}
+        ${TINY_XML2_FILES}
         ${TS_FILES}
 )
 
