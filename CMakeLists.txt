@@ -48,6 +48,8 @@ set(PROJECT_SOURCES
         filenavigator.h
         imagemetainfo.h
         imagemetainfo.cpp
+        imagemetainfomodel.h
+        imagemetainfomodel.cpp
         imagewidget.cpp
         imagewidget.h
         main.cpp

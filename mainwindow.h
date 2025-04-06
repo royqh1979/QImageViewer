@@ -11,6 +11,7 @@ class ImageWidget;
 class FileNavigator;
 class QSpinBox;
 class QLabel;
+class ImageMetaInfoModel;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -43,5 +44,6 @@ private:
     QSpinBox *mZoomFactor;
     QLabel *mImageSizeInfo;
     QLabel *mPageInfo;
+    ImageMetaInfoModel *mImageMetaInfoModel;
 };
 #endif // MAINWINDOW_H

@@ -1,5 +1,6 @@
 #include "imagemetainfo.h"
 #include "TinyEXIF.h"
+#include <QStandardItemModel>
 #include <fstream>
 ImageMetaInfo::ImageMetaInfo()
 {
@@ -8,6 +9,7 @@ ImageMetaInfo::ImageMetaInfo()
 
 ImageMetaInfo::ImageMetaInfo(const QString &filename)
 {
+    mFilename = filename;
     mValid = parseInfo(filename);
 }
 
@@ -279,3 +281,9 @@ bool ImageMetaInfo::parseInfo(const QString &filename)
 
     return true;
 }
+
+const QString &ImageMetaInfo::filename() const
+{
+    return mFilename;
+}
+

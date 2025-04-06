@@ -58,9 +58,12 @@ public:
     double latitude() const;
     double longitude() const;
     double altitude() const;
+    const QString &filename() const;
+
 private:
     bool parseInfo(const QString& filename);
 private:
+    QString mFilename;
     bool mValid;
     uint32_t mImageWidth;                // Image width reported in EXIF data
     uint32_t mImageHeight;               // Image height reported in EXIF data

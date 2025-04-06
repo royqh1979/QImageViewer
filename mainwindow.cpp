@@ -3,6 +3,7 @@
 #include "imagewidget.h"
 #include "filenavigator.h"
 #include "imagemetainfo.h"
+#include "imagemetainfomodel.h"
 
 #include <QHBoxLayout>
 #include <QDebug>
@@ -43,6 +44,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mFileNavigator, &FileNavigator::currentFileChanged,
             this, &MainWindow::onCurrentFileChanged);
 
+
+    mImageMetaInfoModel = new ImageMetaInfoModel(this);
+    ui->imageMetaInfoView->setModel(mImageMetaInfoModel);
+    ui->imageMetaInfoView->setHeaderHidden(true);
     updateStatusBar();
 }
 
@@ -59,9 +64,13 @@ void MainWindow::openFolder(const QString &path)
 void MainWindow::onCurrentFileChanged(int oldFileId, int currentFileId)
 {
     mImageWidget->setImage(QPixmap(mFileNavigator->currentFileInfo().absoluteFilePath()));
-    ImageMetaInfo info{mFileNavigator->currentFileInfo().absoluteFilePath()};
-    qDebug()<<info.valid();
-    qDebug()<<info.dateTime()<<info.focalLength()<<info.focalLengthIn35mm();
+    ImageMetaInfo *info=new ImageMetaInfo(mFileNavigator->currentFileInfo().absoluteFilePath());
+    mImageMetaInfoModel->setMetaInfo(info);
+    ui->imageMetaInfoView->setFirstColumnSpanned(0,QModelIndex(),true);
+    ui->imageMetaInfoView->setFirstColumnSpanned(1,QModelIndex(),true);
+    ui->imageMetaInfoView->setFirstColumnSpanned(2,QModelIndex(),true);
+    ui->imageMetaInfoView->expandAll();
+    ui->imageMetaInfoView->resizeColumnToContents(0);
     updateStatusBar();
 }
 
