@@ -84,6 +84,10 @@ endif()
 
 target_link_libraries(QImageViewer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Svg)
 
+target_link_options(QImageViewer PRIVATE
+    $<$<CONFIG:MinSizeRel>:-s -static>
+)
+
 set_target_properties(QImageViewer PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
