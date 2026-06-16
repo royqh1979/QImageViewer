@@ -127,7 +127,6 @@ void DirModel::setThumbnail(const QString &dirPath, int imageIdx, int thumbnailS
                 info->thumbnail = thumbnail;
                 info->thumbnailTime = QDateTime::currentDateTime();
                 QModelIndex index = createIndex(imageIdx,0);
-                qDebug()<<imageIdx<<imagePath<<"setted"<<thumbnail.isNull();
                 emit dataChanged(index,index);
             }
         }
@@ -263,6 +262,5 @@ void ThumbnailLoader::run()
     } else {
         thumbnail = pixmap.scaledToHeight(mThumbnailSize);
     }
-    qDebug()<<pixmap.isNull()<<thumbnail.isNull();
     emit thumbnailLoaded(mDirPath, mImageIdx, mThumbnailSize, mImagePath, thumbnail);
 }

@@ -311,7 +311,6 @@ void ImageWidget::nextFrame()
 {
     if (mCacheImages.count()<=1)
         return;
-    qDebug()<<mCurrentFrame;
     mCurrentFrame++;
     if (mCurrentFrame>=mCacheImages.count())
         mCurrentFrame = 0;
