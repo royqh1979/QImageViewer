@@ -81,7 +81,7 @@ void MainWindow::onCurrentFileChanged(int oldFileId, int currentFileId)
 
     ui->dirView->selectionModel()->select(index,QItemSelectionModel::SelectionFlag::Select);
     ui->dirView->setCurrentIndex(index);
-    mImageWidget->setImage(QPixmap(mDirModel->imagePath(mDirModel->currentFileIdx())));
+    mImageWidget->setImage(mDirModel->imagePath(mDirModel->currentFileIdx()));
     ImageMetaInfo *info=new ImageMetaInfo(mDirModel->imagePath(mDirModel->currentFileIdx()));
     mImageMetaInfoModel->setMetaInfo(info);
     ui->imageMetaInfoView->setFirstColumnSpanned(0,QModelIndex(),true);

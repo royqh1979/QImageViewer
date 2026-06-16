@@ -20,6 +20,7 @@
 
 #include <QAbstractScrollArea>
 
+class QTimer;
 class ImageWidget : public QAbstractScrollArea
 {
     Q_OBJECT
@@ -37,8 +38,7 @@ public:
 
     AutoFitType fitType() const;
     void setFitType(AutoFitType newFitType);
-    const QPixmap &image() const;
-    void setImage(const QPixmap &newImage);
+    void setImage(const QString &newPath);
     QSize imageSize() const;
 
     const QColor &background() const;
@@ -55,6 +55,10 @@ public:
     void scrollToBottom();
     void scrollToLeft();
     void scrollToRight();
+
+    void play();
+    void pause();
+    void nextFrame();
 signals:
     void imageUpdated();
     void fitTypeChanged();
@@ -69,12 +73,15 @@ private:
     float mRatio;
     AutoFitType mFitType;
     AutoFitType mWorkingFitType;
-    QPixmap mImage;
-    QPixmap mCacheImage;
+    QList<QPixmap> mImages;
+    QList<int> mImageDelays;
+    QList<QPixmap> mCacheImages;
+    int mCurrentFrame;
     QColor mBackground;
     int mScrollAngleX;
     int mScrollAngleY;
     QPoint mOldMousePos;
+    QTimer *mFrameTimer;
     bool mMovingImage;
     bool mSwapLeftRightWhenTurnPage;
 
