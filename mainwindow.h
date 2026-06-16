@@ -53,9 +53,16 @@ private slots:
 
     void on_actionPrev_Frame_triggered();
 
+    void on_actionFull_Screen_triggered();
+
+    void on_actionShow_Contents_toggled(bool arg1);
+
+    void on_dockDir_visibilityChanged(bool visible);
+
 private:
     void updateStatusBar();
     void applySettings();
+    void updateActions();
 private:
     Ui::MainWindow *ui;
     ImageWidget *mImageWidget;
@@ -65,10 +72,14 @@ private:
     QLabel *mPageInfo;
     ImageMetaInfoModel *mImageMetaInfoModel;
     ThumbnailDelegate *mThumbnailDelegate;
+    bool mInFullScreen;
+    bool mMaximizedBeforeFullScreen;
 
     // QWidget interface
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+
 };
 #endif // MAINWINDOW_H

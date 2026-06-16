@@ -13,6 +13,7 @@
 #include <QLabel>
 #include <QMimeData>
 #include <QDragEnterEvent>
+#include <QScrollBar>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -20,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    mInFullScreen = false;
     mPageInfo = new QLabel(this);
     mPageInfo->setText(" ");
     ui->statusbar->addPermanentWidget(mPageInfo);
@@ -58,9 +60,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->imageMetaInfoView->setHeaderHidden(true);
     ui->dockMetaInfo->setVisible(false);
 
+    setWindowIcon(QPixmap(":/icons/imageviewer.png"));
     setAcceptDrops(true);
     updateStatusBar();
     applySettings();
+
+    addActions(menuBar()->actions());
 }
 
 MainWindow::~MainWindow()
@@ -75,20 +80,21 @@ void MainWindow::openFolder(const QString &path)
 
 void MainWindow::onCurrentFileChanged(int oldFileId, int currentFileId)
 {
-    if (mDirModel->imageCount()<=0)
-        return;
-    QModelIndex index = mDirModel->index(currentFileId,0);
+    if (mDirModel->imageCount()>0) {
+        QModelIndex index = mDirModel->index(currentFileId,0);
 
-    ui->dirView->selectionModel()->select(index,QItemSelectionModel::SelectionFlag::Select);
-    ui->dirView->setCurrentIndex(index);
-    mImageWidget->setImage(mDirModel->imagePath(mDirModel->currentFileIdx()));
-    ImageMetaInfo *info=new ImageMetaInfo(mDirModel->imagePath(mDirModel->currentFileIdx()));
-    mImageMetaInfoModel->setMetaInfo(info);
-    ui->imageMetaInfoView->setFirstColumnSpanned(0,QModelIndex(),true);
-    ui->imageMetaInfoView->setFirstColumnSpanned(1,QModelIndex(),true);
-    ui->imageMetaInfoView->setFirstColumnSpanned(2,QModelIndex(),true);
-    ui->imageMetaInfoView->expandAll();
-    ui->imageMetaInfoView->resizeColumnToContents(0);
+        ui->dirView->selectionModel()->select(index,QItemSelectionModel::SelectionFlag::Select);
+        ui->dirView->setCurrentIndex(index);
+        mImageWidget->setImage(mDirModel->imagePath(mDirModel->currentFileIdx()));
+        ImageMetaInfo *info=new ImageMetaInfo(mDirModel->imagePath(mDirModel->currentFileIdx()));
+        mImageMetaInfoModel->setMetaInfo(info);
+        ui->imageMetaInfoView->setFirstColumnSpanned(0,QModelIndex(),true);
+        ui->imageMetaInfoView->setFirstColumnSpanned(1,QModelIndex(),true);
+        ui->imageMetaInfoView->setFirstColumnSpanned(2,QModelIndex(),true);
+        ui->imageMetaInfoView->expandAll();
+        ui->imageMetaInfoView->resizeColumnToContents(0);
+    }
+    updateActions();
     updateStatusBar();
 }
 
@@ -175,9 +181,21 @@ void MainWindow::updateStatusBar()
 
 void MainWindow::applySettings()
 {
-    mDirModel->setThumbnailSize(350);
-    mThumbnailDelegate->setThumbnailSize(350);
+    int thumbnailSize = 200;
+    mDirModel->setThumbnailSize(thumbnailSize);
+    mThumbnailDelegate->setThumbnailSize(thumbnailSize);
+    ui->dirView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->dirView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    ui->dirView->setMinimumWidth(mDirModel->thumbnailSize()+ui->dirView->verticalScrollBar()->sizeHint().width()+20);
+    ui->dirView->setMaximumWidth(mDirModel->thumbnailSize()+ui->dirView->verticalScrollBar()->sizeHint().width()+20);
+    ui->dockDir->setWidget(ui->dirView);
     ui->dirView->doItemsLayout();
+}
+
+void MainWindow::updateActions()
+{
+    ui->menuAnimation->menuAction()->setVisible(mImageWidget->isAnimation());
+    ui->menuAnimation->menuAction()->setEnabled(mImageWidget->isAnimation());
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -186,7 +204,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
     if (mimeData->urls().count()==1) {
         QList<QUrl> urlList = mimeData->urls();
         QString fileName = urlList.first().toLocalFile();
-        if (QFileInfo{fileName}.isDir())
+        if (QFileInfo::exists(fileName))
             event->acceptProposedAction();
     }
 }
@@ -199,6 +217,14 @@ void MainWindow::dropEvent(QDropEvent *event)
         QString fileName = urlList.first().toLocalFile();
         openFolder(fileName);
         event->acceptProposedAction();
+    }
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape && event->modifiers() == Qt::NoModifier
+            && mInFullScreen) {
+        on_actionFull_Screen_triggered();
     }
 }
 
@@ -248,5 +274,50 @@ void MainWindow::on_actionNext_Frame_triggered()
 void MainWindow::on_actionPrev_Frame_triggered()
 {
     mImageWidget->prevFrame();
+}
+
+
+void MainWindow::on_actionFull_Screen_triggered()
+{
+    if (mInFullScreen) {
+        ui->dockDir->blockSignals(true);
+        if (ui->dockDir->isVisible()!=ui->actionShow_Contents->isChecked())
+            ui->dockDir->setVisible(ui->actionShow_Contents->isChecked());
+        ui->dockDir->blockSignals(false);
+        //ui->toolBar->setVisible(true);
+        ui->menubar->setVisible(true);
+        ui->statusbar->setVisible(true);
+        if (mMaximizedBeforeFullScreen)
+            showMaximized();
+        else
+            showNormal();
+        mInFullScreen = false;
+    } else {
+        mMaximizedBeforeFullScreen = isMaximized();
+        ui->dockDir->blockSignals(true);
+        ui->dockDir->setVisible(false);
+        ui->dockDir->blockSignals(false);
+        //ui->toolBar->setVisible(false);
+        ui->menubar->setVisible(false);
+        ui->statusbar->setVisible(false);
+        showFullScreen();
+        mInFullScreen = true;
+    }
+}
+
+
+void MainWindow::on_actionShow_Contents_toggled(bool arg1)
+{
+    Q_UNUSED(arg1);
+    if (!mInFullScreen)
+        ui->dockDir->setVisible(ui->actionShow_Contents->isChecked());
+}
+
+
+void MainWindow::on_dockDir_visibilityChanged(bool visible)
+{
+    ui->actionShow_Contents->blockSignals(true);
+    ui->actionShow_Contents->setChecked(visible);
+    ui->actionShow_Contents->blockSignals(false);
 }
 

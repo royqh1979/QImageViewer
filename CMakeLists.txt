@@ -63,6 +63,10 @@ set(PROJECT_SOURCES
         ${TS_FILES}
 )
 
+set(RESOURCES
+    icons.qrc
+)
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(QImageViewer
         MANUAL_FINALIZATION
@@ -78,6 +82,7 @@ else()
     else()
         add_executable(QImageViewer
             ${PROJECT_SOURCES}
+            ${RESOURCES}
         )
     endif()
 

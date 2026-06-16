@@ -13,23 +13,37 @@ DirModel::DirModel(QObject *parent) : QAbstractListModel(parent),
 
 void DirModel::open(const QString &path)
 {
-    if (path == mPath)
-        return;
     QString oldPath = mPath;
-    mPath = path;
-    QDir dir{mPath};
+    QFileInfo info{path};
+    if (!info.exists())
+        return;
+    QDir dir;
+    QString fileName;
+    if (info.isDir()) {
+        dir = QDir{mPath};
+    } else {
+        dir = info.dir();
+        fileName = info.fileName();
+    }
+    if (dir.absolutePath() == mPath)
+        return;
+    mPath = dir.absolutePath();
+
     QFileInfoList fileInfos =  dir.entryInfoList(QDir::Filter::Files);
     beginResetModel();
     QMutexLocker lock{&mMutex};
     mLoadings.clear();
     mImageInfos.clear();
     mImageInfoIndex.clear();
+    int idx = -1;
     foreach(const QFileInfo & fileInfo, fileInfos) {
         if (QImageReader::supportedImageFormats().contains(fileInfo.suffix().toLower().toLocal8Bit())) {
             PImageInfo info = std::make_shared<ImageInfo>();
             info->filename = fileInfo.fileName();
             info->fullPath = dir.absoluteFilePath(info->filename);
             info->thumbnailTime = QDateTime::currentDateTime();
+            if (info->filename == fileName)
+                idx = mImageInfos.count();
             mImageInfos.append(info);
             mImageInfoIndex.insert(info->fullPath,info);
         }
@@ -38,8 +52,12 @@ void DirModel::open(const QString &path)
     emit pathChanged(oldPath, mPath);
     if (mImageInfos.isEmpty())
         mCurrentFileIdx = -1;
-    else
-        toFirst();
+    else {
+        if (idx == -1)
+            toFirst();
+        else
+            setCurrentFileIdx(idx);
+    }
 }
 
 const QString &DirModel::path() const
