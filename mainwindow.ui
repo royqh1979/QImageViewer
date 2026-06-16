@@ -40,9 +40,24 @@
     <addaction name="actionNext"/>
     <addaction name="actionFirst"/>
     <addaction name="actionLast"/>
+    <addaction name="separator"/>
+    <addaction name="actionRotate_Left"/>
+    <addaction name="actionRotate_Right"/>
+    <addaction name="actionFlip_Horizontal"/>
+    <addaction name="actionFlip_Vertical"/>
+   </widget>
+   <widget class="QMenu" name="menuAnimation">
+    <property name="title">
+     <string>Animation</string>
+    </property>
+    <addaction name="actionStop_Animation"/>
+    <addaction name="actionPlay_Animation"/>
+    <addaction name="actionNext_Frame"/>
+    <addaction name="actionPrev_Frame"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
+   <addaction name="menuAnimation"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dockMetaInfo">
@@ -151,6 +166,46 @@
    </property>
    <property name="shortcut">
     <string>End</string>
+   </property>
+  </action>
+  <action name="actionRotate_Left">
+   <property name="text">
+    <string>Rotate Left</string>
+   </property>
+  </action>
+  <action name="actionRotate_Right">
+   <property name="text">
+    <string>Rotate Right</string>
+   </property>
+  </action>
+  <action name="actionFlip_Horizontal">
+   <property name="text">
+    <string>Flip Horizontal</string>
+   </property>
+  </action>
+  <action name="actionFlip_Vertical">
+   <property name="text">
+    <string>Flip Vertical</string>
+   </property>
+  </action>
+  <action name="actionStop_Animation">
+   <property name="text">
+    <string>Stop</string>
+   </property>
+  </action>
+  <action name="actionPlay_Animation">
+   <property name="text">
+    <string>Play</string>
+   </property>
+  </action>
+  <action name="actionNext_Frame">
+   <property name="text">
+    <string>Next Frame</string>
+   </property>
+  </action>
+  <action name="actionPrev_Frame">
+   <property name="text">
+    <string>Prev Frame</string>
    </property>
   </action>
  </widget>

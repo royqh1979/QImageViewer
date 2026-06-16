@@ -59,6 +59,8 @@ public:
     void play();
     void pause();
     void nextFrame();
+    void prevFrame();
+    bool isAnimation() const;
 signals:
     void imageUpdated();
     void fitTypeChanged();
@@ -67,6 +69,7 @@ signals:
     void swapLeftRightWhenTurnPageChanged();
 
 private:
+    void playNextFrame();
     void updateImage(bool forceRatio=false);
     void scrollImageByMouseMove(QMouseEvent *event);
 private:

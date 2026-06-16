@@ -39,7 +39,7 @@ ImageWidget::ImageWidget(QWidget *parent) :
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     mFrameTimer = new QTimer(this);
     connect(mFrameTimer, &QTimer::timeout,
-            this, &ImageWidget::nextFrame);
+            this, &ImageWidget::playNextFrame);
 }
 
 float ImageWidget::ratio() const
@@ -299,7 +299,7 @@ void ImageWidget::play()
 {
     if (mCacheImages.count()<=1)
         return;
-    nextFrame();
+    playNextFrame();
 }
 
 void ImageWidget::pause()
@@ -309,13 +309,35 @@ void ImageWidget::pause()
 
 void ImageWidget::nextFrame()
 {
+    mCurrentFrame++;
+    if (mCurrentFrame >= mImages.count())
+        mCurrentFrame  = 0;
+    viewport()->update();
+}
+
+void ImageWidget::prevFrame()
+{
+    mCurrentFrame--;
+    if (mCurrentFrame < 0)
+        mCurrentFrame = mImages.count() - 1;
+    viewport()->update();
+}
+
+void ImageWidget::playNextFrame()
+{
     if (mCacheImages.count()<=1)
         return;
     mCurrentFrame++;
     if (mCurrentFrame>=mCacheImages.count())
         mCurrentFrame = 0;
     viewport()->update();
-    mFrameTimer->singleShot(mImageDelays[mCurrentFrame], this, &ImageWidget::nextFrame);
+    mFrameTimer->setInterval(mImageDelays[mCurrentFrame]);
+    mFrameTimer->start();
+}
+
+bool ImageWidget::isAnimation() const
+{
+    return mImages.count()>1;
 }
 
 void ImageWidget::wheelEvent(QWheelEvent *e)

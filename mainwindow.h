@@ -37,6 +37,22 @@ private slots:
     void on_actionOpen_triggered();
 
     void on_actionClose_triggered();
+    void on_actionRotate_Left_triggered();
+
+    void on_actionRotate_Right_triggered();
+
+    void on_actionFlip_Horizontal_triggered();
+
+    void on_actionFlip_Vertical_triggered();
+
+    void on_actionStop_Animation_triggered();
+
+    void on_actionPlay_Animation_triggered();
+
+    void on_actionNext_Frame_triggered();
+
+    void on_actionPrev_Frame_triggered();
+
 private:
     void updateStatusBar();
     void applySettings();

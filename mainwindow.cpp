@@ -183,11 +183,9 @@ void MainWindow::applySettings()
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
     const QMimeData* mimeData = event->mimeData();
-    qDebug()<<mimeData->urls().count();
     if (mimeData->urls().count()==1) {
         QList<QUrl> urlList = mimeData->urls();
         QString fileName = urlList.first().toLocalFile();
-        qDebug()<<fileName;
         if (QFileInfo{fileName}.isDir())
             event->acceptProposedAction();
     }
@@ -202,5 +200,53 @@ void MainWindow::dropEvent(QDropEvent *event)
         openFolder(fileName);
         event->acceptProposedAction();
     }
+}
+
+
+void MainWindow::on_actionRotate_Left_triggered()
+{
+    mImageWidget->rotate(-90);
+}
+
+
+void MainWindow::on_actionRotate_Right_triggered()
+{
+    mImageWidget->rotate(90);
+}
+
+
+void MainWindow::on_actionFlip_Horizontal_triggered()
+{
+    mImageWidget->horizontalFlip();
+}
+
+
+void MainWindow::on_actionFlip_Vertical_triggered()
+{
+    mImageWidget->verticalFlip();
+}
+
+
+void MainWindow::on_actionStop_Animation_triggered()
+{
+    mImageWidget->pause();
+}
+
+
+void MainWindow::on_actionPlay_Animation_triggered()
+{
+    mImageWidget->play();
+}
+
+
+void MainWindow::on_actionNext_Frame_triggered()
+{
+    mImageWidget->nextFrame();
+}
+
+
+void MainWindow::on_actionPrev_Frame_triggered()
+{
+    mImageWidget->prevFrame();
 }
 
