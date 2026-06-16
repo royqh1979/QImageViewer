@@ -145,7 +145,7 @@
     <string>Next</string>
    </property>
    <property name="shortcut">
-    <string>Down</string>
+    <string>PgDown</string>
    </property>
   </action>
   <action name="actionPrevious">
@@ -153,7 +153,7 @@
     <string>Previous</string>
    </property>
    <property name="shortcut">
-    <string>Up</string>
+    <string>PgUp</string>
    </property>
   </action>
   <action name="actionFirst">

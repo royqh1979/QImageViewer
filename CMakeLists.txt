@@ -67,25 +67,19 @@ set(RESOURCES
     icons.qrc
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(QImageViewer
-        MANUAL_FINALIZATION
+if(WIN32)
+    add_executable(${PROJECT_NAME} WIN32
         ${PROJECT_SOURCES}
-    )
+        ${RESOURCES})
+else()
+    add_executable(${PROJECT_NAME}
+        ${PROJECT_SOURCES}
+        ${RESOURCES})
+endif()
 
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 else()
-    if(ANDROID)
-        add_library(QImageViewer SHARED
-            ${PROJECT_SOURCES}
-        )
-    else()
-        add_executable(QImageViewer
-            ${PROJECT_SOURCES}
-            ${RESOURCES}
-        )
-    endif()
-
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
@@ -94,6 +88,15 @@ target_link_libraries(QImageViewer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT
 target_link_options(QImageViewer PRIVATE
     $<$<CONFIG:MinSizeRel>:-s -static>
 )
+
+if(WIN32)
+    set(APP_ICON_PATH "${CMAKE_CURRENT_SOURCE_DIR}/imageviewer.ico")
+    if(EXISTS ${APP_ICON_PATH})
+        set(APP_RC "${CMAKE_CURRENT_BINARY_DIR}/app.rc")
+        file(WRITE ${APP_RC} "IDI_ICON1 ICON \"${APP_ICON_PATH}\"\n")
+        target_sources(${PROJECT_NAME} PRIVATE ${APP_RC})
+    endif()
+endif()
 
 set_target_properties(QImageViewer PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
