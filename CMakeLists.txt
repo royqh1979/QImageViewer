@@ -44,8 +44,8 @@ set(TINY_EXIF_FILES
     )
 
 set(PROJECT_SOURCES
-        filenavigator.cpp
-        filenavigator.h
+        dirmodel.cpp
+        dirmodel.h
         imagemetainfo.h
         imagemetainfo.cpp
         imagemetainfomodel.h
@@ -56,6 +56,8 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        thumbnailview.cpp
+        thumbnailview.h
         ${TINY_EXIF_FILES}
         ${TINY_XML2_FILES}
         ${TS_FILES}

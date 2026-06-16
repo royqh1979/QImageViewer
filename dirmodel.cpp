@@ -1,0 +1,268 @@
+#include "dirmodel.h"
+
+#include <QDir>
+#include <QImageReader>
+#include <QMimeData>
+
+DirModel::DirModel(QObject *parent) : QAbstractListModel(parent),
+    mThumbnailSize{256},
+    mCurrentFileIdx{-1}
+{
+
+}
+
+void DirModel::open(const QString &path)
+{
+    if (path == mPath)
+        return;
+    QString oldPath = mPath;
+    mPath = path;
+    QDir dir{mPath};
+    QFileInfoList fileInfos =  dir.entryInfoList(QDir::Filter::Files);
+    beginResetModel();
+    QMutexLocker lock{&mMutex};
+    mLoadings.clear();
+    mImageInfos.clear();
+    mImageInfoIndex.clear();
+    foreach(const QFileInfo & fileInfo, fileInfos) {
+        if (QImageReader::supportedImageFormats().contains(fileInfo.suffix().toLower().toLocal8Bit())) {
+            PImageInfo info = std::make_shared<ImageInfo>();
+            info->filename = fileInfo.fileName();
+            info->fullPath = dir.absoluteFilePath(info->filename);
+            info->thumbnailTime = QDateTime::currentDateTime();
+            mImageInfos.append(info);
+            mImageInfoIndex.insert(info->fullPath,info);
+        }
+    }
+    endResetModel();
+    emit pathChanged(oldPath, mPath);
+    if (mImageInfos.isEmpty())
+        mCurrentFileIdx = -1;
+    else
+        toFirst();
+}
+
+const QString &DirModel::path() const
+{
+    return mPath;
+}
+
+void DirModel::setCurrentFileIdx(int fileIdx)
+{
+    if (fileIdx < 0)
+        fileIdx = 0;
+    if (fileIdx >= imageCount())
+        fileIdx = imageCount()-1;
+    if (fileIdx == mCurrentFileIdx)
+        return;
+    int oldIdx = mCurrentFileIdx;
+    mCurrentFileIdx = fileIdx;
+    emit currentFileChanged(oldIdx, mCurrentFileIdx);
+}
+
+int DirModel::currentFileIdx() const
+{
+    return mCurrentFileIdx;
+}
+
+void DirModel::toNext()
+{
+    setCurrentFileIdx(currentFileIdx()+1);
+}
+
+void DirModel::toPrevious()
+{
+    setCurrentFileIdx(currentFileIdx()-1);
+}
+
+void DirModel::toFirst()
+{
+    setCurrentFileIdx(0);
+}
+
+void DirModel::toLast()
+{
+    setCurrentFileIdx(imageCount()-1);
+}
+
+int DirModel::imageCount() const
+{
+    QMutexLocker locker{&mMutex};
+    return mImageInfos.count();
+}
+
+QString DirModel::imageFileName(int idx) const
+{
+    QMutexLocker locker{&mMutex};
+    return mImageInfos[idx]->filename;
+}
+
+QString DirModel::imagePath(int idx) const
+{
+    QMutexLocker locker{&mMutex};
+    return mImageInfos[idx]->fullPath;
+}
+
+QPixmap DirModel::thumbnail(int idx) const
+{
+    QMutexLocker locker{&mMutex};
+    QPixmap defaultThumb;
+    if (idx<0 || idx>=mImageInfoIndex.count())
+        return defaultThumb;
+    if (mImageInfos[idx]->thumbnail.isNull()) {
+        loadThumbnail(idx,mImageInfos[idx]->fullPath);
+        return defaultThumb;
+    }
+    return mImageInfos[idx]->thumbnail;
+}
+
+void DirModel::setThumbnail(const QString &dirPath, int imageIdx, int thumbnailSize, const QString &imagePath, QPixmap thumbnail)
+{
+    QMutexLocker locker(&mMutex);
+    mLoadings.remove(imageIdx);
+    if (mPath == dirPath && mThumbnailSize == thumbnailSize && imageIdx>=0){
+        if (imageIdx < mImageInfos.count()) {
+            PImageInfo info = mImageInfos[imageIdx];
+            if (info->fullPath == imagePath) {
+                info->thumbnail = thumbnail;
+                info->thumbnailTime = QDateTime::currentDateTime();
+                QModelIndex index = createIndex(imageIdx,0);
+                qDebug()<<imageIdx<<imagePath<<"setted"<<thumbnail.isNull();
+                emit dataChanged(index,index);
+            }
+        }
+    }
+}
+
+void DirModel::clearThumbnails()
+{
+    QMutexLocker locker{&mMutex};
+    foreach(PImageInfo info, mImageInfos) {
+        info->thumbnail = QPixmap();
+    }
+    QModelIndex top=createIndex(0,0);
+    QModelIndex bottom = createIndex(mImageInfos.count()-1,0);
+    emit dataChanged(top,bottom);
+}
+
+void DirModel::loadThumbnail(int idx, const QString &path) const
+{
+    QMutexLocker locker{&mMutex};
+    if (mLoadings.contains(idx))
+        return;
+    mLoadings.insert(idx);
+    ThumbnailLoader *loader=new ThumbnailLoader(mPath,idx,mThumbnailSize,path);
+    connect(loader, &ThumbnailLoader::thumbnailLoaded,
+            this, &DirModel::setThumbnail);
+    loader->start();
+}
+
+int DirModel::thumbnailSize() const
+{
+    return mThumbnailSize;
+}
+
+void DirModel::setThumbnailSize(int newThumbnailSize)
+{
+    if (newThumbnailSize!=mThumbnailSize) {
+        mThumbnailSize = newThumbnailSize;
+        clearThumbnails();
+    }
+}
+
+QStringList DirModel::mimeTypes() const
+{
+    return QStringList{"text/uri-list"};
+}
+
+QMimeData *DirModel::mimeData(const QModelIndexList &indexes) const
+{
+    QMimeData *mime = new QMimeData();
+    QDir dir{mPath};
+    if (dir.exists()) {
+        QMutexLocker locker{&mMutex};
+        QStringList texts;
+        QList<QUrl> urls;
+        for (const QModelIndex &idx : indexes) {
+            QString path = mImageInfos[idx.row()]->fullPath;
+            texts << path;
+            urls.append(QUrl::fromLocalFile(path));
+        }
+        mime->setUrls(urls);
+        mime->setText(texts.join("\n"));
+    }
+    return mime;
+}
+
+Qt::ItemFlags DirModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid()) return Qt::NoItemFlags;
+    return QAbstractListModel::flags(index) | Qt::ItemIsDragEnabled;
+}
+
+Qt::DropActions DirModel::supportedDragActions() const
+{
+    return Qt::CopyAction;
+}
+
+int DirModel::rowCount(const QModelIndex &parent) const
+{
+    return mImageInfos.count();
+}
+
+QVariant DirModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+    int row =index.row();
+    if (row<0 || row>=imageCount())
+        return QVariant();
+    switch(role) {
+    case Qt::ToolTipRole:
+        return imagePath(row);
+    case Qt::DisplayRole:
+        return imageFileName(row);
+    case Qt::DecorationRole:
+        return thumbnail(row);
+    }
+    return QVariant();
+}
+
+
+ThumbnailLoader::ThumbnailLoader(const QString &dirPath, int imageIdx, int thumbnailSize, const QString &imagePath, QObject *parent)
+{
+    mDirPath = dirPath;
+    mImageIdx = imageIdx;
+    mThumbnailSize = thumbnailSize;
+    mImagePath = imagePath;
+    connect(this, &QThread::finished,
+            this, &QObject::deleteLater);
+}
+
+void ThumbnailLoader::run()
+{
+    QPixmap pixmap;
+    int delayCount = 0;
+    while (true) {
+        QImageReader reader{mImagePath};
+        reader.setAutoTransform(true);
+        QImage image = reader.read();
+        if (!image.isNull()) {
+            pixmap = QPixmap::fromImage(image);
+            break;
+        }
+        delayCount++;
+        if (delayCount>10) {
+            return;
+        }
+        QThread::msleep(100);
+    }
+    QPixmap thumbnail;
+    if (pixmap.width()>pixmap.height()) {
+        thumbnail = pixmap.scaledToWidth(mThumbnailSize);
+    } else {
+        thumbnail = pixmap.scaledToHeight(mThumbnailSize);
+    }
+    qDebug()<<pixmap.isNull()<<thumbnail.isNull();
+    emit thumbnailLoaded(mDirPath, mImageIdx, mThumbnailSize, mImagePath, thumbnail);
+}
