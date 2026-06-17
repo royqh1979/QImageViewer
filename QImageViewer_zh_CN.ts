@@ -189,7 +189,7 @@
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="37"/>
+        <location filename="mainwindow.ui" line="40"/>
         <source>View</source>
         <translation>视图</translation>
     </message>
@@ -202,13 +202,13 @@
         <translation type="vanished">选项</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="145"/>
+        <location filename="mainwindow.ui" line="148"/>
         <source>toolBar</source>
         <translation>工具栏</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="310"/>
-        <location filename="mainwindow.ui" line="313"/>
+        <location filename="mainwindow.ui" line="329"/>
+        <location filename="mainwindow.ui" line="332"/>
         <source>Contents</source>
         <translation>目录</translation>
     </message>
@@ -217,7 +217,7 @@
         <translation type="vanished">下一页</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="198"/>
+        <location filename="mainwindow.ui" line="203"/>
         <source>PgDown</source>
         <translation>PgDown</translation>
     </message>
@@ -226,7 +226,7 @@
         <translation type="vanished">上一页</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="210"/>
+        <location filename="mainwindow.ui" line="217"/>
         <source>PgUp</source>
         <translation>PgUp</translation>
     </message>
@@ -235,7 +235,7 @@
         <translation type="vanished">末页</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="234"/>
+        <location filename="mainwindow.ui" line="245"/>
         <source>End</source>
         <translation>End</translation>
     </message>
@@ -244,27 +244,27 @@
         <translation type="vanished">首页</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="222"/>
+        <location filename="mainwindow.ui" line="231"/>
         <source>Home</source>
         <translation>Home</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="358"/>
+        <location filename="mainwindow.ui" line="377"/>
         <source>W</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="328"/>
+        <location filename="mainwindow.ui" line="347"/>
         <source>H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="60"/>
+        <location filename="mainwindow.ui" line="63"/>
         <source>Animation</source>
         <translation>动画</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="69"/>
+        <location filename="mainwindow.ui" line="72"/>
         <source>Option</source>
         <translation>选项</translation>
     </message>
@@ -273,78 +273,88 @@
         <translation type="vanished">打开</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="195"/>
+        <location filename="mainwindow.ui" line="200"/>
         <source>Next</source>
         <translation>下一张</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="207"/>
+        <location filename="mainwindow.ui" line="214"/>
         <source>Previous</source>
         <translation>前一张</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="219"/>
+        <location filename="mainwindow.ui" line="228"/>
         <source>First</source>
         <translation>第一张</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="231"/>
+        <location filename="mainwindow.ui" line="242"/>
         <source>Last</source>
         <translation>最后一张</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="243"/>
+        <location filename="mainwindow.ui" line="256"/>
         <source>Rotate Left</source>
         <translation>左转</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="252"/>
+        <location filename="mainwindow.ui" line="267"/>
         <source>Rotate Right</source>
         <translation>右转</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="261"/>
+        <location filename="mainwindow.ui" line="278"/>
         <source>Flip Horizontal</source>
         <translation>水平翻转</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="270"/>
+        <location filename="mainwindow.ui" line="289"/>
         <source>Flip Vertical</source>
         <translation>垂直翻转</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="275"/>
+        <location filename="mainwindow.ui" line="294"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="280"/>
+        <location filename="mainwindow.ui" line="299"/>
         <source>Play</source>
         <translation>播放</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="285"/>
+        <location filename="mainwindow.ui" line="304"/>
         <source>Next Frame</source>
         <translation>下一帧</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="290"/>
+        <location filename="mainwindow.ui" line="309"/>
         <source>Prev Frame</source>
         <translation>上一帧</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="343"/>
+        <location filename="mainwindow.ui" line="362"/>
         <source>P</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="363"/>
+        <location filename="mainwindow.ui" line="382"/>
         <source>Option...</source>
         <translation>选项...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="371"/>
+        <location filename="mainwindow.ui" line="390"/>
         <source>Image Meta Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="395"/>
+        <source>Print...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="400"/>
+        <source>Print Preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -388,7 +398,7 @@
         <translation type="vanished">垂直翻转</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="181"/>
+        <location filename="mainwindow.ui" line="184"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
@@ -397,12 +407,12 @@
         <translation type="vanished">Ctrl+F4</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="295"/>
+        <location filename="mainwindow.ui" line="314"/>
         <source>Full Screen</source>
         <translation>全屏</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="298"/>
+        <location filename="mainwindow.ui" line="317"/>
         <source>F11</source>
         <translation></translation>
     </message>
@@ -427,17 +437,17 @@
         <translation type="vanished">Ctrl+G</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="173"/>
+        <location filename="mainwindow.ui" line="176"/>
         <source>Open...</source>
         <translation>打开...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="176"/>
+        <location filename="mainwindow.ui" line="179"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="186"/>
+        <location filename="mainwindow.ui" line="189"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
@@ -446,17 +456,17 @@
         <translation type="vanished">Ctrl+X</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="355"/>
+        <location filename="mainwindow.ui" line="374"/>
         <source>Fit Width</source>
         <translation>适应宽度</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="325"/>
+        <location filename="mainwindow.ui" line="344"/>
         <source>Fit Height</source>
         <translation>适应高度</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="340"/>
+        <location filename="mainwindow.ui" line="359"/>
         <source>Fit Page</source>
         <translation>适应页面</translation>
     </message>
@@ -485,12 +495,12 @@
         <translation type="vanished">QComicsViewer %1 [%2]</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="108"/>
+        <location filename="mainwindow.cpp" line="113"/>
         <source>Openning &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="218"/>
+        <location filename="mainwindow.cpp" line="223"/>
         <source>Choose image file</source>
         <translation>选择图片文件</translation>
     </message>

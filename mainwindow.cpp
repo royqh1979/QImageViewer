@@ -18,6 +18,10 @@
 #include <QScrollBar>
 #include <QToolTip>
 #include <QStyleFactory>
+#include <QPrintDialog>
+#include <QPrinter>
+#include <QPainter>
+#include <QPrintPreviewDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -92,6 +96,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowIcon(QPixmap(":/icons/imageviewer.png"));
     setAcceptDrops(true);
+    updateActions();
     updateStatusBar();
     applySettings();
 
@@ -279,8 +284,21 @@ void MainWindow::applySettings()
 
 void MainWindow::updateActions()
 {
-    ui->menuAnimation->menuAction()->setVisible(mImageWidget->isAnimation());
-    ui->menuAnimation->menuAction()->setEnabled(mImageWidget->isAnimation());
+    bool hasImage = (mDirModel->imageCount()>0);
+    ui->actionClose->setEnabled(hasImage);
+    ui->actionPrint->setEnabled(hasImage);
+    ui->actionPrint_Preview->setEnabled(hasImage);
+    ui->actionFirst->setEnabled(hasImage);
+    ui->actionLast->setEnabled(hasImage);
+    ui->actionPrevious->setEnabled(hasImage);
+    ui->actionNext->setEnabled(hasImage);
+    ui->actionRotate_Left->setEnabled(hasImage);
+    ui->actionRotate_Right->setEnabled(hasImage);
+    ui->actionFlip_Horizontal->setEnabled(hasImage);
+    ui->actionFlip_Vertical->setEnabled(hasImage);
+    bool isAnimation = mImageWidget->isAnimation();
+    ui->menuAnimation->menuAction()->setVisible(isAnimation);
+    ui->menuAnimation->menuAction()->setEnabled(isAnimation);
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -452,5 +470,54 @@ void MainWindow::on_dockMetaInfo_visibilityChanged(bool visible)
 void MainWindow::on_actionExit_triggered()
 {
     close();
+}
+
+
+void MainWindow::on_actionPrint_triggered()
+{
+    QPrinter printer(QPrinter::HighResolution);
+
+    // 弹出打印对话框，用户可选择打印机、份数、方向等
+    QPrintDialog dialog(&printer, this);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+
+    QPainter painter(&printer);
+
+    QPixmap pixmap = mImageWidget->currentFrame();
+    // 计算缩放比例，让图片完整打印在页面内（保持宽高比）
+    QRect rect = painter.viewport();
+    QSize size = pixmap.size();
+    size.scale(rect.size(), Qt::KeepAspectRatio);
+
+    QRect targetRect(QPoint(0, 0), size);
+    targetRect.moveCenter(rect.center());
+
+    painter.drawPixmap(targetRect, pixmap);
+    painter.end();
+}
+
+
+void MainWindow::on_actionPrint_Preview_triggered()
+{
+    QPrinter printer(QPrinter::HighResolution);
+    QPrintPreviewDialog preview(&printer, this);
+
+    QPixmap pixmap = mImageWidget->currentFrame();
+
+    QObject::connect(&preview, &QPrintPreviewDialog::paintRequested,
+                     [&pixmap](QPrinter *printer) {
+        QPainter painter(printer);
+        QRect rect = painter.viewport();
+        QSize size = pixmap.size();
+        size.scale(rect.size(), Qt::KeepAspectRatio);
+
+        QRect targetRect(QPoint(0, 0), size);
+        targetRect.moveCenter(rect.center());
+
+        painter.drawPixmap(targetRect, pixmap);
+    });
+
+    preview.exec();
 }
 

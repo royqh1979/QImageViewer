@@ -41,6 +41,8 @@ public:
     void setImage(const QString &newPath);
     QSize imageSize() const;
 
+    QPixmap currentFrame() const;
+
     const QColor &background() const;
     void setBackground(const QColor &newBackground);
 
@@ -79,7 +81,7 @@ private:
     QList<QPixmap> mImages;
     QList<int> mImageDelays;
     QList<QPixmap> mCacheImages;
-    int mCurrentFrame;
+    int mCurrentFrameIdx;
     QColor mBackground;
     int mScrollAngleX;
     int mScrollAngleY;

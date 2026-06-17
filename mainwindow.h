@@ -69,6 +69,12 @@ private slots:
 
     void on_dockMetaInfo_visibilityChanged(bool visible);
 
+    void on_actionExit_triggered();
+
+    void on_actionPrint_triggered();
+
+    void on_actionPrint_Preview_triggered();
+
 private:
     void updateStatusBar();
     void applySettings();

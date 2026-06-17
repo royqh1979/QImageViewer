@@ -107,6 +107,13 @@ QSize ImageWidget::imageSize() const
         return QSize{0,0};
 }
 
+QPixmap ImageWidget::currentFrame() const
+{
+    if (mImages.count()<=0)
+        return QPixmap();
+    return mImages[mCurrentFrameIdx];
+}
+
 void ImageWidget::resizeEvent(QResizeEvent *event)
 {
     QAbstractScrollArea::resizeEvent(event);
@@ -122,9 +129,9 @@ void ImageWidget::paintEvent(QPaintEvent *event)
         return ;
     int img_x = horizontalScrollBar()->value();
     int img_y = verticalScrollBar()->value();
-    int x = std::max(0, (viewport()->width() - mCacheImages[mCurrentFrame].width())/2);
-    int y = std::max(0, (viewport()->height() - mCacheImages[mCurrentFrame].height())/2);
-    painter.drawPixmap(x,y,mCacheImages[mCurrentFrame],img_x,img_y,viewport()->width(), viewport()->height());
+    int x = std::max(0, (viewport()->width() - mCacheImages[mCurrentFrameIdx].width())/2);
+    int y = std::max(0, (viewport()->height() - mCacheImages[mCurrentFrameIdx].height())/2);
+    painter.drawPixmap(x,y,mCacheImages[mCurrentFrameIdx],img_x,img_y,viewport()->width(), viewport()->height());
 }
 
 void ImageWidget::keyPressEvent(QKeyEvent *event)
@@ -212,12 +219,12 @@ void ImageWidget::updateImage(bool forceRatio)
         horizontalScrollBar()->setRange(0, mCacheImages[0].width()-viewport()->width());
         verticalScrollBar()->setSingleStep(mCacheImages[0].height()/10);
         horizontalScrollBar()->setSingleStep(mCacheImages[0].width()/10);
-        mCurrentFrame = 0;
+        mCurrentFrameIdx = 0;
         play();
     } else {
         verticalScrollBar()->setRange(0,0);
         horizontalScrollBar()->setRange(0,0);
-        mCurrentFrame = -1;
+        mCurrentFrameIdx = -1;
     }
     emit imageUpdated();
     viewport()->update();
@@ -312,17 +319,17 @@ void ImageWidget::pause()
 
 void ImageWidget::nextFrame()
 {
-    mCurrentFrame++;
-    if (mCurrentFrame >= mImages.count())
-        mCurrentFrame  = 0;
+    mCurrentFrameIdx++;
+    if (mCurrentFrameIdx >= mImages.count())
+        mCurrentFrameIdx  = 0;
     viewport()->update();
 }
 
 void ImageWidget::prevFrame()
 {
-    mCurrentFrame--;
-    if (mCurrentFrame < 0)
-        mCurrentFrame = mImages.count() - 1;
+    mCurrentFrameIdx--;
+    if (mCurrentFrameIdx < 0)
+        mCurrentFrameIdx = mImages.count() - 1;
     viewport()->update();
 }
 
@@ -330,11 +337,11 @@ void ImageWidget::playNextFrame()
 {
     if (mCacheImages.count()<=1)
         return;
-    mCurrentFrame++;
-    if (mCurrentFrame>=mCacheImages.count())
-        mCurrentFrame = 0;
+    mCurrentFrameIdx++;
+    if (mCurrentFrameIdx>=mCacheImages.count())
+        mCurrentFrameIdx = 0;
     viewport()->update();
-    mFrameTimer->setInterval(mImageDelays[mCurrentFrame]);
+    mFrameTimer->setInterval(mImageDelays[mCurrentFrameIdx]);
     mFrameTimer->start();
 }
 

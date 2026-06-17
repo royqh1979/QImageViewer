@@ -26,8 +26,8 @@ endif()
 #    endif()
 #endif()
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Svg LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Svg LinguistTools REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Svg LinguistTools PrintSupport REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Svg LinguistTools PrintSupport REQUIRED)
 
 include_directories(SYSTEM libs/tinyxml2 libs/tinyexif)
 
@@ -121,6 +121,7 @@ target_link_libraries(QImageViewer PRIVATE
     Qt::Core
     Qt::Gui
     Qt::Widgets
+    Qt::PrintSupport
     Qt::Svg)
 
 target_link_options(QImageViewer PRIVATE

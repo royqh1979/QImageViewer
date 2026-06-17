@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -29,6 +29,9 @@
     </property>
     <addaction name="actionOpen"/>
     <addaction name="actionClose"/>
+    <addaction name="separator"/>
+    <addaction name="actionPrint_Preview"/>
+    <addaction name="actionPrint"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -189,7 +192,9 @@
   <action name="actionNext">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/icons/images/noun-next.svg</normaloff>:/icons/images/noun-next.svg</iconset>
+     <normaloff>:/icons/images/noun-next.svg</normaloff>
+     <disabledoff>:/icons/images/noun-next-disabled.svg</disabledoff>
+     <disabledon>:/icons/images/noun-next-disabled.svg</disabledon>:/icons/images/noun-next.svg</iconset>
    </property>
    <property name="text">
     <string>Next</string>
@@ -201,7 +206,9 @@
   <action name="actionPrevious">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/icons/images/noun-prev.svg</normaloff>:/icons/images/noun-prev.svg</iconset>
+     <normaloff>:/icons/images/noun-prev.svg</normaloff>
+     <disabledoff>:/icons/images/noun-prev-disabled.svg</disabledoff>
+     <disabledon>:/icons/images/noun-prev-disabled.svg</disabledon>:/icons/images/noun-prev.svg</iconset>
    </property>
    <property name="text">
     <string>Previous</string>
@@ -213,7 +220,9 @@
   <action name="actionFirst">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/icons/images/noun-first.svg</normaloff>:/icons/images/noun-first.svg</iconset>
+     <normaloff>:/icons/images/noun-first.svg</normaloff>
+     <disabledoff>:/icons/images/noun-first-disabled.svg</disabledoff>
+     <disabledon>:/icons/images/noun-first-disabled.svg</disabledon>:/icons/images/noun-first.svg</iconset>
    </property>
    <property name="text">
     <string>First</string>
@@ -225,7 +234,9 @@
   <action name="actionLast">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/icons/images/noun-last.svg</normaloff>:/icons/images/noun-last.svg</iconset>
+     <normaloff>:/icons/images/noun-last.svg</normaloff>
+     <disabledoff>:/icons/images/noun-last-disabled.svg</disabledoff>
+     <disabledon>:/icons/images/noun-last-disabled.svg</disabledon>:/icons/images/noun-last.svg</iconset>
    </property>
    <property name="text">
     <string>Last</string>
@@ -237,7 +248,9 @@
   <action name="actionRotate_Left">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/icons/images/noun-rotate-left.svg</normaloff>:/icons/images/noun-rotate-left.svg</iconset>
+     <normaloff>:/icons/images/noun-rotate-left.svg</normaloff>
+     <disabledoff>:/icons/images/noun-rotate-left-disabled.svg</disabledoff>
+     <disabledon>:/icons/images/noun-rotate-left-disabled.svg</disabledon>:/icons/images/noun-rotate-left.svg</iconset>
    </property>
    <property name="text">
     <string>Rotate Left</string>
@@ -246,7 +259,9 @@
   <action name="actionRotate_Right">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/icons/images/noun-rotate-right.svg</normaloff>:/icons/images/noun-rotate-right.svg</iconset>
+     <normaloff>:/icons/images/noun-rotate-right.svg</normaloff>
+     <disabledoff>:/icons/images/noun-rotate-right-disabled.svg</disabledoff>
+     <disabledon>:/icons/images/noun-rotate-right-disabled.svg</disabledon>:/icons/images/noun-rotate-right.svg</iconset>
    </property>
    <property name="text">
     <string>Rotate Right</string>
@@ -255,7 +270,9 @@
   <action name="actionFlip_Horizontal">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/icons/images/noun-flip-horizontal.svg</normaloff>:/icons/images/noun-flip-horizontal.svg</iconset>
+     <normaloff>:/icons/images/noun-flip-horizontal.svg</normaloff>
+     <disabledoff>:/icons/images/noun-flip-horizontal-disabled.svg</disabledoff>
+     <disabledon>:/icons/images/noun-flip-horizontal-disabled.svg</disabledon>:/icons/images/noun-flip-horizontal.svg</iconset>
    </property>
    <property name="text">
     <string>Flip Horizontal</string>
@@ -264,7 +281,9 @@
   <action name="actionFlip_Vertical">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/icons/images/noun-flip-vertical.svg</normaloff>:/icons/images/noun-flip-vertical.svg</iconset>
+     <normaloff>:/icons/images/noun-flip-vertical.svg</normaloff>
+     <disabledoff>:/icons/images/noun-flip-vertical-disabled.svg</disabledoff>
+     <disabledon>:/icons/images/noun-flip-vertical-disabled.svg</disabledon>:/icons/images/noun-flip-vertical.svg</iconset>
    </property>
    <property name="text">
     <string>Flip Vertical</string>
@@ -369,6 +388,16 @@
    </property>
    <property name="text">
     <string>Image Meta Info</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="text">
+    <string>Print...</string>
+   </property>
+  </action>
+  <action name="actionPrint_Preview">
+   <property name="text">
+    <string>Print Preview</string>
    </property>
   </action>
  </widget>
