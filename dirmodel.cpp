@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QImageReader>
 #include <QMimeData>
+#include <QSemaphore>
 
 DirModel::DirModel(QObject *parent) : QAbstractListModel(parent),
     mThumbnailSize{256},
@@ -245,7 +246,7 @@ QVariant DirModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-
+static QSemaphore thumbnailLoaderSemaphore{5};
 ThumbnailLoader::ThumbnailLoader(const QString &dirPath, int imageIdx, int thumbnailSize, const QString &imagePath, QObject *parent)
 {
     mDirPath = dirPath;
@@ -261,9 +262,11 @@ void ThumbnailLoader::run()
     QPixmap pixmap;
     int delayCount = 0;
     while (true) {
+        thumbnailLoaderSemaphore.acquire(1);
         QImageReader reader{mImagePath};
         reader.setAutoTransform(true);
         QImage image = reader.read();
+        thumbnailLoaderSemaphore.release(1);
         if (!image.isNull()) {
             pixmap = QPixmap::fromImage(image);
             break;

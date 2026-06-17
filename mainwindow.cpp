@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    qApp->setStyle(QStyleFactory::create("fusion"));
     ui->setupUi(this);
 
     mInFullScreen = false;
@@ -89,7 +90,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->menuAnimation->menuAction()->setVisible(false);
 
-    qApp->setStyle(QStyleFactory::create("fusion"));
     setWindowIcon(QPixmap(":/icons/imageviewer.png"));
     setAcceptDrops(true);
     updateStatusBar();
