@@ -20,7 +20,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void openFolder(const QString& path);
+    void open(const QString& path);
 private slots:
     void onCurrentFileChanged(int oldFileId, int currentFileId);
     void onRequestPrevImage(bool scrollToBottom);
@@ -28,6 +28,8 @@ private slots:
     void onDirViewCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
     void onZoomFactorChanged(int newVal);
     void onDirViewSizeChanged();
+    void updateImageFitType();
+    void onImageWidgetContextMenuRequested(const QPoint &pos);
     void on_actionNext_triggered();
 
     void on_actionPrevious_triggered();
@@ -61,6 +63,8 @@ private slots:
 
     void on_dockDir_visibilityChanged(bool visible);
 
+    void on_actionOption_triggered();
+
 private:
     void updateStatusBar();
     void applySettings();
@@ -82,6 +86,6 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
-
+    void closeEvent(QCloseEvent *event) override;
 };
 #endif // MAINWINDOW_H

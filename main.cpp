@@ -1,10 +1,13 @@
 #include "mainwindow.h"
+#include "settings.h"
 
 #include <QApplication>
 #include <QImageReader>
 #include <QLocale>
 #include <QTranslator>
 #include <QDebug>
+#include <QStandardPaths>
+#include <QDir>
 
 int main(int argc, char *argv[])
 {
@@ -19,7 +22,14 @@ int main(int argc, char *argv[])
             break;
         }
     }
+    QStringList appLocations = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
+    QDir dataDir{appLocations.first()};
+    auto settings = std::make_shared<Settings>(dataDir.filePath("config.ini"));
+    pSettings = settings.get();
+    settings->load();
     MainWindow w;
     w.show();
-    return a.exec();
+    int code = a.exec();
+    settings->save();
+    return code;
 }

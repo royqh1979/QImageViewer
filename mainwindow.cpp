@@ -5,6 +5,8 @@
 #include "imagemetainfo.h"
 #include "imagemetainfomodel.h"
 #include "thumbnailview.h"
+#include "settings.h"
+#include "settingsdialog/settingsdialog.h"
 
 #include <QHBoxLayout>
 #include <QDebug>
@@ -14,6 +16,8 @@
 #include <QMimeData>
 #include <QDragEnterEvent>
 #include <QScrollBar>
+#include <QToolTip>
+#include <QStyleFactory>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -43,7 +47,9 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::onRequestPrevImage);
     connect(mImageWidget, &ImageWidget::requestNextImage,
             this, &MainWindow::onRequestNextImage);
-
+    connect(mImageWidget, &QWidget::customContextMenuRequested,
+            this , &MainWindow::onImageWidgetContextMenuRequested);
+    mImageWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     mDirModel = new DirModel(this);
     connect(mDirModel, &DirModel::currentFileChanged,
@@ -63,6 +69,27 @@ MainWindow::MainWindow(QWidget *parent)
     ui->imageMetaInfoView->setHeaderHidden(true);
     ui->dockMetaInfo->setVisible(false);
 
+    QActionGroup *fitActionGroup = new QActionGroup(this);
+    fitActionGroup->addAction(ui->actionFit_Width);
+    fitActionGroup->addAction(ui->actionFit_Height);
+    fitActionGroup->addAction(ui->actionFit_Page);
+    fitActionGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::ExclusiveOptional);
+    //updateImageFitType();
+
+    connect(ui->actionFit_Width, &QAction::triggered,
+            this, &MainWindow::updateImageFitType);
+    connect(ui->actionFit_Height, &QAction::triggered,
+            this, &MainWindow::updateImageFitType);
+    connect(ui->actionFit_Page, &QAction::triggered,
+            this, &MainWindow::updateImageFitType);
+
+    resize(pSettings->ui().mainWindowWidth(), pSettings->ui().mainWindowHeight());
+    move(pSettings->ui().mainWindowLeft(), pSettings->ui().mainWindowTop());
+    ui->dockDir->setVisible(pSettings->ui().showContentsPanel());
+
+    ui->menuAnimation->menuAction()->setVisible(false);
+
+    qApp->setStyle(QStyleFactory::create("fusion"));
     setWindowIcon(QPixmap(":/icons/imageviewer.png"));
     setAcceptDrops(true);
     updateStatusBar();
@@ -76,9 +103,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::openFolder(const QString &path)
+void MainWindow::open(const QString &path)
 {
+    ui->statusbar->showMessage(tr("Openning \"%1\"").arg(path));
     mDirModel->open(path);
+    ui->statusbar->clearMessage();
 }
 
 void MainWindow::onCurrentFileChanged(int oldFileId, int currentFileId)
@@ -135,6 +164,28 @@ void MainWindow::onDirViewSizeChanged()
     ui->dirView->doItemsLayout();
 }
 
+void MainWindow::updateImageFitType()
+{
+    if (ui->actionFit_Height->isChecked())
+        mImageWidget->setFitType(ImageWidget::AutoFitType::Height);
+    else if (ui->actionFit_Width->isChecked())
+        mImageWidget->setFitType(ImageWidget::AutoFitType::Width);
+    else if (ui->actionFit_Page->isChecked())
+        mImageWidget->setFitType(ImageWidget::AutoFitType::Page);
+    else
+        mImageWidget->setFitType(ImageWidget::AutoFitType::None);
+}
+
+void MainWindow::onImageWidgetContextMenuRequested(const QPoint &pos)
+{
+    QMenu *menu=new QMenu(this);
+    menu->addAction(ui->actionFull_Screen);
+    menu->addSeparator();
+    menu->addAction(ui->actionFit_Page);
+    menu->addAction(ui->actionFit_Width);
+    menu->addAction(ui->actionFit_Height);
+    menu->popup(mImageWidget->mapToGlobal(pos));
+}
 
 void MainWindow::on_actionNext_triggered()
 {
@@ -162,15 +213,15 @@ void MainWindow::on_actionLast_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString path = QFileDialog::getExistingDirectory(this, "Choose folder");
+    QString path = QFileDialog::getOpenFileName(this, tr("Choose image file"));
     if (!path.isEmpty())
-        openFolder(path);
+        open(path);
 }
 
 
 void MainWindow::on_actionClose_triggered()
 {
-    openFolder("");
+    open("");
 }
 
 void MainWindow::updateStatusBar()
@@ -197,7 +248,17 @@ void MainWindow::updateStatusBar()
 
 void MainWindow::applySettings()
 {
-    int thumbnailSize = 200;
+    QFont font{pSettings->ui().fontName(), pSettings->ui().fontSize()};
+    qApp->setFont(font);
+    setFont(font);
+
+    ui->actionFit_Width->setChecked(pSettings->view().fitMode() == "Width");
+    ui->actionFit_Height->setChecked(pSettings->view().fitMode() == "Height");
+    ui->actionFit_Page->setChecked(pSettings->view().fitMode() == "Page");
+
+    updateImageFitType();
+
+    int thumbnailSize = pSettings->view().thumbnailSize();
     mDirModel->setThumbnailSize(thumbnailSize);
     mThumbnailDelegate->setThumbnailSize(thumbnailSize);
     ui->dirView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -237,7 +298,7 @@ void MainWindow::dropEvent(QDropEvent *event)
     if (mimeData->urls().count()==1) {
         QList<QUrl> urlList = mimeData->urls();
         QString fileName = urlList.first().toLocalFile();
-        openFolder(fileName);
+        open(fileName);
         event->acceptProposedAction();
     }
 }
@@ -248,6 +309,24 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             && mInFullScreen) {
         on_actionFull_Screen_triggered();
     }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    Q_UNUSED(event);
+    pSettings->ui().setShowContentsPanel(ui->actionShow_Contents->isChecked());
+    pSettings->ui().setMainWindowWidth(width());
+    pSettings->ui().setMainWindowHeight(height());
+    pSettings->ui().setMainWindowLeft(pos().x());
+    pSettings->ui().setMainWindowTop(pos().y());
+    if (ui->actionFit_Width->isChecked())
+        pSettings->view().setFitMode("Width");
+    else if (ui->actionFit_Height->isChecked())
+        pSettings->view().setFitMode("Height");
+    else if (ui->actionFit_Page->isChecked())
+        pSettings->view().setFitMode("Page");
+    else
+        pSettings->view().setFitMode("None");
 }
 
 
@@ -341,5 +420,14 @@ void MainWindow::on_dockDir_visibilityChanged(bool visible)
     ui->actionShow_Contents->blockSignals(true);
     ui->actionShow_Contents->setChecked(visible);
     ui->actionShow_Contents->blockSignals(false);
+}
+
+
+void MainWindow::on_actionOption_triggered()
+{
+    PSettingsDialog optionDlg = SettingsDialog::optionDialog(this);
+    connect(optionDlg.get(), &SettingsDialog::settingsChanged,
+            this, &MainWindow::applySettings);
+    optionDlg->exec();
 }
 

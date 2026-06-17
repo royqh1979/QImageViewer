@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>ImageViewer</string>
   </property>
   <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">
@@ -43,6 +43,10 @@
     <addaction name="actionFirst"/>
     <addaction name="actionLast"/>
     <addaction name="separator"/>
+    <addaction name="actionFit_Page"/>
+    <addaction name="actionFit_Width"/>
+    <addaction name="actionFit_Height"/>
+    <addaction name="separator"/>
     <addaction name="actionRotate_Left"/>
     <addaction name="actionRotate_Right"/>
     <addaction name="actionFlip_Horizontal"/>
@@ -59,9 +63,16 @@
     <addaction name="actionNext_Frame"/>
     <addaction name="actionPrev_Frame"/>
    </widget>
+   <widget class="QMenu" name="menuOption">
+    <property name="title">
+     <string>Option</string>
+    </property>
+    <addaction name="actionOption"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
    <addaction name="menuAnimation"/>
+   <addaction name="menuOption"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dockMetaInfo">
@@ -122,9 +133,37 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpen"/>
+   <addaction name="separator"/>
+   <addaction name="actionFirst"/>
+   <addaction name="actionPrevious"/>
+   <addaction name="actionNext"/>
+   <addaction name="actionLast"/>
+   <addaction name="separator"/>
+   <addaction name="actionRotate_Left"/>
+   <addaction name="actionRotate_Right"/>
+   <addaction name="actionFlip_Horizontal"/>
+   <addaction name="actionFlip_Vertical"/>
+   <addaction name="separator"/>
+   <addaction name="actionShow_Contents"/>
+  </widget>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-open.svg</normaloff>:/icons/images/noun-open.svg</iconset>
+   </property>
    <property name="text">
-    <string>Open</string>
+    <string>Open...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -141,6 +180,10 @@
    </property>
   </action>
   <action name="actionNext">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-next.svg</normaloff>:/icons/images/noun-next.svg</iconset>
+   </property>
    <property name="text">
     <string>Next</string>
    </property>
@@ -149,6 +192,10 @@
    </property>
   </action>
   <action name="actionPrevious">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-prev.svg</normaloff>:/icons/images/noun-prev.svg</iconset>
+   </property>
    <property name="text">
     <string>Previous</string>
    </property>
@@ -157,6 +204,10 @@
    </property>
   </action>
   <action name="actionFirst">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-first.svg</normaloff>:/icons/images/noun-first.svg</iconset>
+   </property>
    <property name="text">
     <string>First</string>
    </property>
@@ -165,6 +216,10 @@
    </property>
   </action>
   <action name="actionLast">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-last.svg</normaloff>:/icons/images/noun-last.svg</iconset>
+   </property>
    <property name="text">
     <string>Last</string>
    </property>
@@ -173,21 +228,37 @@
    </property>
   </action>
   <action name="actionRotate_Left">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-rotate-left.svg</normaloff>:/icons/images/noun-rotate-left.svg</iconset>
+   </property>
    <property name="text">
     <string>Rotate Left</string>
    </property>
   </action>
   <action name="actionRotate_Right">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-rotate-right.svg</normaloff>:/icons/images/noun-rotate-right.svg</iconset>
+   </property>
    <property name="text">
     <string>Rotate Right</string>
    </property>
   </action>
   <action name="actionFlip_Horizontal">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-flip-horizontal.svg</normaloff>:/icons/images/noun-flip-horizontal.svg</iconset>
+   </property>
    <property name="text">
     <string>Flip Horizontal</string>
    </property>
   </action>
   <action name="actionFlip_Vertical">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-flip-vertical.svg</normaloff>:/icons/images/noun-flip-vertical.svg</iconset>
+   </property>
    <property name="text">
     <string>Flip Vertical</string>
    </property>
@@ -224,11 +295,65 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-folder-contents.svg</normaloff>:/icons/images/noun-folder-contents.svg</iconset>
+   </property>
    <property name="text">
     <string>Contents</string>
    </property>
    <property name="toolTip">
     <string>Contents</string>
+   </property>
+  </action>
+  <action name="actionFit_Height">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-elevator.svg</normaloff>:/icons/images/noun-elevator.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Fit Height</string>
+   </property>
+   <property name="shortcut">
+    <string>H</string>
+   </property>
+  </action>
+  <action name="actionFit_Page">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-fit-to-screen.svg</normaloff>:/icons/images/noun-fit-to-screen.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Fit Page</string>
+   </property>
+   <property name="shortcut">
+    <string>P</string>
+   </property>
+  </action>
+  <action name="actionFit_Width">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-fit-width.svg</normaloff>:/icons/images/noun-fit-width.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Fit Width</string>
+   </property>
+   <property name="shortcut">
+    <string>W</string>
+   </property>
+  </action>
+  <action name="actionOption">
+   <property name="text">
+    <string>Option...</string>
    </property>
   </action>
  </widget>
@@ -239,6 +364,8 @@
    <header>widgets/resizeawarelistview.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -56,8 +56,21 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        settings.cpp
+        settings.h
         thumbnailview.cpp
         thumbnailview.h
+        settingsdialog/appearancesettingswidget.cpp
+        settingsdialog/appearancesettingswidget.h
+        settingsdialog/appearancesettingswidget.ui
+        settingsdialog/settingsdialog.cpp
+        settingsdialog/settingsdialog.h
+        settingsdialog/settingsdialog.ui
+        settingsdialog/settingswidget.cpp
+        settingsdialog/settingswidget.h
+        settingsdialog/viewsettingswidget.cpp
+        settingsdialog/viewsettingswidget.h
+        settingsdialog/viewsettingswidget.ui
         widgets/resizeawarelistview.cpp
         widgets/resizeawarelistview.h
         ${TINY_EXIF_FILES}
@@ -83,6 +96,21 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+    set(QM_FILES)
+    qt5_create_translation(QM_FILES
+        ${CMAKE_SOURCE_DIR}
+        ${TS_FILES})
+
+    qt5_add_translation(QM_FILES ${TS_FILES})
+
+    set(QM_QRC "${CMAKE_CURRENT_BINARY_DIR}/translations.qrc")
+    file(WRITE ${QM_QRC} "<RCC>\n    <qresource prefix=\"/i18n\">\n")
+    foreach(QM_FILE ${QM_FILES})
+        get_filename_component(QM_NAME ${QM_FILE} NAME)
+        file(APPEND ${QM_QRC} "        <file>${QM_NAME}</file>\n")
+    endforeach()
+    file(APPEND ${QM_QRC} "    </qresource>\n</RCC>\n")
+    target_sources(${PROJECT_NAME} PRIVATE ${QM_QRC})
 endif()
 
 target_include_directories(QImageViewer PRIVATE
