@@ -448,3 +448,9 @@ void MainWindow::on_dockMetaInfo_visibilityChanged(bool visible)
     ui->actionImage_Meta_Info->blockSignals(false);
 }
 
+
+void MainWindow::on_actionExit_triggered()
+{
+    close();
+}
+
