@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "ui_mainwindow.h"
 #include "imagewidget.h"
 #include "dirmodel.h"
 #include "imagemetainfo.h"
@@ -54,6 +54,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->dirView->setModel(mDirModel);
     connect(ui->dirView->selectionModel(), &QItemSelectionModel::currentRowChanged,
             this, &MainWindow::onDirViewCurrentChanged);
+
+    connect(ui->dirView, &ResizeawareListView::resized,
+            this, &MainWindow::onDirViewSizeChanged);
 
     mImageMetaInfoModel = new ImageMetaInfoModel(this);
     ui->imageMetaInfoView->setModel(mImageMetaInfoModel);
@@ -124,6 +127,14 @@ void MainWindow::onZoomFactorChanged(int newVal)
     mImageWidget->setRatio(newVal/100.0);
 }
 
+void MainWindow::onDirViewSizeChanged()
+{
+    int width = ui->dirView->width()-ui->dirView->verticalScrollBar()->sizeHint().width()-20;
+    mThumbnailDelegate->setThumbnailSize(width);
+    mDirModel->setThumbnailSize(width);
+    ui->dirView->doItemsLayout();
+}
+
 
 void MainWindow::on_actionNext_triggered()
 {
@@ -191,9 +202,15 @@ void MainWindow::applySettings()
     mThumbnailDelegate->setThumbnailSize(thumbnailSize);
     ui->dirView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->dirView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    int oldMin = ui->dirView->minimumWidth();
+    int oldMax = ui->dirView->maximumWidth();
+    ui->dirView->blockSignals(true);
     ui->dirView->setMinimumWidth(mDirModel->thumbnailSize()+ui->dirView->verticalScrollBar()->sizeHint().width()+20);
     ui->dirView->setMaximumWidth(mDirModel->thumbnailSize()+ui->dirView->verticalScrollBar()->sizeHint().width()+20);
     ui->dockDir->setWidget(ui->dirView);
+    ui->dirView->setMinimumWidth(oldMin);
+    ui->dirView->setMaximumWidth(oldMax);
+    ui->dirView->blockSignals(false);
     ui->dirView->doItemsLayout();
 }
 

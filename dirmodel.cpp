@@ -20,7 +20,7 @@ void DirModel::open(const QString &path)
     QDir dir;
     QString fileName;
     if (info.isDir()) {
-        dir = QDir{mPath};
+        dir = QDir{path};
     } else {
         dir = info.dir();
         fileName = info.fileName();

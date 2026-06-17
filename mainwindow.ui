@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -104,7 +104,7 @@
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QListView" name="dirView">
+      <widget class="ResizeawareListView" name="dirView">
        <property name="resizeMode">
         <enum>QListView::Adjust</enum>
        </property>
@@ -232,6 +232,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ResizeawareListView</class>
+   <extends>QListView</extends>
+   <header>widgets/resizeawarelistview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

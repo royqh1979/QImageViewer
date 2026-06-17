@@ -27,6 +27,7 @@ private slots:
     void onRequestNextImage();
     void onDirViewCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
     void onZoomFactorChanged(int newVal);
+    void onDirViewSizeChanged();
     void on_actionNext_triggered();
 
     void on_actionPrevious_triggered();

@@ -85,6 +85,10 @@ else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
+target_include_directories(QImageViewer PRIVATE
+    ${CMAKE_SOURCE_DIR}
+    )
+
 target_link_libraries(QImageViewer PRIVATE
     Qt::Core
     Qt::Gui
