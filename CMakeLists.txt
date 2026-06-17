@@ -58,6 +58,8 @@ set(PROJECT_SOURCES
         mainwindow.ui
         thumbnailview.cpp
         thumbnailview.h
+        widgets/resizeawarelistview.cpp
+        widgets/resizeawarelistview.h
         ${TINY_EXIF_FILES}
         ${TINY_XML2_FILES}
         ${TS_FILES}
