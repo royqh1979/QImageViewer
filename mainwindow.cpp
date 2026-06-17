@@ -28,8 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
     mZoomFactor = new QSpinBox(this);
     mZoomFactor->setSuffix("%");
     mZoomFactor->setRange(1,1000);
-//    connect(mZoomFactor, qOverload<int>(&QSpinBox::valueChanged),
-//            this, &MainWindow::onZoomFactorChanged);
+    connect(mZoomFactor, qOverload<int>(&QSpinBox::valueChanged),
+            this, &MainWindow::onZoomFactorChanged);
     ui->statusbar->addPermanentWidget(mZoomFactor);
     mImageSizeInfo = new QLabel(this);
     mImageSizeInfo->setText(" ");
@@ -117,6 +117,11 @@ void MainWindow::onDirViewCurrentChanged(const QModelIndex &current, const QMode
     if (!current.isValid())
         return;
     mDirModel->setCurrentFileIdx(current.row());
+}
+
+void MainWindow::onZoomFactorChanged(int newVal)
+{
+    mImageWidget->setRatio(newVal/100.0);
 }
 
 

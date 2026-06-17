@@ -26,6 +26,7 @@ private slots:
     void onRequestPrevImage(bool scrollToBottom);
     void onRequestNextImage();
     void onDirViewCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
+    void onZoomFactorChanged(int newVal);
     void on_actionNext_triggered();
 
     void on_actionPrevious_triggered();
