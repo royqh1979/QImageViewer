@@ -75,10 +75,13 @@ void ImageWidget::setFitType(AutoFitType newFitType)
 
 void ImageWidget::setImage(const QString &newPath)
 {
-    QImageReader reader{newPath};
     mImages.clear();
     mCacheImages.clear();
     mImageDelays.clear();
+    viewport()->update();
+    if (newPath.isEmpty())
+        return;
+    QImageReader reader{newPath};
     if (reader.imageCount() == -1)
         return;
     if (reader.imageCount() == 0) {

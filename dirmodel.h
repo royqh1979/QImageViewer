@@ -27,6 +27,7 @@ class DirModel : public QAbstractListModel
 public:
     explicit DirModel(QObject *parent = nullptr);
     void open(const QString& path);
+    void close();
     const QString &path() const;
     void setCurrentFileIdx(int fileIdx);
     int currentFileIdx() const;

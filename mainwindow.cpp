@@ -125,6 +125,8 @@ void MainWindow::onCurrentFileChanged(int oldFileId, int currentFileId)
         ui->imageMetaInfoView->setFirstColumnSpanned(2,QModelIndex(),true);
         ui->imageMetaInfoView->expandAll();
         ui->imageMetaInfoView->resizeColumnToContents(0);
+    } else {
+        mImageWidget->setImage("");
     }
     updateActions();
     updateStatusBar();
@@ -221,7 +223,7 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_actionClose_triggered()
 {
-    open("");
+    mDirModel->close();
 }
 
 void MainWindow::updateStatusBar()

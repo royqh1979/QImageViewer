@@ -61,6 +61,24 @@ void DirModel::open(const QString &path)
     }
 }
 
+void DirModel::close()
+{
+    if (mImageInfos.count()==0)
+        return;
+    QString oldPath = mPath;
+    int oldIdx = mCurrentFileIdx;
+    mPath = "";
+    beginResetModel();
+    QMutexLocker lock{&mMutex};
+    mLoadings.clear();
+    mImageInfos.clear();
+    mImageInfoIndex.clear();
+    mCurrentFileIdx = -1;
+    endResetModel();
+    emit pathChanged(oldPath, mPath);
+    emit currentFileChanged(oldIdx,mCurrentFileIdx);
+}
+
 const QString &DirModel::path() const
 {
     return mPath;
@@ -113,12 +131,16 @@ int DirModel::imageCount() const
 QString DirModel::imageFileName(int idx) const
 {
     QMutexLocker locker{&mMutex};
+    if (idx<0 || idx>=mImageInfoIndex.count())
+        return QString();
     return mImageInfos[idx]->filename;
 }
 
 QString DirModel::imagePath(int idx) const
 {
     QMutexLocker locker{&mMutex};
+    if (idx<0 || idx>=mImageInfoIndex.count())
+        return QString();
     return mImageInfos[idx]->fullPath;
 }
 

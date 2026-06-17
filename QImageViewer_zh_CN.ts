@@ -490,7 +490,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="216"/>
+        <location filename="mainwindow.cpp" line="218"/>
         <source>Choose image file</source>
         <translation>选择图片文件</translation>
     </message>
