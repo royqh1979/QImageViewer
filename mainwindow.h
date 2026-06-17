@@ -65,6 +65,10 @@ private slots:
 
     void on_actionOption_triggered();
 
+    void on_actionImage_Meta_Info_toggled(bool arg1);
+
+    void on_dockMetaInfo_visibilityChanged(bool visible);
+
 private:
     void updateStatusBar();
     void applySettings();

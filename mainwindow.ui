@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>ImageViewer</string>
+   <string>QImageViewer</string>
   </property>
   <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">
@@ -37,6 +37,7 @@
      <string>View</string>
     </property>
     <addaction name="actionShow_Contents"/>
+    <addaction name="actionImage_Meta_Info"/>
     <addaction name="separator"/>
     <addaction name="actionPrevious"/>
     <addaction name="actionNext"/>
@@ -78,6 +79,12 @@
   <widget class="QDockWidget" name="dockMetaInfo">
    <property name="floating">
     <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetClosable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::RightDockWidgetArea</set>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -354,6 +361,14 @@
   <action name="actionOption">
    <property name="text">
     <string>Option...</string>
+   </property>
+  </action>
+  <action name="actionImage_Meta_Info">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Image Meta Info</string>
    </property>
   </action>
  </widget>

@@ -29,6 +29,9 @@ int main(int argc, char *argv[])
     settings->load();
     MainWindow w;
     w.show();
+    if (argc==2) {
+        w.open(QString::fromLocal8Bit(argv[1]));
+    }
     int code = a.exec();
     settings->save();
     return code;

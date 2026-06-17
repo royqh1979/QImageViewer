@@ -385,7 +385,7 @@ void MainWindow::on_actionFull_Screen_triggered()
         if (ui->dockDir->isVisible()!=ui->actionShow_Contents->isChecked())
             ui->dockDir->setVisible(ui->actionShow_Contents->isChecked());
         ui->dockDir->blockSignals(false);
-        //ui->toolBar->setVisible(true);
+        ui->toolBar->setVisible(true);
         ui->menubar->setVisible(true);
         ui->statusbar->setVisible(true);
         if (mMaximizedBeforeFullScreen)
@@ -398,7 +398,7 @@ void MainWindow::on_actionFull_Screen_triggered()
         ui->dockDir->blockSignals(true);
         ui->dockDir->setVisible(false);
         ui->dockDir->blockSignals(false);
-        //ui->toolBar->setVisible(false);
+        ui->toolBar->setVisible(false);
         ui->menubar->setVisible(false);
         ui->statusbar->setVisible(false);
         showFullScreen();
@@ -429,5 +429,20 @@ void MainWindow::on_actionOption_triggered()
     connect(optionDlg.get(), &SettingsDialog::settingsChanged,
             this, &MainWindow::applySettings);
     optionDlg->exec();
+}
+
+
+void MainWindow::on_actionImage_Meta_Info_toggled(bool arg1)
+{
+    if (!mInFullScreen)
+        ui->dockMetaInfo->setVisible(ui->actionImage_Meta_Info->isChecked());
+}
+
+
+void MainWindow::on_dockMetaInfo_visibilityChanged(bool visible)
+{
+    ui->actionImage_Meta_Info->blockSignals(true);
+    ui->actionImage_Meta_Info->setChecked(visible);
+    ui->actionImage_Meta_Info->blockSignals(false);
 }
 
