@@ -29,6 +29,8 @@ void DirModel::open(const QString &path)
     if (dir.absolutePath() == mPath)
         return;
     mPath = dir.absolutePath();
+    if (oldPath != mPath)
+        mCurrentFileIdx = -1;
 
     QFileInfoList fileInfos =  dir.entryInfoList(QDir::Filter::Files);
     beginResetModel();
