@@ -26,8 +26,6 @@ void DirModel::open(const QString &path)
         dir = info.dir();
         fileName = info.fileName();
     }
-    if (dir.absolutePath() == mPath)
-        return;
     mPath = dir.absolutePath();
     if (oldPath != mPath)
         mCurrentFileIdx = -1;
