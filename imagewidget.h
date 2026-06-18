@@ -78,6 +78,7 @@ private:
     void jumpToFrame(std::unique_ptr<QImageReader> &reader, int frameNumber);
     void loadImage();
     void postProcessImage();
+    void scaleImage();
     void updateImage();
     void scrollImageByMouseMove(QMouseEvent *event);
 private:

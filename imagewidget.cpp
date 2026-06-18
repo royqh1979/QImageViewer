@@ -203,6 +203,17 @@ void ImageWidget::loadImage()
 void ImageWidget::postProcessImage()
 {
     if (!mImage.isNull()) {
+        mImage = mImage.transformed(mTransform);
+        scaleImage();
+    } else {
+        mImageFrameCount = 0;
+        mCurrentFrameNumber = -1;
+    }
+}
+
+void ImageWidget::scaleImage()
+{
+    if (!mImage.isNull()) {
         QSize oldSize = mImage.size();
         switch(mWorkingFitType) {
         case AutoFitType::Page:
@@ -224,11 +235,7 @@ void ImageWidget::postProcessImage()
             mRatio = (float)mImage.width() / oldSize.width();
             break;
         }
-    } else {
-        mImageFrameCount = 0;
-        mCurrentFrameNumber = -1;
     }
-    mImage = mImage.transformed(mTransform);
 }
 
 void ImageWidget::updateImage()
@@ -276,7 +283,11 @@ void ImageWidget::rotate(int degree)
     if (mImage.isNull())
         return;
     mTransform = mTransform * QTransform().rotate(degree);
-    mImage = mImage.transformed(QTransform().rotate(90));
+    if (!isAnimation()) {
+        mImage = QPixmap::fromImage(QImage{mImagePath});
+        postProcessImage();
+    } else
+        mImage = mImage.transformed(QTransform().rotate(degree));
     updateImage();
 }
 
@@ -285,7 +296,11 @@ void ImageWidget::horizontalFlip()
     if (mImage.isNull())
         return;
     mTransform = mTransform * QTransform().scale(-1,1);
-    mImage = mImage.transformed(QTransform().scale(-1,1));
+    if (!isAnimation()) {
+        mImage = QPixmap::fromImage(QImage{mImagePath});
+        postProcessImage();
+    } else
+        mImage = mImage.transformed(QTransform().scale(-1,1));
     updateImage();
 }
 
@@ -294,7 +309,11 @@ void ImageWidget::verticalFlip()
     if (mImage.isNull())
         return;
     mTransform = mTransform * QTransform().scale(1,-1);
-    mImage = mImage.transformed(QTransform().scale(1,-1));
+    if (!isAnimation()) {
+        mImage = QPixmap::fromImage(QImage{mImagePath});
+        postProcessImage();
+    } else
+        mImage = mImage.transformed(QTransform().scale(1,-1));
     updateImage();
 }
 
