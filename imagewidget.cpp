@@ -180,7 +180,6 @@ void ImageWidget::keyPressEvent(QKeyEvent *event)
 void ImageWidget::loadImage()
 {
     if (mImageReader) {
-        qDebug()<<mCurrentFrameNumber<<mImageFrameCount;
         if (!mImageReader->canRead()) {
             mImageReader = std::make_unique<QImageReader>(mImagePath);
         } else if (mCurrentFrameNumber < 0)
