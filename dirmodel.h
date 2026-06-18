@@ -39,6 +39,8 @@ public:
     QString imageFileName(int idx) const;
     QString imagePath(int idx) const;
     QPixmap thumbnail(int idx) const;
+    int thumbnailSize() const;
+    void setThumbnailSize(int newThumbnailSize);
 signals:
     void currentFileChanged(int oldFileId, int currentFileId);
     void pathChanged(const QString& oldPath, const QString& newPath);
@@ -64,8 +66,6 @@ public:
     Qt::DropActions supportedDragActions() const override;
     int rowCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;
-    int thumbnailSize() const;
-    void setThumbnailSize(int newThumbnailSize);
 };
 
 class ThumbnailLoader: public QThread {

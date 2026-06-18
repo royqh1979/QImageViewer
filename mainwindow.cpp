@@ -67,14 +67,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->dirView->setModel(mDirModel);
     connect(ui->dirView->selectionModel(), &QItemSelectionModel::currentRowChanged,
             this, &MainWindow::onDirViewCurrentChanged);
-
     connect(ui->dirView, &ResizeawareListView::resized,
             this, &MainWindow::onDirViewSizeChanged);
+    ui->dirView->setAcceptDrops(false);
 
     mImageMetaInfoModel = new ImageMetaInfoModel(this);
     ui->imageMetaInfoView->setModel(mImageMetaInfoModel);
     ui->imageMetaInfoView->setHeaderHidden(true);
     ui->dockMetaInfo->setVisible(false);
+    ui->imageMetaInfoView->setAcceptDrops(false);
 
     QActionGroup *fitActionGroup = new QActionGroup(this);
     fitActionGroup->addAction(ui->actionFit_Width);
