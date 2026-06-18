@@ -38,8 +38,11 @@ ImageWidget::ImageWidget(QWidget *parent) :
     setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     mFrameTimer = new QTimer(this);
+    mFrameTimer->setSingleShot(true);
     connect(mFrameTimer, &QTimer::timeout,
             this, &ImageWidget::playNextFrame);
+    mImageFrameCount = -1;
+    mCurrentFrameNumber = -1;
 }
 
 float ImageWidget::ratio() const
@@ -52,7 +55,8 @@ void ImageWidget::setRatio(float newRatio)
     newRatio = std::max((float)0.01, newRatio);
     if (newRatio!=mRatio) {
         mRatio = newRatio;
-        updateImage(true);
+        mWorkingFitType = AutoFitType::None;
+        loadImage();
     }
 }
 
@@ -68,56 +72,53 @@ void ImageWidget::setFitType(AutoFitType newFitType)
         mWorkingFitType = mFitType;
         if (mFitType == AutoFitType::None)
             mRatio = 1;
-        updateImage();
+        loadImage();
         emit fitTypeChanged();
     }
 }
 
 void ImageWidget::setImage(const QString &newPath)
 {
-    mImages.clear();
-    mCacheImages.clear();
-    mImageDelays.clear();
+    mImage = QPixmap();
+    mImageFrameCount = -1;
+    mCurrentFrameNumber = -1;
+    mImageReader = nullptr;
+    mTransform = QTransform();
     viewport()->update();
     if (newPath.isEmpty())
         return;
-    QImageReader reader{newPath};
-    if (reader.imageCount() == -1)
+    mImagePath = newPath;
+    std::unique_ptr<QImageReader> reader = std::make_unique<QImageReader>(newPath);
+    if (!reader->canRead() || reader->imageCount() == -1) {
         return;
-    if (reader.imageCount() == 0) {
-        mImages.append(QPixmap::fromImage(reader.read()));
-        mImageDelays.append(-1);
-    } else {
-        while(reader.canRead()) {
-            mImageDelays.append(reader.nextImageDelay());
-            mImages.append(QPixmap::fromImage(reader.read()));
-        }
     }
     mWorkingFitType = mFitType;
-    updateImage();
+    if (reader->imageCount() <= 1) {
+        mImageFrameCount = 1;
+        loadImage();
+    } else {
+        mImageFrameCount = reader->imageCount();
+        mImageReader = std::move(reader);
+        play();
+    }
     horizontalScrollBar()->setValue(0);
     verticalScrollBar()->setValue(0);
 }
 
 QSize ImageWidget::imageSize() const
 {
-    if (mImages.count()>0)
-        return mImages[0].size();
-    else
-        return QSize{0,0};
+    return mImage.size();
 }
 
 QPixmap ImageWidget::currentFrame() const
 {
-    if (mImages.count()<=0)
-        return QPixmap();
-    return mImages[mCurrentFrameIdx];
+    return mImage;
 }
 
 void ImageWidget::resizeEvent(QResizeEvent *event)
 {
     QAbstractScrollArea::resizeEvent(event);
-    updateImage();
+    loadImage();
 }
 
 void ImageWidget::paintEvent(QPaintEvent *event)
@@ -125,13 +126,13 @@ void ImageWidget::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
     QPainter painter(viewport());
     painter.fillRect(0,0,viewport()->width(),viewport()->height(),mBackground);
-    if (mCacheImages.count()==0)
+    if (mImage.isNull())
         return ;
     int img_x = horizontalScrollBar()->value();
     int img_y = verticalScrollBar()->value();
-    int x = std::max(0, (viewport()->width() - mCacheImages[mCurrentFrameIdx].width())/2);
-    int y = std::max(0, (viewport()->height() - mCacheImages[mCurrentFrameIdx].height())/2);
-    painter.drawPixmap(x,y,mCacheImages[mCurrentFrameIdx],img_x,img_y,viewport()->width(), viewport()->height());
+    int x = std::max(0, (viewport()->width() - mImage.width())/2);
+    int y = std::max(0, (viewport()->height() - mImage.height())/2);
+    painter.drawPixmap(x,y,mImage,img_x,img_y,viewport()->width(), viewport()->height());
 }
 
 void ImageWidget::keyPressEvent(QKeyEvent *event)
@@ -176,55 +177,60 @@ void ImageWidget::keyPressEvent(QKeyEvent *event)
     QAbstractScrollArea::keyPressEvent(event);
 }
 
-void ImageWidget::updateImage(bool forceRatio)
+void ImageWidget::loadImage()
 {
-    if (forceRatio)
-        mWorkingFitType = AutoFitType::None;
-    if (mImages.count()>0 && viewport()->width()>0 && viewport()->height()>0) {
-        pause();
-        mCacheImages.clear();
+    if (mImageReader) {
+        qDebug()<<mCurrentFrameNumber<<mImageFrameCount;
+        if (!mImageReader->canRead()) {
+            mImageReader = std::make_unique<QImageReader>(mImagePath);
+        } else if (mCurrentFrameNumber < 0)
+            mImageReader->jumpToImage(mImageFrameCount-1);
+        mCurrentImageDelay = mImageReader->nextImageDelay();
+        mImage = QPixmap::fromImage(mImageReader->read());
+        mCurrentFrameNumber = mImageReader->currentImageNumber();
+    } else {
+        mImage = QPixmap::fromImage(QImage{mImagePath});
+    }
+    if (!mImage.isNull()) {
+        QSize oldSize = mImage.size();
         switch(mWorkingFitType) {
         case AutoFitType::Page:
-        {
-            float r1,r2;
-            r1 = (float)viewport()->width() / mImages[0].width();
-            r2 = (float)viewport()->height() / mImages[0].height();
-            if (r1 * mImages[0].height() > viewport()->height())
-                mRatio = r2;
-            else
-                mRatio = r1;
-        }   // fall through here
+            mImage = mImage.scaled(viewport()->size(),Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            mRatio = mImage.size().width()/oldSize.width();
+            break;
         case AutoFitType::None:
-            for (int i=0;i<mImages.count();i++) {
-                mCacheImages.append(mImages[i].scaled(
-                            mImages[i].width() * mRatio,
-                            mImages[i].height() * mRatio,
-                            Qt::KeepAspectRatio, Qt::SmoothTransformation));
-            }
+            mImage = mImage.scaled(
+                            oldSize.width() * mRatio,
+                            oldSize.height() * mRatio,
+                            Qt::KeepAspectRatio, Qt::SmoothTransformation);
             break;
         case AutoFitType::Height:
-            for (int i=0;i<mImages.count();i++) {
-                mCacheImages.append(mImages[i].scaledToHeight(viewport()->height(), Qt::SmoothTransformation));
-            }
-            mRatio = (float)mCacheImages[0].height() / mImages[0].height();
+            mImage = mImage.scaledToHeight(viewport()->height(), Qt::SmoothTransformation);
+            mRatio = (float)mImage.height() / oldSize.height();
             break;
         case AutoFitType::Width:
-            for (int i=0;i<mImages.count();i++) {
-                mCacheImages.append(mImages[i].scaledToWidth(viewport()->width(), Qt::SmoothTransformation));
-            }
-            mRatio = (float)mCacheImages[0].width() / mImages[0].width();
+            mImage = mImage.scaledToWidth(viewport()->width(), Qt::SmoothTransformation);
+            mRatio = (float)mImage.width() / oldSize.width();
             break;
         }
-        verticalScrollBar()->setRange(0, mCacheImages[0].height()-viewport()->height());
-        horizontalScrollBar()->setRange(0, mCacheImages[0].width()-viewport()->width());
-        verticalScrollBar()->setSingleStep(mCacheImages[0].height()/10);
-        horizontalScrollBar()->setSingleStep(mCacheImages[0].width()/10);
-        mCurrentFrameIdx = 0;
-        play();
+    } else {
+        mImageFrameCount = 0;
+        mCurrentFrameNumber = -1;
+    }
+    mImage = mImage.transformed(mTransform);
+    updateImage();
+}
+
+void ImageWidget::updateImage()
+{
+    if (!mImage.isNull()) {
+        verticalScrollBar()->setRange(0, mImage.height()-viewport()->height());
+        horizontalScrollBar()->setRange(0, mImage.width()-viewport()->width());
+        verticalScrollBar()->setSingleStep(mImage.height()/10);
+        horizontalScrollBar()->setSingleStep(mImage.width()/10);
     } else {
         verticalScrollBar()->setRange(0,0);
         horizontalScrollBar()->setRange(0,0);
-        mCurrentFrameIdx = -1;
     }
     emit imageUpdated();
     viewport()->update();
@@ -257,31 +263,28 @@ void ImageWidget::setSwapLeftRightWhenTurnPage(bool newSwapLeftRightWhenTurnPage
 
 void ImageWidget::rotate(int degree)
 {
-    if (mImages.count()==0)
+    if (mImage.isNull())
         return;
-    for (int i=0;i<mImages.count();i++) {
-        mImages[i] = mImages[i].transformed(QTransform().rotate(degree));
-    }
+    mTransform = mTransform * QTransform().rotate(degree);
+    mImage = mImage.transformed(QTransform().rotate(90));
     updateImage();
 }
 
 void ImageWidget::horizontalFlip()
 {
-    if (mImages.count()==0)
+    if (mImage.isNull())
         return;
-    for (int i=0;i<mImages.count();i++) {
-        mImages[i] = mImages[i].transformed(QTransform().scale(-1,1));
-    }
+    mTransform = mTransform * QTransform().scale(-1,1);
+    mImage = mImage.transformed(QTransform().scale(-1,1));
     updateImage();
 }
 
 void ImageWidget::verticalFlip()
 {
-    if (mImages.count()==0)
+    if (mImage.isNull())
         return;
-    for (int i=0;i<mImages.count();i++) {
-        mImages[i] = mImages[i].transformed(QTransform().scale(1,-1));
-    }
+    mTransform = mTransform * QTransform().scale(1,-1);
+    mImage = mImage.transformed(QTransform().scale(1,-1));
     updateImage();
 }
 
@@ -307,47 +310,46 @@ void ImageWidget::scrollToRight()
 
 void ImageWidget::play()
 {
-    if (mCacheImages.count()<=1)
+    if (mImageFrameCount<=1)
         return;
+    if (!mImageReader) {
+        mImageReader = std::make_unique<QImageReader>(mImagePath);
+        mImageReader->jumpToImage(mCurrentFrameNumber);
+    }
     playNextFrame();
 }
 
 void ImageWidget::pause()
 {
+    mImageReader = nullptr;
     mFrameTimer->stop();
 }
 
 void ImageWidget::nextFrame()
 {
-    mCurrentFrameIdx++;
-    if (mCurrentFrameIdx >= mImages.count())
-        mCurrentFrameIdx  = 0;
-    viewport()->update();
+    mCurrentFrameNumber++;
+    loadImage();
 }
 
 void ImageWidget::prevFrame()
 {
-    mCurrentFrameIdx--;
-    if (mCurrentFrameIdx < 0)
-        mCurrentFrameIdx = mImages.count() - 1;
-    viewport()->update();
+    mCurrentFrameNumber--;
+    loadImage();
 }
 
 void ImageWidget::playNextFrame()
 {
-    if (mCacheImages.count()<=1)
+    if (!mImageReader || mImageFrameCount<=1)
         return;
-    mCurrentFrameIdx++;
-    if (mCurrentFrameIdx>=mCacheImages.count())
-        mCurrentFrameIdx = 0;
-    viewport()->update();
-    mFrameTimer->setInterval(mImageDelays[mCurrentFrameIdx]);
+    mFrameTimer->setInterval(mCurrentImageDelay);
     mFrameTimer->start();
+    mCurrentFrameNumber++;
+    loadImage();
 }
 
 bool ImageWidget::isAnimation() const
 {
-    return mImages.count()>1;
+    return mImageFrameCount>1;
 }
 
 void ImageWidget::wheelEvent(QWheelEvent *e)
@@ -427,7 +429,7 @@ void ImageWidget::mouseDoubleClickEvent(QMouseEvent *event)
             mWorkingFitType = AutoFitType::Page;
         else
             mWorkingFitType = mFitType;
-        updateImage();
+        loadImage();
         event->accept();
     }
 }

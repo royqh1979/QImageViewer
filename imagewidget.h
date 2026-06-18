@@ -19,6 +19,7 @@
 #define IMAGEWIDGET_H
 
 #include <QAbstractScrollArea>
+#include <QImageReader>
 
 class QTimer;
 class ImageWidget : public QAbstractScrollArea
@@ -72,16 +73,20 @@ signals:
 
 private:
     void playNextFrame();
-    void updateImage(bool forceRatio=false);
+    void loadImage();
+    void updateImage();
     void scrollImageByMouseMove(QMouseEvent *event);
 private:
     float mRatio;
     AutoFitType mFitType;
     AutoFitType mWorkingFitType;
-    QList<QPixmap> mImages;
-    QList<int> mImageDelays;
-    QList<QPixmap> mCacheImages;
-    int mCurrentFrameIdx;
+    QString mImagePath;
+    QPixmap mImage;
+    QTransform mTransform;
+    std::unique_ptr<QImageReader> mImageReader;
+    int mImageFrameCount;
+    int mCurrentImageDelay;
+    int mCurrentFrameNumber;
     QColor mBackground;
     int mScrollAngleX;
     int mScrollAngleY;
