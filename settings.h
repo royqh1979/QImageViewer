@@ -140,12 +140,16 @@ public:
         int thumbnailSize() const;
         void setThumbnailSize(int newThumbnailSize);
 
+        int slideShowDelayTime() const;
+        void setSlideShowDelayTime(int newSlideShowDelayTime);
+
     protected:
         void doSave() override;
         void doLoad() override;
     private:
         QString mFitMode;
         int mThumbnailSize;
+        int mSlideShowDelayTime;
     };
 
 public:

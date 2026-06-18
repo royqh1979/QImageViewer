@@ -24,6 +24,10 @@
 #include <QPrintPreviewDialog>
 #include <QClipboard>
 #include <QMessageBox>
+#include <QTimer>
+#include <QDialog>
+#include <QSpinBox>
+#include <QPushButton>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,6 +35,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     qApp->setStyle(QStyleFactory::create("fusion"));
     ui->setupUi(this);
+
+    mSlideShowTimer = new QTimer{this};
+    mSlideShowTimer->setSingleShot(true);
+    mSlideShowTimer->setInterval(3000);
+    connect(mSlideShowTimer, &QTimer::timeout,
+            this, &MainWindow::slideShowNextImage);
 
     mInFullScreen = false;
     mPageInfo = new QLabel(this);
@@ -113,6 +123,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::open(const QString &path)
 {
+    mSlideShowTimer->stop();
     ui->statusbar->showMessage(tr("Openning \"%1\"").arg(path));
     mDirModel->open(path);
     ui->statusbar->clearMessage();
@@ -169,6 +180,7 @@ void MainWindow::onZoomFactorChanged(int newVal)
 void MainWindow::onDirViewSizeChanged()
 {
     int width = ui->dirView->width()-ui->dirView->verticalScrollBar()->sizeHint().width()-20;
+    pSettings->view().setThumbnailSize(width);
     mThumbnailDelegate->setThumbnailSize(width);
     mDirModel->setThumbnailSize(width);
     ui->dirView->doItemsLayout();
@@ -184,6 +196,15 @@ void MainWindow::updateImageFitType()
         mImageWidget->setFitType(ImageWidget::AutoFitType::Page);
     else
         mImageWidget->setFitType(ImageWidget::AutoFitType::None);
+}
+
+void MainWindow::slideShowNextImage()
+{
+    mSlideShowTimer->start();
+    if (mDirModel->currentFileIdx() == mDirModel->imageCount()-1)
+        mDirModel->toFirst();
+    else
+        mDirModel->toNext();
 }
 
 void MainWindow::onImageWidgetContextMenuRequested(const QPoint &pos)
@@ -231,6 +252,7 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_actionClose_triggered()
 {
+    mSlideShowTimer->stop();
     mDirModel->close();
 }
 
@@ -353,7 +375,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
     else
         pSettings->view().setFitMode("None");
 }
-
 
 void MainWindow::on_actionRotate_Left_triggered()
 {
@@ -557,3 +578,59 @@ void MainWindow::on_actionRefresh_triggered()
     mDirModel->open(mImageWidget->imagePath());
 }
 
+
+void MainWindow::on_actionSlide_Show_triggered()
+{
+    if (mSlideShowTimer->isActive())
+        mSlideShowTimer->stop();
+    else {
+        if (mDirModel->imageCount()<=1)
+            return;
+        QDialog dlg;
+        dlg.setWindowTitle(tr("Slide Show"));
+        dlg.resize(300,150);
+        QLabel *label = new QLabel("Delay Time(ms)", &dlg);
+        QSpinBox *edit = new QSpinBox(&dlg);
+        edit->setMinimum(1);
+        edit->setMaximum(999999);
+        edit->setValue(pSettings->view().slideShowDelayTime());
+
+        QFrame *inputFrame = new QFrame{&dlg};
+        inputFrame->setFrameShape(QFrame::NoFrame);
+        inputFrame->setFrameShadow(QFrame::Plain);
+
+        QHBoxLayout *inputLayout = new QHBoxLayout{inputFrame};
+        inputLayout->addWidget(label);
+        inputLayout->addWidget(edit);
+        inputFrame->setLayout(inputLayout);
+
+        QFrame *btnFrame = new QFrame{&dlg};
+        btnFrame->setFrameShape(QFrame::NoFrame);
+        btnFrame->setFrameShadow(QFrame::Plain);
+        QPushButton *okBtn = new QPushButton(tr("Ok"), btnFrame);
+        QPushButton *cancelBtn = new QPushButton(tr("Cancel"), btnFrame);
+
+        QHBoxLayout *btnLayout = new QHBoxLayout{&dlg};
+        btnLayout->addStretch(1);
+        btnLayout->addWidget(okBtn);
+        btnLayout->addWidget(cancelBtn);
+        btnFrame->setLayout(btnLayout);
+
+        QVBoxLayout *mainLayout = new QVBoxLayout{&dlg};  // 直接设置给 dialog
+        mainLayout->addWidget(inputFrame);
+        mainLayout->addStretch(1);
+        mainLayout->addWidget(btnFrame);
+        dlg.setLayout(mainLayout);
+
+        connect(okBtn, &QPushButton::clicked, [this, &dlg, edit]() {
+            pSettings->view().setSlideShowDelayTime(edit->value());
+            mSlideShowTimer->setInterval(edit->value());
+            mSlideShowTimer->start();
+            dlg.accept();
+        });
+
+        connect(cancelBtn, &QPushButton::clicked, &dlg, &QDialog::reject);
+
+        dlg.exec();
+    }
+}

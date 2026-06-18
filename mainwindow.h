@@ -13,6 +13,7 @@ class QSpinBox;
 class QLabel;
 class ImageMetaInfoModel;
 class ThumbnailDelegate;
+class QTimer;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -29,6 +30,7 @@ private slots:
     void onZoomFactorChanged(int newVal);
     void onDirViewSizeChanged();
     void updateImageFitType();
+    void slideShowNextImage();
     void onImageWidgetContextMenuRequested(const QPoint &pos);
     void on_actionNext_triggered();
 
@@ -81,6 +83,8 @@ private slots:
 
     void on_actionRefresh_triggered();
 
+    void on_actionSlide_Show_triggered();
+
 private:
     void updateStatusBar();
     void applySettings();
@@ -96,6 +100,7 @@ private:
     ThumbnailDelegate *mThumbnailDelegate;
     bool mInFullScreen;
     bool mMaximizedBeforeFullScreen;
+    QTimer *mSlideShowTimer;
 
     // QWidget interface
 protected:

@@ -46,6 +46,8 @@
     <addaction name="separator"/>
     <addaction name="actionRefresh"/>
     <addaction name="separator"/>
+    <addaction name="actionSlide_Show"/>
+    <addaction name="separator"/>
     <addaction name="actionPrevious"/>
     <addaction name="actionNext"/>
     <addaction name="actionFirst"/>
@@ -436,6 +438,11 @@
   <action name="actionRefresh">
    <property name="text">
     <string>Refresh</string>
+   </property>
+  </action>
+  <action name="actionSlide_Show">
+   <property name="text">
+    <string>Slide Show</string>
    </property>
   </action>
  </widget>

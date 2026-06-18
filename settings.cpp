@@ -416,12 +416,24 @@ void Settings::View::doSave()
 {
     saveValue("FitMode",mFitMode);
     saveValue("ThumbnailSize", mThumbnailSize);
+    saveValue("SlideShowDelayTime", mSlideShowDelayTime);
 }
 
 void Settings::View::doLoad()
 {
     mFitMode = stringValue("FitMode","None");
     mThumbnailSize = intValue("ThumbnailSize", 300);
+    mSlideShowDelayTime = intValue("SlideShowDelayTime", 5000);
+}
+
+int Settings::View::slideShowDelayTime() const
+{
+    return mSlideShowDelayTime;
+}
+
+void Settings::View::setSlideShowDelayTime(int newSlideShowDelayTime)
+{
+    mSlideShowDelayTime = newSlideShowDelayTime;
 }
 
 int Settings::View::thumbnailSize() const
