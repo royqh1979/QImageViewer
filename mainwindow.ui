@@ -44,6 +44,8 @@
     <addaction name="actionShow_Contents"/>
     <addaction name="actionImage_Meta_Info"/>
     <addaction name="separator"/>
+    <addaction name="actionRefresh"/>
+    <addaction name="separator"/>
     <addaction name="actionPrevious"/>
     <addaction name="actionNext"/>
     <addaction name="actionFirst"/>
@@ -429,6 +431,11 @@
   <action name="actionCopy_To">
    <property name="text">
     <string>Copy To...</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="text">
+    <string>Refresh</string>
    </property>
   </action>
  </widget>

@@ -550,3 +550,9 @@ void MainWindow::on_actionCopy_To_triggered()
         QMessageBox::critical(this,tr("Copy Failed"),tr("Image copy failed!"));
 }
 
+
+void MainWindow::on_actionRefresh_triggered()
+{
+    mDirModel->open(mImageWidget->imagePath());
+}
+

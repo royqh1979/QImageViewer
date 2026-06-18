@@ -79,6 +79,8 @@ private slots:
 
     void on_actionCopy_To_triggered();
 
+    void on_actionRefresh_triggered();
+
 private:
     void updateStatusBar();
     void applySettings();
