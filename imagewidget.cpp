@@ -97,7 +97,8 @@ void ImageWidget::setImage(const QString &newPath)
         mImageFrameCount = 1;
         loadImage();
     } else {
-        mImageFrameCount = reader->imageCount();
+        mImageFrameCount = reader->imageCount();        
+        mCurrentImageDelay = reader->nextImageDelay();
         mImageReader = std::move(reader);
         play();
     }
@@ -108,6 +109,11 @@ void ImageWidget::setImage(const QString &newPath)
 QSize ImageWidget::imageSize() const
 {
     return mImage.size();
+}
+
+QString ImageWidget::imagePath() const
+{
+    return mImagePath;
 }
 
 QPixmap ImageWidget::currentFrame() const
@@ -190,6 +196,12 @@ void ImageWidget::loadImage()
     } else {
         mImage = QPixmap::fromImage(QImage{mImagePath});
     }
+    postProcessImage();
+    updateImage();
+}
+
+void ImageWidget::postProcessImage()
+{
     if (!mImage.isNull()) {
         QSize oldSize = mImage.size();
         switch(mWorkingFitType) {
@@ -217,7 +229,6 @@ void ImageWidget::loadImage()
         mCurrentFrameNumber = -1;
     }
     mImage = mImage.transformed(mTransform);
-    updateImage();
 }
 
 void ImageWidget::updateImage()
@@ -311,29 +322,67 @@ void ImageWidget::play()
 {
     if (mImageFrameCount<=1)
         return;
-    if (!mImageReader) {
-        mImageReader = std::make_unique<QImageReader>(mImagePath);
-        mImageReader->jumpToImage(mCurrentFrameNumber);
-    }
     playNextFrame();
 }
 
 void ImageWidget::pause()
 {
-    mImageReader = nullptr;
-    mFrameTimer->stop();
+    if (mImageFrameCount<=1)
+        return;
+    if (!mImageReader) {
+        mImageReader = std::make_unique<QImageReader>(mImagePath);
+        jumpToFrame(mImageReader, mCurrentFrameNumber);
+        playNextFrame();
+    } else {
+        mFrameTimer->stop();
+        mImageReader = nullptr;
+    }
 }
+
+void ImageWidget::stop()
+{
+    if (mImageFrameCount<=1)
+        return;
+    mFrameTimer->stop();
+    mImageReader = nullptr;
+    std::unique_ptr<QImageReader> reader = std::make_unique<QImageReader>(mImagePath);
+    mImage = QPixmap::fromImage(reader->read());
+    mCurrentImageDelay = reader->nextImageDelay();
+    mCurrentFrameNumber = 0;
+    postProcessImage();
+    updateImage();
+}
+
 
 void ImageWidget::nextFrame()
 {
-    mCurrentFrameNumber++;
-    loadImage();
+    if (mImageReader || mImageFrameCount<=1)
+        return;
+    std::unique_ptr<QImageReader> reader=std::make_unique<QImageReader>(mImagePath);
+    if (mCurrentFrameNumber!=mImageFrameCount-1)
+        jumpToFrame(reader,mCurrentFrameNumber);
+    mImage = QPixmap::fromImage(reader->read());
+    mCurrentImageDelay = reader->nextImageDelay();
+    mCurrentFrameNumber = reader->currentImageNumber();
+    postProcessImage();
+    updateImage();
 }
 
 void ImageWidget::prevFrame()
 {
+    if (mImageReader || mImageFrameCount<=1)
+        return;
+    std::unique_ptr<QImageReader> reader=std::make_unique<QImageReader>(mImagePath);
     mCurrentFrameNumber--;
-    loadImage();
+    if (mCurrentFrameNumber<0)
+        mCurrentFrameNumber = mImageFrameCount-1;
+    if (mCurrentFrameNumber!=0)
+        jumpToFrame(reader,mCurrentFrameNumber-1);
+    mImage = QPixmap::fromImage(reader->read());
+    mCurrentImageDelay = reader->nextImageDelay();
+    mCurrentFrameNumber = reader->currentImageNumber();
+    postProcessImage();
+    updateImage();
 }
 
 void ImageWidget::playNextFrame()
@@ -344,6 +393,18 @@ void ImageWidget::playNextFrame()
     mFrameTimer->start();
     mCurrentFrameNumber++;
     loadImage();
+}
+
+void ImageWidget::jumpToFrame(std::unique_ptr<QImageReader> &reader, int frameNumber)
+{
+    bool isOk = reader->jumpToImage(frameNumber);
+    if (!isOk) {
+        while(reader->canRead()) {
+            reader->read();
+            if (frameNumber == reader->currentImageNumber())
+                break;
+        }
+    }
 }
 
 bool ImageWidget::isAnimation() const

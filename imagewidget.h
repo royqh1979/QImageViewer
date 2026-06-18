@@ -41,6 +41,7 @@ public:
     void setFitType(AutoFitType newFitType);
     void setImage(const QString &newPath);
     QSize imageSize() const;
+    QString imagePath() const;
 
     QPixmap currentFrame() const;
 
@@ -61,6 +62,7 @@ public:
 
     void play();
     void pause();
+    void stop();
     void nextFrame();
     void prevFrame();
     bool isAnimation() const;
@@ -73,7 +75,9 @@ signals:
 
 private:
     void playNextFrame();
+    void jumpToFrame(std::unique_ptr<QImageReader> &reader, int frameNumber);
     void loadImage();
+    void postProcessImage();
     void updateImage();
     void scrollImageByMouseMove(QMouseEvent *event);
 private:

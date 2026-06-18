@@ -51,7 +51,7 @@ private slots:
 
     void on_actionStop_Animation_triggered();
 
-    void on_actionPlay_Animation_triggered();
+    void on_actionPause_Animation_triggered();
 
     void on_actionNext_Frame_triggered();
 
@@ -74,6 +74,10 @@ private slots:
     void on_actionPrint_triggered();
 
     void on_actionPrint_Preview_triggered();
+
+    void on_actionCopy_triggered();
+
+    void on_actionCopy_To_triggered();
 
 private:
     void updateStatusBar();

@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -29,6 +29,8 @@
     </property>
     <addaction name="actionOpen"/>
     <addaction name="actionClose"/>
+    <addaction name="separator"/>
+    <addaction name="actionCopy_To"/>
     <addaction name="separator"/>
     <addaction name="actionPrint_Preview"/>
     <addaction name="actionPrint"/>
@@ -63,7 +65,7 @@
      <string>Animation</string>
     </property>
     <addaction name="actionStop_Animation"/>
-    <addaction name="actionPlay_Animation"/>
+    <addaction name="actionPause_Animation"/>
     <addaction name="actionNext_Frame"/>
     <addaction name="actionPrev_Frame"/>
    </widget>
@@ -73,8 +75,15 @@
     </property>
     <addaction name="actionOption"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionCopy"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuAnimation"/>
    <addaction name="menuOption"/>
   </widget>
@@ -294,19 +303,28 @@
     <string>Stop</string>
    </property>
   </action>
-  <action name="actionPlay_Animation">
+  <action name="actionPause_Animation">
    <property name="text">
-    <string>Play</string>
+    <string>Play/Pause</string>
+   </property>
+   <property name="shortcut">
+    <string>Space</string>
    </property>
   </action>
   <action name="actionNext_Frame">
    <property name="text">
     <string>Next Frame</string>
    </property>
+   <property name="shortcut">
+    <string>N</string>
+   </property>
   </action>
   <action name="actionPrev_Frame">
    <property name="text">
     <string>Prev Frame</string>
+   </property>
+   <property name="shortcut">
+    <string>P</string>
    </property>
   </action>
   <action name="actionFull_Screen">
@@ -344,7 +362,7 @@
     <string>Fit Height</string>
    </property>
    <property name="shortcut">
-    <string>H</string>
+    <string>Ctrl+H</string>
    </property>
   </action>
   <action name="actionFit_Page">
@@ -359,7 +377,7 @@
     <string>Fit Page</string>
    </property>
    <property name="shortcut">
-    <string>P</string>
+    <string>Ctrl+P</string>
    </property>
   </action>
   <action name="actionFit_Width">
@@ -374,7 +392,7 @@
     <string>Fit Width</string>
    </property>
    <property name="shortcut">
-    <string>W</string>
+    <string>Ctrl+W</string>
    </property>
   </action>
   <action name="actionOption">
@@ -398,6 +416,19 @@
   <action name="actionPrint_Preview">
    <property name="text">
     <string>Print Preview</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="text">
+    <string>Copy</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionCopy_To">
+   <property name="text">
+    <string>Copy To...</string>
    </property>
   </action>
  </widget>

@@ -22,6 +22,8 @@
 #include <QPrinter>
 #include <QPainter>
 #include <QPrintPreviewDialog>
+#include <QClipboard>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -286,6 +288,7 @@ void MainWindow::updateActions()
 {
     bool hasImage = (mDirModel->imageCount()>0);
     ui->actionClose->setEnabled(hasImage);
+    ui->actionCopy_To->setEnabled(hasImage);
     ui->actionPrint->setEnabled(hasImage);
     ui->actionPrint_Preview->setEnabled(hasImage);
     ui->actionFirst->setEnabled(hasImage);
@@ -296,6 +299,7 @@ void MainWindow::updateActions()
     ui->actionRotate_Right->setEnabled(hasImage);
     ui->actionFlip_Horizontal->setEnabled(hasImage);
     ui->actionFlip_Vertical->setEnabled(hasImage);
+    ui->actionCopy->setEnabled(hasImage);
     bool isAnimation = mImageWidget->isAnimation();
     ui->menuAnimation->menuAction()->setVisible(isAnimation);
     ui->menuAnimation->menuAction()->setEnabled(isAnimation);
@@ -376,13 +380,13 @@ void MainWindow::on_actionFlip_Vertical_triggered()
 
 void MainWindow::on_actionStop_Animation_triggered()
 {
-    mImageWidget->pause();
+    mImageWidget->stop();
 }
 
 
-void MainWindow::on_actionPlay_Animation_triggered()
+void MainWindow::on_actionPause_Animation_triggered()
 {
-    mImageWidget->play();
+    mImageWidget->pause();
 }
 
 
@@ -519,5 +523,30 @@ void MainWindow::on_actionPrint_Preview_triggered()
     });
 
     preview.exec();
+}
+
+
+void MainWindow::on_actionCopy_triggered()
+{
+    QPixmap pixmap = mImageWidget->currentFrame();
+    if (!pixmap.isNull()) {
+        QApplication::clipboard()->setPixmap(pixmap);
+    }
+}
+
+
+void MainWindow::on_actionCopy_To_triggered()
+{
+    if (!QFileInfo::exists(mImageWidget->imagePath()))
+        return;
+    QString newPath = QFileDialog::getExistingDirectory(this, tr("Copy Image File"));
+    if (newPath.isEmpty())
+        return;
+    newPath = QDir{newPath}.absoluteFilePath(QFileInfo{mImageWidget->imagePath()}.fileName());
+    bool isOk = QFile::copy(mImageWidget->imagePath(),newPath);
+    if (isOk)
+        QMessageBox::information(this,tr("Copy Succeed"),tr("Image has been successfully copied!"));
+    else
+        QMessageBox::critical(this,tr("Copy Failed"),tr("Image copy failed!"));
 }
 
