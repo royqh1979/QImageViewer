@@ -415,14 +415,12 @@ void Settings::View::setFitMode(const QString &newFitMode)
 void Settings::View::doSave()
 {
     saveValue("FitMode",mFitMode);
-    saveValue("ThumbnailSize", mThumbnailSize);
     saveValue("SlideShowDelayTime", mSlideShowDelayTime);
 }
 
 void Settings::View::doLoad()
 {
     mFitMode = stringValue("FitMode","None");
-    mThumbnailSize = intValue("ThumbnailSize", 300);
     mSlideShowDelayTime = intValue("SlideShowDelayTime", 5000);
 }
 
@@ -436,12 +434,12 @@ void Settings::View::setSlideShowDelayTime(int newSlideShowDelayTime)
     mSlideShowDelayTime = newSlideShowDelayTime;
 }
 
-int Settings::View::thumbnailSize() const
+int Settings::UI::contentsPanelWidth() const
 {
-    return mThumbnailSize;
+    return mContentsPanelWidth;
 }
 
-void Settings::View::setThumbnailSize(int newThumbnailSize)
+void Settings::UI::setContentsPanelWidth(int newContentsPanelWidth)
 {
-    mThumbnailSize = newThumbnailSize;
+    mContentsPanelWidth = newContentsPanelWidth;
 }

@@ -113,6 +113,9 @@ public:
         int mainWindowTop() const;
         void setMainWindowTop(int newMainWindowTop);
 
+        int contentsPanelWidth() const;
+        void setContentsPanelWidth(int newContentsPanelWidth);
+
     protected:
         void doSave() override;
         void doLoad() override;
@@ -137,9 +140,6 @@ public:
         const QString &fitMode() const;
         void setFitMode(const QString &newFitMode);
 
-        int thumbnailSize() const;
-        void setThumbnailSize(int newThumbnailSize);
-
         int slideShowDelayTime() const;
         void setSlideShowDelayTime(int newSlideShowDelayTime);
 
@@ -148,7 +148,6 @@ public:
         void doLoad() override;
     private:
         QString mFitMode;
-        int mThumbnailSize;
         int mSlideShowDelayTime;
     };
 

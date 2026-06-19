@@ -81,6 +81,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->dirView, &ResizeawareListView::resized,
             this, &MainWindow::onDirViewSizeChanged);
     ui->dirView->setAcceptDrops(false);
+    mDirModel->setThumbnailSize(150);
+    mThumbnailDelegate->setThumbnailSize(150);
 
     mImageMetaInfoModel = new ImageMetaInfoModel(this);
     ui->imageMetaInfoView->setModel(mImageMetaInfoModel);
@@ -104,7 +106,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     resize(pSettings->ui().mainWindowWidth(), pSettings->ui().mainWindowHeight());
     move(pSettings->ui().mainWindowLeft(), pSettings->ui().mainWindowTop());
+    resizeDocks({ui->dockDir},{pSettings->ui().contentsPanelWidth()},Qt::Orientation::Horizontal);
     ui->dockDir->setVisible(pSettings->ui().showContentsPanel());
+    ui->dirView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->dirView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     ui->menuAnimation->menuAction()->setVisible(false);
 
@@ -181,7 +186,6 @@ void MainWindow::onZoomFactorChanged(int newVal)
 void MainWindow::onDirViewSizeChanged()
 {
     int width = ui->dirView->width()-ui->dirView->verticalScrollBar()->sizeHint().width()-20;
-    pSettings->view().setThumbnailSize(width);
     mThumbnailDelegate->setThumbnailSize(width);
     mDirModel->setThumbnailSize(width);
     ui->dirView->doItemsLayout();
@@ -290,22 +294,6 @@ void MainWindow::applySettings()
     ui->actionFit_Page->setChecked(pSettings->view().fitMode() == "Page");
 
     updateImageFitType();
-
-    int thumbnailSize = pSettings->view().thumbnailSize();
-    mDirModel->setThumbnailSize(thumbnailSize);
-    mThumbnailDelegate->setThumbnailSize(thumbnailSize);
-    ui->dirView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    ui->dirView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    int oldMin = ui->dirView->minimumWidth();
-    int oldMax = ui->dirView->maximumWidth();
-    ui->dirView->blockSignals(true);
-    ui->dirView->setMinimumWidth(mDirModel->thumbnailSize()+ui->dirView->verticalScrollBar()->sizeHint().width()+20);
-    ui->dirView->setMaximumWidth(mDirModel->thumbnailSize()+ui->dirView->verticalScrollBar()->sizeHint().width()+20);
-    ui->dockDir->setWidget(ui->dirView);
-    ui->dirView->setMinimumWidth(oldMin);
-    ui->dirView->setMaximumWidth(oldMax);
-    ui->dirView->blockSignals(false);
-    ui->dirView->doItemsLayout();
 }
 
 void MainWindow::updateActions()
