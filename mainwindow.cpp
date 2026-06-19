@@ -355,6 +355,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     pSettings->ui().setMainWindowHeight(height());
     pSettings->ui().setMainWindowLeft(pos().x());
     pSettings->ui().setMainWindowTop(pos().y());
+    pSettings->ui().setContentsPanelWidth(ui->dockDir->width());
     if (ui->actionFit_Width->isChecked())
         pSettings->view().setFitMode("Width");
     else if (ui->actionFit_Height->isChecked())
