@@ -85,11 +85,18 @@
     </property>
     <addaction name="actionCopy"/>
    </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
    <addaction name="menuEdit"/>
    <addaction name="menuAnimation"/>
    <addaction name="menuOption"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dockMetaInfo">
@@ -443,6 +450,11 @@
   <action name="actionSlide_Show">
    <property name="text">
     <string>Slide Show</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About...</string>
    </property>
   </action>
  </widget>

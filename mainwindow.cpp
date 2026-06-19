@@ -7,6 +7,7 @@
 #include "thumbnailview.h"
 #include "settings.h"
 #include "settingsdialog/settingsdialog.h"
+#include "aboutdialog.h"
 
 #include <QHBoxLayout>
 #include <QDebug>
@@ -634,3 +635,10 @@ void MainWindow::on_actionSlide_Show_triggered()
         dlg.exec();
     }
 }
+
+void MainWindow::on_actionAbout_triggered()
+{
+    AboutDialog dlg{this};
+    dlg.exec();
+}
+

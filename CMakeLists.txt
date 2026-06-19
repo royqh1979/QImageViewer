@@ -44,6 +44,9 @@ set(TINY_EXIF_FILES
     )
 
 set(PROJECT_SOURCES
+		aboutdialog.cpp
+		aboutdialog.h
+		aboutdialog.ui
         dirmodel.cpp
         dirmodel.h
         imagemetainfo.h

@@ -85,6 +85,8 @@ private slots:
 
     void on_actionSlide_Show_triggered();
 
+    void on_actionAbout_triggered();
+
 private:
     void updateStatusBar();
     void applySettings();
