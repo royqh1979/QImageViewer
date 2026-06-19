@@ -56,7 +56,8 @@ void ImageWidget::setRatio(float newRatio)
     if (newRatio!=mRatio) {
         mRatio = newRatio;
         mWorkingFitType = AutoFitType::None;
-        loadImage();
+        scaleImage();
+        updateImage();
     }
 }
 
@@ -72,7 +73,8 @@ void ImageWidget::setFitType(AutoFitType newFitType)
         mWorkingFitType = mFitType;
         if (mFitType == AutoFitType::None)
             mRatio = 1;
-        loadImage();
+        scaleImage();
+        updateImage();
         emit fitTypeChanged();
     }
 }
@@ -80,6 +82,7 @@ void ImageWidget::setFitType(AutoFitType newFitType)
 void ImageWidget::setImage(const QString &newPath)
 {
     mImage = QPixmap();
+    mCachedImage = QPixmap();
     mImageFrameCount = -1;
     mCurrentFrameNumber = -1;
     mImageReader = nullptr;
@@ -132,13 +135,13 @@ void ImageWidget::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
     QPainter painter(viewport());
     painter.fillRect(0,0,viewport()->width(),viewport()->height(),mBackground);
-    if (mImage.isNull())
+    if (mCachedImage.isNull())
         return ;
     int img_x = horizontalScrollBar()->value();
     int img_y = verticalScrollBar()->value();
-    int x = std::max(0, (viewport()->width() - mImage.width())/2);
-    int y = std::max(0, (viewport()->height() - mImage.height())/2);
-    painter.drawPixmap(x,y,mImage,img_x,img_y,viewport()->width(), viewport()->height());
+    int x = std::max(0, (viewport()->width() - mCachedImage.width())/2);
+    int y = std::max(0, (viewport()->height() - mCachedImage.height())/2);
+    painter.drawPixmap(x,y,mCachedImage,img_x,img_y,viewport()->width(), viewport()->height());
 }
 
 void ImageWidget::keyPressEvent(QKeyEvent *event)
@@ -217,22 +220,22 @@ void ImageWidget::scaleImage()
         QSize oldSize = mImage.size();
         switch(mWorkingFitType) {
         case AutoFitType::Page:
-            mImage = mImage.scaled(viewport()->size(),Qt::KeepAspectRatio, Qt::SmoothTransformation);
-            mRatio = mImage.size().width()/oldSize.width();
+            mCachedImage = mImage.scaled(viewport()->size(),Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            mRatio = (float) mCachedImage.size().width()/oldSize.width();
             break;
         case AutoFitType::None:
-            mImage = mImage.scaled(
+            mCachedImage = mImage.scaled(
                             oldSize.width() * mRatio,
                             oldSize.height() * mRatio,
                             Qt::KeepAspectRatio, Qt::SmoothTransformation);
             break;
         case AutoFitType::Height:
-            mImage = mImage.scaledToHeight(viewport()->height(), Qt::SmoothTransformation);
-            mRatio = (float)mImage.height() / oldSize.height();
+            mCachedImage = mImage.scaledToHeight(viewport()->height(), Qt::SmoothTransformation);
+            mRatio = (float)mCachedImage.height() / oldSize.height();
             break;
         case AutoFitType::Width:
-            mImage = mImage.scaledToWidth(viewport()->width(), Qt::SmoothTransformation);
-            mRatio = (float)mImage.width() / oldSize.width();
+            mCachedImage = mImage.scaledToWidth(viewport()->width(), Qt::SmoothTransformation);
+            mRatio = (float)mCachedImage.width() / oldSize.width();
             break;
         }
     }
@@ -240,11 +243,11 @@ void ImageWidget::scaleImage()
 
 void ImageWidget::updateImage()
 {
-    if (!mImage.isNull()) {
-        verticalScrollBar()->setRange(0, mImage.height()-viewport()->height());
-        horizontalScrollBar()->setRange(0, mImage.width()-viewport()->width());
-        verticalScrollBar()->setSingleStep(mImage.height()/10);
-        horizontalScrollBar()->setSingleStep(mImage.width()/10);
+    if (!mCachedImage.isNull()) {
+        verticalScrollBar()->setRange(0, mCachedImage.height()-viewport()->height());
+        horizontalScrollBar()->setRange(0, mCachedImage.width()-viewport()->width());
+        verticalScrollBar()->setSingleStep(mCachedImage.height()/10);
+        horizontalScrollBar()->setSingleStep(mCachedImage.width()/10);
     } else {
         verticalScrollBar()->setRange(0,0);
         horizontalScrollBar()->setRange(0,0);

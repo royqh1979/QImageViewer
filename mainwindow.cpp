@@ -65,6 +65,8 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::onRequestPrevImage);
     connect(mImageWidget, &ImageWidget::requestNextImage,
             this, &MainWindow::onRequestNextImage);
+    connect(mImageWidget, &ImageWidget::imageUpdated,
+            this, &MainWindow::updateStatusBar);
     connect(mImageWidget, &QWidget::customContextMenuRequested,
             this , &MainWindow::onImageWidgetContextMenuRequested);
     mImageWidget->setContextMenuPolicy(Qt::CustomContextMenu);

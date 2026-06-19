@@ -87,6 +87,7 @@ private:
     AutoFitType mWorkingFitType;
     QString mImagePath;
     QPixmap mImage;
+    QPixmap mCachedImage;
     QTransform mTransform;
     std::unique_ptr<QImageReader> mImageReader;
     int mImageFrameCount;
