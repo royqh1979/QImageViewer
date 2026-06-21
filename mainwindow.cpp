@@ -219,6 +219,8 @@ void MainWindow::onImageWidgetContextMenuRequested(const QPoint &pos)
     QMenu *menu=new QMenu(this);
     menu->addAction(ui->actionFull_Screen);
     menu->addSeparator();
+    menu->addAction(ui->actionSlide_Show);
+    menu->addSeparator();
     menu->addAction(ui->actionFit_Page);
     menu->addAction(ui->actionFit_Width);
     menu->addAction(ui->actionFit_Height);
