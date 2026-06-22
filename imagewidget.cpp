@@ -56,7 +56,6 @@ void ImageWidget::setRatio(float newRatio)
     if (newRatio!=mRatio) {
         mRatio = newRatio;
         mWorkingFitType = AutoFitType::None;
-        scaleImage();
         updateImage();
     }
 }
@@ -73,7 +72,6 @@ void ImageWidget::setFitType(AutoFitType newFitType)
         mWorkingFitType = mFitType;
         if (mFitType == AutoFitType::None)
             mRatio = 1;
-        scaleImage();
         updateImage();
         emit fitTypeChanged();
     }
@@ -127,7 +125,6 @@ QPixmap ImageWidget::currentFrame() const
 void ImageWidget::resizeEvent(QResizeEvent *event)
 {
     QAbstractScrollArea::resizeEvent(event);
-    scaleImage();
     updateImage();
 }
 
@@ -208,7 +205,6 @@ void ImageWidget::postProcessImage()
 {
     if (!mImage.isNull()) {
         mImage = mImage.transformed(mTransform);
-        scaleImage();
     } else {
         mImageFrameCount = 0;
         mCurrentFrameNumber = -1;
@@ -244,6 +240,7 @@ void ImageWidget::scaleImage()
 
 void ImageWidget::updateImage()
 {
+    scaleImage();
     if (!mCachedImage.isNull()) {
         verticalScrollBar()->setRange(0, mCachedImage.height()-viewport()->height());
         horizontalScrollBar()->setRange(0, mCachedImage.width()-viewport()->width());
