@@ -172,8 +172,11 @@ public:
 	std::string DateTimeOriginal;       // Original file date and time (may not exist)
 	std::string DateTimeDigitized;      // Digitization date and time (may not exist)
 	std::string SubSecTimeOriginal;     // Sub-second time that original picture was taken
+    uint16_t Rating;                    // Rating tag used by Windows
+    uint16_t RatingPercent;             // Rating tag used by Windows, value in percent
 	std::string Copyright;              // File copyright information
-	double ExposureTime;                // Exposure time in seconds
+    std::string Artist;                 // The name of the camera owner, photographer or image creator.
+    double ExposureTime;                // Exposure time in seconds
 	double FNumber;                     // F/stop
 	uint16_t ExposureProgram;           // Exposure program
 	                                    // 0: not defined

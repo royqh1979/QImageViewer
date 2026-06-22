@@ -127,7 +127,8 @@ QPixmap ImageWidget::currentFrame() const
 void ImageWidget::resizeEvent(QResizeEvent *event)
 {
     QAbstractScrollArea::resizeEvent(event);
-    loadImage();
+    scaleImage();
+    updateImage();
 }
 
 void ImageWidget::paintEvent(QPaintEvent *event)

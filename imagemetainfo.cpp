@@ -168,12 +168,12 @@ double ImageMetaInfo::focalLengthIn35mm() const
     return mFocalLengthIn35mm;
 }
 
-double ImageMetaInfo::latitude() const
+QString ImageMetaInfo::latitude() const
 {
     return mLatitude;
 }
 
-double ImageMetaInfo::longitude() const
+QString ImageMetaInfo::longitude() const
 {
     return mLongitude;
 }
@@ -208,6 +208,9 @@ bool ImageMetaInfo::parseInfo(const QString &filename)
     // 2: inch
     // 3: centimeter
     switch(imageEXIF.ResolutionUnit) {
+    case 1:
+        mResolutionUnit = ResolutionUnit::No;
+        break;
     case 2:
         mResolutionUnit = ResolutionUnit::Inch;
         break;
@@ -225,6 +228,9 @@ bool ImageMetaInfo::parseInfo(const QString &filename)
     mDateTimeDigitized = QByteArray::fromStdString(imageEXIF.DateTimeDigitized);      // Digitization date and time (may not exist)
     mSubSecTimeOriginal = QByteArray::fromStdString(imageEXIF.SubSecTimeOriginal);     // Sub-second time that original picture was taken
     mCopyright = QByteArray::fromStdString(imageEXIF.Copyright);              // File copyright information
+    mArtist = QByteArray::fromStdString(imageEXIF.Artist);              // The name of the camera owner, photographer or image creator.
+    mRating = imageEXIF.Rating;
+    mRatingPercent = imageEXIF.RatingPercent;
     mExposureTime = imageEXIF.ExposureTime;                // Exposure time in seconds
     mFNumber = imageEXIF.FNumber;                     // F/stop
     // Exposure program
@@ -275,11 +281,34 @@ bool ImageMetaInfo::parseInfo(const QString &filename)
     mFocalLength = imageEXIF.FocalLength;                 // Focal length of lens in millimeters
     mFlashUsed = imageEXIF.Flash & 1;
     mFocalLengthIn35mm = imageEXIF.LensInfo.FocalLengthIn35mm;       // Focal length in 35mm film
-    mLatitude = imageEXIF.GeoLocation.Latitude;                // Image latitude expressed as decimal
-    mLongitude = imageEXIF.GeoLocation.Longitude;               // Image longitude expressed as decimal
+    if (imageEXIF.GeoLocation.LatComponents.direction)
+        mLatitude = QString("%1°%2'%3\" %4").arg(int(imageEXIF.GeoLocation.LatComponents.degrees))
+                .arg(int(imageEXIF.GeoLocation.LatComponents.minutes))
+                .arg(int(imageEXIF.GeoLocation.LatComponents.seconds))
+                .arg(QChar(imageEXIF.GeoLocation.LatComponents.direction));   // Image latitude expressed as decimal
+    if (imageEXIF.GeoLocation.LonComponents.direction)
+        mLongitude = QString("%1°%2'%3\" %4").arg(int(imageEXIF.GeoLocation.LonComponents.degrees))
+                .arg(int(imageEXIF.GeoLocation.LonComponents.minutes))
+                .arg(int(imageEXIF.GeoLocation.LonComponents.seconds))
+                .arg(QChar(imageEXIF.GeoLocation.LonComponents.direction));   // Image longitude expressed as decimal
     mAltitude = imageEXIF.GeoLocation.Altitude;                // Altitude in meters, relative to sea level
 
     return true;
+}
+
+double ImageMetaInfo::rating() const
+{
+    return mRating;
+}
+
+double ImageMetaInfo::ratingPercent() const
+{
+    return mRatingPercent;
+}
+
+const QByteArray &ImageMetaInfo::artist() const
+{
+    return mArtist;
 }
 
 const QString &ImageMetaInfo::filename() const

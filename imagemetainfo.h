@@ -9,6 +9,7 @@ public:
     ImageMetaInfo(const QString& filename);
     enum class ResolutionUnit{
         None,
+        No,
         Inch,
         Centimeter
     };
@@ -55,10 +56,16 @@ public:
     double focalLength() const;
     bool flashUsed() const;
     double focalLengthIn35mm() const;
-    double latitude() const;
-    double longitude() const;
+    QString latitude() const;
+    QString longitude() const;
     double altitude() const;
     const QString &filename() const;
+
+    const QByteArray &artist() const;
+
+    double ratingPercent() const;
+
+    double rating() const;
 
 private:
     bool parseInfo(const QString& filename);
@@ -87,6 +94,10 @@ private:
     QByteArray mDateTimeDigitized;      // Digitization date and time (may not exist)
     QByteArray mSubSecTimeOriginal;     // Sub-second time that original picture was taken
     QByteArray mCopyright;              // File copyright information
+    QByteArray mArtist;                 // The name of the camera owner, photographer or image creator.
+
+    double mRating;
+    double mRatingPercent;
     double mExposureTime;                // Exposure time in seconds
     double mFNumber;                     // F/stop
     ExposureProgram mExposureProgram;           // Exposure program
@@ -108,8 +119,8 @@ private:
     double mFocalLength;                 // Focal length of lens in millimeters
     bool mFlashUsed;
     double mFocalLengthIn35mm;       // Focal length in 35mm film
-    double mLatitude;                // Image latitude expressed as decimal
-    double mLongitude;               // Image longitude expressed as decimal
+    QString mLatitude;                // Image latitude
+    QString mLongitude;               // Image longitude
     double mAltitude;                // Altitude in meters, relative to sea level
 };
 

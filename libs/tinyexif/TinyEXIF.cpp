@@ -400,6 +400,11 @@ void EXIFInfo::parseIFDImage(EntryParser& parser, unsigned& exif_sub_ifd_offset,
 		parser.Fetch(DateTime);
 		break;
 
+    case 0x013b:
+        // The name of the camera owner, photographer or image creator.
+        parser.Fetch(Artist);
+        break;
+
 	case 0x1001:
 		// Original Image width
 		if (!parser.Fetch(RelatedImageWidth)) {
@@ -417,6 +422,16 @@ void EXIFInfo::parseIFDImage(EntryParser& parser, unsigned& exif_sub_ifd_offset,
 				RelatedImageHeight = _RelatedImageHeight;
 		}
 		break;
+
+    case 0x4746:
+        // Copyright information
+        parser.Fetch(Rating);
+        break;
+
+    case 0x4749:
+        // Copyright information
+        parser.Fetch(RatingPercent);
+        break;
 
 	case 0x8298:
 		// Copyright information
@@ -486,13 +501,13 @@ void EXIFInfo::parseIFDExif(EntryParser& parser) {
 	case 0x9201:
 		// Shutter speed value
 		parser.Fetch(ShutterSpeedValue);
-		ShutterSpeedValue = 1.0/exp(ShutterSpeedValue*log(2));
+//        ShutterSpeedValue = 1.0/exp(ShutterSpeedValue*log(2));
 		break;
 
 	case 0x9202:
 		// Aperture value
 		parser.Fetch(ApertureValue);
-		ApertureValue = exp(ApertureValue*log(2)*0.5);
+        //ApertureValue = exp(ApertureValue*log(2)*0.5);
 		break;
 
 	case 0x9203:
@@ -1233,8 +1248,11 @@ void EXIFInfo::clear() {
 	DateTimeDigitized = "";
 	SubSecTimeOriginal= "";
 	Copyright         = "";
+    Artist            = "";
 
 	// Shorts / unsigned / double
+    Rating            = 0;
+    RatingPercent     = 0;
 	ImageWidth        = 0;
 	ImageHeight       = 0;
 	RelatedImageWidth = 0;
