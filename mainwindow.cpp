@@ -187,6 +187,7 @@ void MainWindow::onZoomFactorChanged(int newVal)
 
 void MainWindow::onDirViewSizeChanged()
 {
+    pSettings->ui().setContentsPanelWidth(ui->dockDir->width());
     int width = ui->dirView->width()-ui->dirView->verticalScrollBar()->sizeHint().width()-20;
     mThumbnailDelegate->setThumbnailSize(width);
     mDirModel->setThumbnailSize(width);
@@ -359,7 +360,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
     pSettings->ui().setMainWindowHeight(height());
     pSettings->ui().setMainWindowLeft(pos().x());
     pSettings->ui().setMainWindowTop(pos().y());
-    pSettings->ui().setContentsPanelWidth(ui->dockDir->width());
+    if (ui->actionShow_Contents->isChecked())
+        pSettings->ui().setContentsPanelWidth(ui->dockDir->width());
     if (ui->actionFit_Width->isChecked())
         pSettings->view().setFitMode("Width");
     else if (ui->actionFit_Height->isChecked())

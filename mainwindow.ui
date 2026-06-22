@@ -419,6 +419,10 @@
    </property>
   </action>
   <action name="actionOption">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-options.svg</normaloff>:/icons/images/noun-options.svg</iconset>
+   </property>
    <property name="text">
     <string>Option...</string>
    </property>
@@ -427,11 +431,19 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-image-information.svg</normaloff>:/icons/images/noun-image-information.svg</iconset>
+   </property>
    <property name="text">
     <string>Image Meta Info</string>
    </property>
   </action>
   <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-print.svg</normaloff>:/icons/images/noun-print.svg</iconset>
+   </property>
    <property name="text">
     <string>Print...</string>
    </property>
@@ -455,11 +467,19 @@
    </property>
   </action>
   <action name="actionRefresh">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-refresh.svg</normaloff>:/icons/images/noun-refresh.svg</iconset>
+   </property>
    <property name="text">
     <string>Refresh</string>
    </property>
   </action>
   <action name="actionSlide_Show">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-slides-show.svg</normaloff>:/icons/images/noun-slides-show.svg</iconset>
+   </property>
    <property name="text">
     <string>Slide Show</string>
    </property>

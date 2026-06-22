@@ -21,6 +21,15 @@
         <file>images/noun-next-disabled.svg</file>
         <file>images/noun-last-disabled.svg</file>
         <file>images/noun-flip-vertical-disabled.svg</file>
-        <file>images/noun-flip-horizontal-disabled.svg</file>        
+        <file>images/noun-flip-horizontal-disabled.svg</file>      
+        <file>images/noun-image-information.svg</file>  
+        <file>images/noun-slides-show.svg</file>
+        <file>images/noun-refresh.svg</file>
+        <file>images/noun-options.svg</file>
+        <file>images/noun-print.svg</file>
+        <file>images/noun-screen.svg</file>
+        <file>images/noun-exit.svg</file>
+        <file>images/noun-copy.svg</file>
+        <file>images/noun-copy-image.svg</file>
     </qresource>
 </RCC>

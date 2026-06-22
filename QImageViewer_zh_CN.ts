@@ -407,48 +407,48 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="423"/>
+        <location filename="mainwindow.ui" line="427"/>
         <source>Option...</source>
         <translation>选项...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="431"/>
+        <location filename="mainwindow.ui" line="439"/>
         <source>Image Meta Info</source>
         <translation>图片信息</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="436"/>
+        <location filename="mainwindow.ui" line="448"/>
         <source>Print...</source>
         <translation>打印...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="441"/>
+        <location filename="mainwindow.ui" line="453"/>
         <source>Print Preview</source>
         <translation>打印预览</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="446"/>
+        <location filename="mainwindow.ui" line="458"/>
         <source>Copy</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="449"/>
+        <location filename="mainwindow.ui" line="461"/>
         <source>Ctrl+C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="454"/>
+        <location filename="mainwindow.ui" line="466"/>
         <source>Copy To...</source>
         <translation>复制到...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="459"/>
+        <location filename="mainwindow.ui" line="475"/>
         <source>Refresh</source>
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="464"/>
-        <location filename="mainwindow.cpp" line="584"/>
+        <location filename="mainwindow.ui" line="484"/>
+        <location filename="mainwindow.cpp" line="586"/>
         <source>Slide Show</source>
         <translation>幻灯片</translation>
     </message>
@@ -575,7 +575,7 @@
         <translation type="vanished">显示目录</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="469"/>
+        <location filename="mainwindow.ui" line="489"/>
         <source>About...</source>
         <translation>关于...</translation>
     </message>
@@ -602,42 +602,42 @@
         <translation>正在打开&quot;%1&quot;...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="256"/>
+        <location filename="mainwindow.cpp" line="257"/>
         <source>Choose image file</source>
         <translation>选择图片文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="558"/>
+        <location filename="mainwindow.cpp" line="560"/>
         <source>Copy Image File</source>
         <translation>复制图片文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="564"/>
+        <location filename="mainwindow.cpp" line="566"/>
         <source>Copy Succeed</source>
         <translation>复制成功</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="564"/>
+        <location filename="mainwindow.cpp" line="566"/>
         <source>Image has been successfully copied!</source>
         <translation>已成功复制图片！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="566"/>
+        <location filename="mainwindow.cpp" line="568"/>
         <source>Copy Failed</source>
         <translation>复制失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="566"/>
+        <location filename="mainwindow.cpp" line="568"/>
         <source>Image copy failed!</source>
         <translation>图片复制失败！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="604"/>
+        <location filename="mainwindow.cpp" line="606"/>
         <source>Ok</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="605"/>
+        <location filename="mainwindow.cpp" line="607"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
