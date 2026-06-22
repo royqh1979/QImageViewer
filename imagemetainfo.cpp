@@ -158,11 +158,6 @@ double ImageMetaInfo::focalLength() const
     return mFocalLength;
 }
 
-bool ImageMetaInfo::flashUsed() const
-{
-    return mFlashUsed;
-}
-
 double ImageMetaInfo::focalLengthIn35mm() const
 {
     return mFocalLengthIn35mm;
@@ -279,7 +274,7 @@ bool ImageMetaInfo::parseInfo(const QString &filename)
     mExposureBiasValue = imageEXIF.ExposureBiasValue;           // Exposure bias value in EV
     mSubjectDistance = imageEXIF.SubjectDistance;             // Distance to focus point in meters
     mFocalLength = imageEXIF.FocalLength;                 // Focal length of lens in millimeters
-    mFlashUsed = imageEXIF.Flash & 1;
+    mFlash = imageEXIF.Flash;
     mFocalLengthIn35mm = imageEXIF.LensInfo.FocalLengthIn35mm;       // Focal length in 35mm film
     if (imageEXIF.GeoLocation.LatComponents.direction)
         mLatitude = QString("%1°%2'%3\" %4").arg(int(imageEXIF.GeoLocation.LatComponents.degrees))
@@ -294,6 +289,11 @@ bool ImageMetaInfo::parseInfo(const QString &filename)
     mAltitude = imageEXIF.GeoLocation.Altitude;                // Altitude in meters, relative to sea level
 
     return true;
+}
+
+uint16_t ImageMetaInfo::flash() const
+{
+    return mFlash;
 }
 
 double ImageMetaInfo::rating() const

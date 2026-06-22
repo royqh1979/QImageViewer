@@ -88,6 +88,7 @@
         <location filename="imagemetainfomodel.cpp" line="103"/>
         <location filename="imagemetainfomodel.cpp" line="108"/>
         <location filename="imagemetainfomodel.cpp" line="138"/>
+        <location filename="imagemetainfomodel.cpp" line="143"/>
         <source>%1</source>
         <translation>%1</translation>
     </message>
@@ -219,11 +220,12 @@
         <translation>焦距(35mm等效)</translation>
     </message>
     <message>
+        <location filename="imagemetainfomodel.cpp" line="137"/>
         <source>ISO Speed Rating</source>
-        <translation type="vanished">ISO感光度</translation>
+        <translation>ISO感光度</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="137"/>
+        <location filename="imagemetainfomodel.cpp" line="142"/>
         <source>Shutter Speed</source>
         <translation>快门速度</translation>
     </message>
@@ -448,7 +450,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="500"/>
-        <location filename="mainwindow.cpp" line="586"/>
+        <location filename="mainwindow.cpp" line="588"/>
         <source>Slide Show</source>
         <translation>幻灯片</translation>
     </message>
@@ -607,37 +609,37 @@
         <translation>选择图片文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="560"/>
+        <location filename="mainwindow.cpp" line="562"/>
         <source>Copy Image File</source>
         <translation>复制图片文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="566"/>
+        <location filename="mainwindow.cpp" line="568"/>
         <source>Copy Succeed</source>
         <translation>复制成功</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="566"/>
+        <location filename="mainwindow.cpp" line="568"/>
         <source>Image has been successfully copied!</source>
         <translation>已成功复制图片！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="568"/>
+        <location filename="mainwindow.cpp" line="570"/>
         <source>Copy Failed</source>
         <translation>复制失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="568"/>
+        <location filename="mainwindow.cpp" line="570"/>
         <source>Image copy failed!</source>
         <translation>图片复制失败！</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="606"/>
+        <location filename="mainwindow.cpp" line="608"/>
         <source>Ok</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="607"/>
+        <location filename="mainwindow.cpp" line="609"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
