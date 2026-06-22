@@ -308,6 +308,8 @@ void MainWindow::updateActions()
     ui->actionCopy_To->setEnabled(hasImage);
     ui->actionPrint->setEnabled(hasImage);
     ui->actionPrint_Preview->setEnabled(hasImage);
+    ui->actionSlide_Show->setEnabled(mDirModel->imageCount()>1);
+    ui->actionRefresh->setEnabled(!mDirModel->path().isEmpty());
     ui->actionFirst->setEnabled(hasImage);
     ui->actionLast->setEnabled(hasImage);
     ui->actionPrevious->setEnabled(hasImage);
