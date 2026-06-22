@@ -89,7 +89,7 @@
         <location filename="imagemetainfomodel.cpp" line="108"/>
         <location filename="imagemetainfomodel.cpp" line="138"/>
         <source>%1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1</translation>
     </message>
     <message>
         <location filename="imagemetainfomodel.cpp" line="34"/>
@@ -109,12 +109,12 @@
     <message>
         <location filename="imagemetainfomodel.cpp" line="51"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>作者</translation>
     </message>
     <message>
         <location filename="imagemetainfomodel.cpp" line="56"/>
         <source>Copyright</source>
-        <translation type="unfinished"></translation>
+        <translation>版权</translation>
     </message>
     <message>
         <location filename="imagemetainfomodel.cpp" line="61"/>
@@ -129,7 +129,7 @@
     <message>
         <location filename="imagemetainfomodel.cpp" line="71"/>
         <source>Software</source>
-        <translation type="unfinished"></translation>
+        <translation>软件</translation>
     </message>
     <message>
         <location filename="imagemetainfomodel.cpp" line="76"/>
@@ -139,18 +139,18 @@
     <message>
         <location filename="imagemetainfomodel.cpp" line="81"/>
         <source>Image Description</source>
-        <translation type="unfinished"></translation>
+        <translation>图片说明</translation>
     </message>
     <message>
         <location filename="imagemetainfomodel.cpp" line="86"/>
         <location filename="imagemetainfomodel.cpp" line="91"/>
         <source>Rating</source>
-        <translation type="unfinished"></translation>
+        <translation>评分</translation>
     </message>
     <message>
         <location filename="imagemetainfomodel.cpp" line="92"/>
         <source>%1%</source>
-        <translation type="unfinished"></translation>
+        <translation>%1%</translation>
     </message>
     <message>
         <location filename="imagemetainfomodel.cpp" line="99"/>
@@ -175,7 +175,7 @@
     <message>
         <location filename="imagemetainfomodel.cpp" line="113"/>
         <source>1/%1 Seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>1/%1 秒</translation>
     </message>
     <message>
         <location filename="imagemetainfomodel.cpp" line="117"/>
@@ -200,7 +200,7 @@
     <message>
         <location filename="imagemetainfomodel.cpp" line="123"/>
         <source>f/%1</source>
-        <translation type="unfinished"></translation>
+        <translation>f/%1</translation>
     </message>
     <message>
         <location filename="imagemetainfomodel.cpp" line="127"/>
@@ -261,14 +261,14 @@
         <translation>工具栏</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="331"/>
+        <location filename="mainwindow.ui" line="335"/>
         <source>Play/Pause</source>
         <oldsource>Pause</oldsource>
         <translation>播放/暂停</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="370"/>
-        <location filename="mainwindow.ui" line="373"/>
+        <location filename="mainwindow.ui" line="378"/>
+        <location filename="mainwindow.ui" line="381"/>
         <source>Contents</source>
         <translation>目录</translation>
     </message>
@@ -277,7 +277,7 @@
         <translation type="vanished">下一页</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="235"/>
+        <location filename="mainwindow.ui" line="239"/>
         <source>PgDown</source>
         <translation>PgDown</translation>
     </message>
@@ -286,7 +286,7 @@
         <translation type="vanished">上一页</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="249"/>
+        <location filename="mainwindow.ui" line="253"/>
         <source>PgUp</source>
         <translation>PgUp</translation>
     </message>
@@ -295,7 +295,7 @@
         <translation type="vanished">末页</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="277"/>
+        <location filename="mainwindow.ui" line="281"/>
         <source>End</source>
         <translation>End</translation>
     </message>
@@ -304,7 +304,7 @@
         <translation type="vanished">首页</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="263"/>
+        <location filename="mainwindow.ui" line="267"/>
         <source>Home</source>
         <translation>Home</translation>
     </message>
@@ -323,47 +323,47 @@
         <translation type="vanished">打开</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="232"/>
+        <location filename="mainwindow.ui" line="236"/>
         <source>Next</source>
         <translation>下一张</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="246"/>
+        <location filename="mainwindow.ui" line="250"/>
         <source>Previous</source>
         <translation>前一张</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="260"/>
+        <location filename="mainwindow.ui" line="264"/>
         <source>First</source>
         <translation>第一张</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="274"/>
+        <location filename="mainwindow.ui" line="278"/>
         <source>Last</source>
         <translation>最后一张</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="288"/>
+        <location filename="mainwindow.ui" line="292"/>
         <source>Rotate Left</source>
         <translation>左转</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="299"/>
+        <location filename="mainwindow.ui" line="303"/>
         <source>Rotate Right</source>
         <translation>右转</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="310"/>
+        <location filename="mainwindow.ui" line="314"/>
         <source>Flip Horizontal</source>
         <translation>水平翻转</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="321"/>
+        <location filename="mainwindow.ui" line="325"/>
         <source>Flip Vertical</source>
         <translation>垂直翻转</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="326"/>
+        <location filename="mainwindow.ui" line="330"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
@@ -372,82 +372,82 @@
         <translation type="vanished">播放</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="339"/>
+        <location filename="mainwindow.ui" line="343"/>
         <source>Next Frame</source>
         <translation>下一帧</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="342"/>
+        <location filename="mainwindow.ui" line="346"/>
         <source>N</source>
-        <translation type="unfinished"></translation>
+        <translation>N</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="347"/>
+        <location filename="mainwindow.ui" line="351"/>
         <source>Prev Frame</source>
         <translation>上一帧</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="350"/>
+        <location filename="mainwindow.ui" line="354"/>
         <source>P</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="388"/>
+        <location filename="mainwindow.ui" line="396"/>
         <source>Ctrl+H</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+H</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="403"/>
+        <location filename="mainwindow.ui" line="411"/>
         <source>Ctrl+P</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="418"/>
+        <location filename="mainwindow.ui" line="426"/>
         <source>Ctrl+W</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+W</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="427"/>
+        <location filename="mainwindow.ui" line="435"/>
         <source>Option...</source>
         <translation>选项...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="439"/>
+        <location filename="mainwindow.ui" line="447"/>
         <source>Image Meta Info</source>
         <translation>图片信息</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="448"/>
+        <location filename="mainwindow.ui" line="456"/>
         <source>Print...</source>
         <translation>打印...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="453"/>
+        <location filename="mainwindow.ui" line="461"/>
         <source>Print Preview</source>
         <translation>打印预览</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="458"/>
+        <location filename="mainwindow.ui" line="470"/>
         <source>Copy</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="461"/>
+        <location filename="mainwindow.ui" line="473"/>
         <source>Ctrl+C</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+C</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="466"/>
+        <location filename="mainwindow.ui" line="482"/>
         <source>Copy To...</source>
         <translation>复制到...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="475"/>
+        <location filename="mainwindow.ui" line="491"/>
         <source>Refresh</source>
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="484"/>
+        <location filename="mainwindow.ui" line="500"/>
         <location filename="mainwindow.cpp" line="586"/>
         <source>Slide Show</source>
         <translation>幻灯片</translation>
@@ -502,12 +502,12 @@
         <translation type="vanished">Ctrl+F4</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="355"/>
+        <location filename="mainwindow.ui" line="363"/>
         <source>Full Screen</source>
         <translation>全屏</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="358"/>
+        <location filename="mainwindow.ui" line="366"/>
         <source>F11</source>
         <translation></translation>
     </message>
@@ -542,7 +542,7 @@
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="221"/>
+        <location filename="mainwindow.ui" line="225"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
@@ -551,12 +551,12 @@
         <translation type="vanished">Ctrl+X</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="415"/>
+        <location filename="mainwindow.ui" line="423"/>
         <source>Fit Width</source>
         <translation>适应宽度</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="385"/>
+        <location filename="mainwindow.ui" line="393"/>
         <source>Fit Height</source>
         <translation>适应高度</translation>
     </message>
@@ -566,7 +566,7 @@
         <translation>编辑</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="400"/>
+        <location filename="mainwindow.ui" line="408"/>
         <source>Fit Page</source>
         <translation>适应页面</translation>
     </message>
@@ -575,12 +575,12 @@
         <translation type="vanished">显示目录</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="489"/>
+        <location filename="mainwindow.ui" line="505"/>
         <source>About...</source>
         <translation>关于...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="334"/>
+        <location filename="mainwindow.ui" line="338"/>
         <source>Space</source>
         <translation>Space</translation>
     </message>

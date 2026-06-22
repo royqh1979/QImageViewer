@@ -217,6 +217,10 @@
    </property>
   </action>
   <action name="actionExit">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-exit.svg</normaloff>:/icons/images/noun-exit.svg</iconset>
+   </property>
    <property name="text">
     <string>Exit</string>
    </property>
@@ -351,6 +355,10 @@
    </property>
   </action>
   <action name="actionFull_Screen">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-screen.svg</normaloff>:/icons/images/noun-screen.svg</iconset>
+   </property>
    <property name="text">
     <string>Full Screen</string>
    </property>
@@ -454,6 +462,10 @@
    </property>
   </action>
   <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-copy-image.svg</normaloff>:/icons/images/noun-copy-image.svg</iconset>
+   </property>
    <property name="text">
     <string>Copy</string>
    </property>
@@ -462,6 +474,10 @@
    </property>
   </action>
   <action name="actionCopy_To">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/images/noun-copy.svg</normaloff>:/icons/images/noun-copy.svg</iconset>
+   </property>
    <property name="text">
     <string>Copy To...</string>
    </property>
