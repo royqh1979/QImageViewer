@@ -183,8 +183,8 @@ bool ImageMetaInfo::parseInfo(const QString &filename)
     std::ifstream stream(filename.toLocal8Bit(), std::ios::binary);
     if (!stream)
         return false;
-    TinyEXIF::EXIFInfo imageEXIF(stream);
-    if (!imageEXIF.Fields) {
+    TinyEXIF::EXIFInfo imageEXIF;
+    if (imageEXIF.parseFrom(stream)!= TinyEXIF::PARSE_SUCCESS) {
         return false;
     }
     mImageWidth = imageEXIF.ImageWidth;                // Image width reported in EXIF data
