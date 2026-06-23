@@ -114,6 +114,27 @@ else()
     endforeach()
     file(APPEND ${QM_QRC} "    </qresource>\n</RCC>\n")
     target_sources(${PROJECT_NAME} PRIVATE ${QM_QRC})
+
+    # a phony target that depends on all lupdate targets (Qt 5)
+    # the actual lupdate targets will be added in target_embed_translations function
+    add_custom_target(update_translations)
+
+    set(lupdate_dir ${CMAKE_CURRENT_BINARY_DIR}/.lupdate)
+    set(lupdate_lst_file ${lupdate_dir}/update_translations.lst)
+    file(WRITE ${lupdate_lst_file})
+    foreach (source_file IN LISTS PROJECT_SOURCES)
+        file(APPEND ${lupdate_lst_file} "${source_file}\n")
+    endforeach()
+
+    # lupdate commands
+    foreach (ts_file IN LISTS TS_FILES)
+        add_custom_command(
+            TARGET update_translations POST_BUILD
+            COMMAND ${Qt5_LUPDATE_EXECUTABLE}
+            ARGS @${lupdate_lst_file} -ts ${ts_file}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+    endforeach()
+
 endif()
 
 target_include_directories(QImageViewer PRIVATE

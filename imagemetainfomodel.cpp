@@ -119,11 +119,11 @@ void ImageMetaInfoModel::setMetaInfo(ImageMetaInfo *info)
                                         new QStandardItem(tr("Exposure Time")),
                                         new QStandardItem(tr("1/%1 Seconds").arg(int(1/mMetaInfo->exposureTime())))
                                     });
-
-        itemPhotoInfos->appendRow({
-                                    new QStandardItem(tr("Flash")),
-                                    new QStandardItem(mMetaInfo->flashUsed()?tr("On"):tr("Off"))
-                                });
+        if (mMetaInfo->flash())
+            itemPhotoInfos->appendRow({
+                                        new QStandardItem(tr("Flash")),
+                                        new QStandardItem((mMetaInfo->flash()&1)?tr("On"):tr("Off"))
+                                    });
         if (mMetaInfo->fNumber()!=0)
             itemPhotoInfos->appendRow({
                                         new QStandardItem(tr("FNumber")),
@@ -141,7 +141,12 @@ void ImageMetaInfoModel::setMetaInfo(ImageMetaInfo *info)
                                     });
         if (mMetaInfo->iSOSpeedRatings()!=0)
             itemPhotoInfos->appendRow({
-                                        new QStandardItem(tr("Shutter Speed")),
+                                        new QStandardItem(tr("ISO Speed Rating")),
+                                        new QStandardItem(tr("%1").arg(mMetaInfo->iSOSpeedRatings()))
+                                    });
+        if (mMetaInfo->shutterSpeedValue()!=0)
+            itemPhotoInfos->appendRow({
+                                        new QStandardItem(tr("Shutter Speed Value")),
                                         new QStandardItem(tr("%1").arg(mMetaInfo->shutterSpeedValue()))
                                     });
 //        itemPhotoInfos->appendRow({

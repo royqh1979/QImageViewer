@@ -54,7 +54,6 @@ public:
     double exposureBiasValue() const;
     double subjectDistance() const;
     double focalLength() const;
-    bool flashUsed() const;
     double focalLengthIn35mm() const;
     QString latitude() const;
     QString longitude() const;
@@ -66,6 +65,8 @@ public:
     double ratingPercent() const;
 
     double rating() const;
+
+    uint16_t flash() const;
 
 private:
     bool parseInfo(const QString& filename);
@@ -117,7 +118,7 @@ private:
     double mExposureBiasValue;           // Exposure bias value in EV
     double mSubjectDistance;             // Distance to focus point in meters
     double mFocalLength;                 // Focal length of lens in millimeters
-    bool mFlashUsed;
+    uint16_t mFlash;
     double mFocalLengthIn35mm;       // Focal length in 35mm film
     QString mLatitude;                // Image latitude
     QString mLongitude;               // Image longitude
