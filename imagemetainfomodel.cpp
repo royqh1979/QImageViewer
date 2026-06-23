@@ -22,6 +22,13 @@ void ImageMetaInfoModel::setMetaInfo(ImageMetaInfo *info)
         if (!mMetaInfo)
             delete mMetaInfo;
         mMetaInfo = info;
+        if (!mMetaInfo->valid()) {
+            setColumnCount(1);
+            appendRow({
+                          new QStandardItem(tr("No Information"))
+                      });
+            return;
+        }
         setColumnCount(2);
         QStandardItem *itemGPSInfos=new QStandardItem(tr("GPS Information"));
         if (!mMetaInfo->latitude().isEmpty())
