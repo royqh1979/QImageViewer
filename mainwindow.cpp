@@ -74,6 +74,8 @@ MainWindow::MainWindow(QWidget *parent)
     mDirModel = new DirModel(this);
     connect(mDirModel, &DirModel::currentFileChanged,
             this, &MainWindow::onCurrentFileChanged);
+    connect(mDirModel, &DirModel::pathChanged,
+            this, &MainWindow::onCurrentDirChanged);
 
     mThumbnailDelegate = new ThumbnailDelegate(this);
     ui->dirView->setItemDelegate(mThumbnailDelegate);
@@ -135,6 +137,16 @@ void MainWindow::open(const QString &path)
     ui->statusbar->showMessage(tr("Openning \"%1\"").arg(path));
     mDirModel->open(path);
     ui->statusbar->clearMessage();
+}
+
+void MainWindow::onCurrentDirChanged(const QString &oldPath, const QString &newPath)
+{
+    QFileInfo dir{newPath};
+    if (dir.isDir()) {
+        setWindowTitle(tr("QImageView [%1]").arg(dir.absoluteFilePath()));
+    } else {
+        setWindowTitle(tr("QImageView").arg(dir.absoluteFilePath()));
+    }
 }
 
 void MainWindow::onCurrentFileChanged(int oldFileId, int currentFileId)

@@ -23,6 +23,7 @@ public:
     ~MainWindow();
     void open(const QString& path);
 private slots:
+    void onCurrentDirChanged(const QString& oldPath, const QString& newPath);
     void onCurrentFileChanged(int oldFileId, int currentFileId);
     void onRequestPrevImage(bool scrollToBottom);
     void onRequestNextImage();
