@@ -213,7 +213,7 @@ bool ImageMetaInfo::parseInfo(const QString &filename)
         mResolutionUnit = ResolutionUnit::Centimeter;
         break;
     default:
-        mResolutionUnit = ResolutionUnit::None;
+        mResolutionUnit = ResolutionUnit::NotDefined;
     }
 
     mBitsPerSample = imageEXIF.BitsPerSample;             // Number of bits per component
@@ -224,6 +224,18 @@ bool ImageMetaInfo::parseInfo(const QString &filename)
     mSubSecTimeOriginal = QByteArray::fromStdString(imageEXIF.SubSecTimeOriginal);     // Sub-second time that original picture was taken
     mCopyright = QByteArray::fromStdString(imageEXIF.Copyright);              // File copyright information
     mArtist = QByteArray::fromStdString(imageEXIF.Artist);              // The name of the camera owner, photographer or image creator.
+
+    mImageTitle = QByteArray::fromStdString(imageEXIF.ImageTitle);
+    mPhotographer = QByteArray::fromStdString(imageEXIF.Photographer);
+    mImageEditor = QByteArray::fromStdString(imageEXIF.ImageEditor);
+    mCameraFirmware = QByteArray::fromStdString(imageEXIF.CameraFirmware);
+    mRAWDevelopingSoftware = QByteArray::fromStdString(imageEXIF.RAWDevelopingSoftware);
+    mImageEditingSoftware = QByteArray::fromStdString(imageEXIF.ImageEditingSoftware);
+    mMetadataEditingSoftware = QByteArray::fromStdString(imageEXIF.MetadataEditingSoftware);
+    mLensSerialNumber = QByteArray::fromStdString(imageEXIF.LensInfo.SerialNumber);
+    mLensModel = QByteArray::fromStdString(imageEXIF.LensInfo.Model);
+    mLensMake = QByteArray::fromStdString(imageEXIF.LensInfo.Make);
+
     mRating = imageEXIF.Rating;
     mRatingPercent = imageEXIF.RatingPercent;
     mExposureTime = imageEXIF.ExposureTime;                // Exposure time in seconds
@@ -264,7 +276,37 @@ bool ImageMetaInfo::parseInfo(const QString &filename)
         mExposureProgram = ExposureProgram::LandscapeMode;
         break;
     default:
-        mExposureProgram = ExposureProgram::NotDefined;
+        mExposureProgram = ExposureProgram::Unknown;
+    }
+    // Metering mode
+    // 0: unknown
+    // 1: average
+    // 2: center weighted average
+    // 3: spot
+    // 4: multi-spot
+    // 5: pattern
+    // 6: partial
+    switch(imageEXIF.MeteringMode) {
+    case 1:
+        mMeteringMode = MeteringMode::Average;
+        break;
+    case 2:
+        mMeteringMode = MeteringMode::CenterWeightedAverage;
+        break;
+    case 3:
+        mMeteringMode = MeteringMode::Spot;
+        break;
+    case 4:
+        mMeteringMode = MeteringMode::MultiSpot;
+        break;
+    case 5:
+        mMeteringMode = MeteringMode::Pattern;
+        break;
+    case 6:
+        mMeteringMode = MeteringMode::Partial;
+        break;
+    default:
+        mMeteringMode = MeteringMode::Unknown;
     }
 
     mISOSpeedRatings = imageEXIF.ISOSpeedRatings;           // ISO speed
@@ -276,6 +318,12 @@ bool ImageMetaInfo::parseInfo(const QString &filename)
     mFocalLength = imageEXIF.FocalLength;                 // Focal length of lens in millimeters
     mFlash = imageEXIF.Flash;
     mFocalLengthIn35mm = imageEXIF.LensInfo.FocalLengthIn35mm;       // Focal length in 35mm film
+    mMinFocalLength = imageEXIF.LensInfo.FocalLengthMin;
+    mMaxFocalLength = imageEXIF.LensInfo.FocalLengthMax;
+    mMinFStop = imageEXIF.LensInfo.FStopMin;
+    mMaxFStop = imageEXIF.LensInfo.FStopMax;
+    mExposureMode = imageEXIF.ExposureMode;
+    mWhiteBalance = imageEXIF.WhiteBalance;
     if (imageEXIF.GeoLocation.LatComponents.direction)
         mLatitude = QString("%1°%2'%3\" %4").arg(int(imageEXIF.GeoLocation.LatComponents.degrees))
                 .arg(int(imageEXIF.GeoLocation.LatComponents.minutes))
@@ -289,6 +337,91 @@ bool ImageMetaInfo::parseInfo(const QString &filename)
     mAltitude = imageEXIF.GeoLocation.Altitude;                // Altitude in meters, relative to sea level
 
     return true;
+}
+
+uint16_t ImageMetaInfo::exposureMode() const
+{
+    return mExposureMode;
+}
+
+uint16_t ImageMetaInfo::whiteBalance() const
+{
+    return mWhiteBalance;
+}
+
+ImageMetaInfo::MeteringMode ImageMetaInfo::meteringMode() const
+{
+    return mMeteringMode;
+}
+
+double ImageMetaInfo::minFStop() const
+{
+    return mMinFStop;
+}
+
+double ImageMetaInfo::maxFStop() const
+{
+    return mMaxFStop;
+}
+
+const QByteArray &ImageMetaInfo::lensMake() const
+{
+    return mLensMake;
+}
+
+const QByteArray &ImageMetaInfo::lensModel() const
+{
+    return mLensModel;
+}
+
+const QByteArray &ImageMetaInfo::imageTitle() const
+{
+    return mImageTitle;
+}
+
+const QByteArray &ImageMetaInfo::photographer() const
+{
+    return mPhotographer;
+}
+
+const QByteArray &ImageMetaInfo::imageEditor() const
+{
+    return mImageEditor;
+}
+
+const QByteArray &ImageMetaInfo::cameraFirmware() const
+{
+    return mCameraFirmware;
+}
+
+const QByteArray &ImageMetaInfo::rAWDevelopingSoftware() const
+{
+    return mRAWDevelopingSoftware;
+}
+
+const QByteArray &ImageMetaInfo::imageEditingSoftware() const
+{
+    return mImageEditingSoftware;
+}
+
+const QByteArray &ImageMetaInfo::metadataEditingSoftware() const
+{
+    return mMetadataEditingSoftware;
+}
+
+const QByteArray &ImageMetaInfo::lensSerialNumber() const
+{
+    return mLensSerialNumber;
+}
+
+double ImageMetaInfo::maxFocalLength() const
+{
+    return mMaxFocalLength;
+}
+
+double ImageMetaInfo::minFocalLength() const
+{
+    return mMinFocalLength;
 }
 
 uint16_t ImageMetaInfo::flash() const

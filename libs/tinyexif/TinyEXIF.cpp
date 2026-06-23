@@ -606,6 +606,14 @@ void EXIFInfo::parseIFDExif(EntryParser& parser) {
 		}
 		break;
 
+    case 0xa402:
+        parser.Fetch(ExposureMode);
+        break;
+
+    case 0xa403:
+        parser.Fetch(WhiteBalance);
+        break;
+
 	case 0xa404:
 		// Digital Zoom Ratio
 		parser.Fetch(LensInfo.DigitalZoomRatio);
@@ -642,7 +650,41 @@ void EXIFInfo::parseIFDExif(EntryParser& parser) {
 		// Lens model.
 		parser.Fetch(LensInfo.Model);
 		break;
-	}
+
+    case 0xa435:
+        // Lens model.
+        parser.Fetch(LensInfo.SerialNumber);
+        break;
+
+    case 0xa436:
+        parser.Fetch(ImageTitle);
+        break;
+
+    case 0xa437:
+        parser.Fetch(Photographer);
+        break;
+
+    case 0xa438:
+        parser.Fetch(ImageEditor);
+        break;
+
+    case 0xa439:
+        parser.Fetch(CameraFirmware);
+        break;
+
+    case 0xa43a:
+        parser.Fetch(RAWDevelopingSoftware);
+        break;
+
+    case 0xa43b:
+        parser.Fetch(ImageEditingSoftware);
+        break;
+
+    case 0xa43c:
+        parser.Fetch(MetadataEditingSoftware);
+        break;
+
+    }
 }
 
 // Parse tag as MakerNote IFD
@@ -1250,6 +1292,13 @@ void EXIFInfo::clear() {
 	Copyright         = "";
     Artist            = "";
 
+    ImageTitle        = "";
+    Photographer      = "";
+    ImageEditor       = "";
+    CameraFirmware    = "";
+    RAWDevelopingSoftware   = "";
+    ImageEditingSoftware    = "";
+    MetadataEditingSoftware = "";
 	// Shorts / unsigned / double
     Rating            = 0;
     RatingPercent     = 0;
@@ -1266,6 +1315,8 @@ void EXIFInfo::clear() {
 	FNumber           = 0;
 	ExposureProgram   = 0;
 	ISOSpeedRatings   = 0;
+    ExposureMode      = 0xFFFF;
+    WhiteBalance      = 0xFFFF;
 	ShutterSpeedValue = 0;
 	ApertureValue     = 0;
 	BrightnessValue   = 0;
@@ -1295,6 +1346,7 @@ void EXIFInfo::clear() {
 	LensInfo.FocalPlaneResolutionUnit = 0;
 	LensInfo.Make = "";
 	LensInfo.Model = "";
+    LensInfo.SerialNumber = "";
 
 	// Geolocation
 	GeoLocation.Latitude                = DBL_MAX;

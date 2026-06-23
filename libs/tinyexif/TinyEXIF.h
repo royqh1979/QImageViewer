@@ -176,6 +176,15 @@ public:
     uint16_t RatingPercent;             // Rating tag used by Windows, value in percent
 	std::string Copyright;              // File copyright information
     std::string Artist;                 // The name of the camera owner, photographer or image creator.
+
+    std::string ImageTitle;
+    std::string Photographer;
+    std::string ImageEditor;
+    std::string CameraFirmware;
+    std::string RAWDevelopingSoftware;
+    std::string ImageEditingSoftware;
+    std::string MetadataEditingSoftware;
+
     double ExposureTime;                // Exposure time in seconds
 	double FNumber;                     // F/stop
 	uint16_t ExposureProgram;           // Exposure program
@@ -189,6 +198,8 @@ public:
 	                                    // 7: portrait mode
 	                                    // 8: landscape mode
 	uint16_t ISOSpeedRatings;           // ISO speed
+    uint16_t ExposureMode;
+    uint16_t WhiteBalance;
 	double ShutterSpeedValue;           // Shutter speed (reciprocal of exposure time)
 	double ApertureValue;               // The lens aperture
 	double BrightnessValue;             // The value of brightness
@@ -271,6 +282,8 @@ public:
 										// 3: centimeter
 		std::string Make;               // Lens manufacturer
 		std::string Model;              // Lens model
+        std::string SerialNumber;
+
 	} LensInfo;
 	struct TINYEXIF_LIB Geolocation_t { // GPS information embedded in file
 		double Latitude;                // Image latitude expressed as decimal

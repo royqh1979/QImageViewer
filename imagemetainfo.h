@@ -8,13 +8,13 @@ public:
     ImageMetaInfo();
     ImageMetaInfo(const QString& filename);
     enum class ResolutionUnit{
-        None,
+        NotDefined,
         No,
         Inch,
         Centimeter
     };
     enum class ExposureProgram{
-        NotDefined,
+        Unknown,
         Manual,
         NormalProgram,
         AperturePriority,
@@ -23,6 +23,16 @@ public:
         ActionProgram,
         PortraitMode,
         LandscapeMode
+    };
+
+    enum class MeteringMode{
+        Unknown,
+        Average,
+        CenterWeightedAverage,
+        Spot,
+        MultiSpot,
+        Pattern,
+        Partial,
     };
 
     bool valid() const;
@@ -68,6 +78,30 @@ public:
 
     uint16_t flash() const;
 
+    double minFocalLength() const;
+
+    double maxFocalLength() const;
+
+    const QByteArray &imageTitle() const;
+    const QByteArray &photographer() const;
+    const QByteArray &imageEditor() const;
+    const QByteArray &cameraFirmware() const;
+    const QByteArray &rAWDevelopingSoftware() const;
+    const QByteArray &imageEditingSoftware() const;
+    const QByteArray &metadataEditingSoftware() const;
+    const QByteArray &lensSerialNumber() const;
+
+    const QByteArray &lensMake() const;
+    const QByteArray &lensModel() const;
+
+    double minFStop() const;
+    double maxFStop() const;
+
+    MeteringMode meteringMode() const;
+
+    uint16_t exposureMode() const;
+    uint16_t whiteBalance() const;
+
 private:
     bool parseInfo(const QString& filename);
 private:
@@ -96,11 +130,24 @@ private:
     QByteArray mSubSecTimeOriginal;     // Sub-second time that original picture was taken
     QByteArray mCopyright;              // File copyright information
     QByteArray mArtist;                 // The name of the camera owner, photographer or image creator.
+    QByteArray mImageTitle;
+    QByteArray mPhotographer;
+    QByteArray mImageEditor;
+    QByteArray mCameraFirmware;
+    QByteArray mRAWDevelopingSoftware;
+    QByteArray mImageEditingSoftware;
+    QByteArray mMetadataEditingSoftware;
+    QByteArray mLensSerialNumber;
+    QByteArray mLensMake;
+    QByteArray mLensModel;
+
 
     double mRating;
     double mRatingPercent;
     double mExposureTime;                // Exposure time in seconds
     double mFNumber;                     // F/stop
+    uint16_t mExposureMode;
+    uint16_t mWhiteBalance;
     ExposureProgram mExposureProgram;           // Exposure program
                                         // 0: not defined
                                         // 1: manual
@@ -111,6 +158,15 @@ private:
                                         // 6: action program
                                         // 7: portrait mode
                                         // 8: landscape mode
+
+    MeteringMode mMeteringMode;         // Metering mode
+                                        // 0: unknown
+                                        // 1: average
+                                        // 2: center weighted average
+                                        // 3: spot
+                                        // 4: multi-spot
+                                        // 5: pattern
+                                        // 6: partial
     uint16_t mISOSpeedRatings;           // ISO speed
     double mShutterSpeedValue;           // Shutter speed (reciprocal of exposure time)
     double mApertureValue;               // The lens aperture
@@ -118,6 +174,10 @@ private:
     double mExposureBiasValue;           // Exposure bias value in EV
     double mSubjectDistance;             // Distance to focus point in meters
     double mFocalLength;                 // Focal length of lens in millimeters
+    double mMinFocalLength;
+    double mMaxFocalLength;
+    double mMinFStop;
+    double mMaxFStop;
     uint16_t mFlash;
     double mFocalLengthIn35mm;       // Focal length in 35mm film
     QString mLatitude;                // Image latitude
