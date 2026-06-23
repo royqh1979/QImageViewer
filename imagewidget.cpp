@@ -90,6 +90,7 @@ void ImageWidget::setImage(const QString &newPath)
         return;
     mImagePath = newPath;
     std::unique_ptr<QImageReader> reader = std::make_unique<QImageReader>(newPath);
+    reader->setAutoTransform(true);
     if (!reader->canRead() || reader->imageCount() == -1) {
         return;
     }
@@ -189,13 +190,16 @@ void ImageWidget::loadImage()
     if (mImageReader) {
         if (!mImageReader->canRead()) {
             mImageReader = std::make_unique<QImageReader>(mImagePath);
+            mImageReader->setAutoTransform(true);
         } else if (mCurrentFrameNumber < 0)
             mImageReader->jumpToImage(mImageFrameCount-1);
         mCurrentImageDelay = mImageReader->nextImageDelay();
         mImage = QPixmap::fromImage(mImageReader->read());
         mCurrentFrameNumber = mImageReader->currentImageNumber();
     } else {
-        mImage = QPixmap::fromImage(QImage{mImagePath});
+        QImageReader reader{mImagePath};
+        reader.setAutoTransform(true);
+        mImage = QPixmap::fromImage(reader.read());
     }
     postProcessImage();
     updateImage();
@@ -351,6 +355,7 @@ void ImageWidget::pause()
         return;
     if (!mImageReader) {
         mImageReader = std::make_unique<QImageReader>(mImagePath);
+        mImageReader->setAutoTransform(true);
         jumpToFrame(mImageReader, mCurrentFrameNumber);
         playNextFrame();
     } else {
@@ -366,6 +371,7 @@ void ImageWidget::stop()
     mFrameTimer->stop();
     mImageReader = nullptr;
     std::unique_ptr<QImageReader> reader = std::make_unique<QImageReader>(mImagePath);
+    reader->setAutoTransform(true);
     mImage = QPixmap::fromImage(reader->read());
     mCurrentImageDelay = reader->nextImageDelay();
     mCurrentFrameNumber = 0;
@@ -379,6 +385,7 @@ void ImageWidget::nextFrame()
     if (mImageReader || mImageFrameCount<=1)
         return;
     std::unique_ptr<QImageReader> reader=std::make_unique<QImageReader>(mImagePath);
+    reader->setAutoTransform(true);
     if (mCurrentFrameNumber!=mImageFrameCount-1)
         jumpToFrame(reader,mCurrentFrameNumber);
     mImage = QPixmap::fromImage(reader->read());
@@ -393,6 +400,7 @@ void ImageWidget::prevFrame()
     if (mImageReader || mImageFrameCount<=1)
         return;
     std::unique_ptr<QImageReader> reader=std::make_unique<QImageReader>(mImagePath);
+    reader->setAutoTransform(true);
     mCurrentFrameNumber--;
     if (mCurrentFrameNumber<0)
         mCurrentFrameNumber = mImageFrameCount-1;
