@@ -87,6 +87,8 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::onDirViewCurrentChanged);
     connect(ui->dirView, &ResizeawareListView::resized,
             this, &MainWindow::onDirViewSizeChanged);
+    connect(ui->dirView, &ResizeawareListView::enterPressed,
+            this, &MainWindow::onDirViewEnterPressed);
     ui->dirView->setAcceptDrops(false);
     mDirModel->setThumbnailSize(150);
     mThumbnailDelegate->setThumbnailSize(150);
@@ -140,6 +142,17 @@ void MainWindow::open(const QString &path)
     ui->statusbar->showMessage(tr("Openning \"%1\"").arg(path));
     mDirModel->open(path);
     ui->statusbar->clearMessage();
+}
+
+void MainWindow::tryOpenSubDirInDirView(const QModelIndex &index)
+{
+    if (!index.isValid())
+        return;
+    QString path = mDirModel->imagePath(index.row());
+    QFileInfo info{path};
+    if (info.isDir()) {
+        open(path);
+    }
 }
 
 void MainWindow::onCurrentDirChanged(const QString &oldPath, const QString &newPath)
@@ -242,6 +255,11 @@ void MainWindow::onImageWidgetContextMenuRequested(const QPoint &pos)
     menu->addAction(ui->actionFit_Width);
     menu->addAction(ui->actionFit_Height);
     menu->popup(mImageWidget->mapToGlobal(pos));
+}
+
+void MainWindow::onDirViewEnterPressed()
+{
+    tryOpenSubDirInDirView(ui->dirView->currentIndex());
 }
 
 void MainWindow::on_actionNext_triggered()
@@ -674,12 +692,6 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_dirView_doubleClicked(const QModelIndex &index)
 {
-    if (!index.isValid())
-        return;
-    QString path = mDirModel->imagePath(index.row());
-    QFileInfo info{path};
-    if (info.isDir()) {
-        open(path);
-    }
+    tryOpenSubDirInDirView(index);
 }
 

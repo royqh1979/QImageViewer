@@ -23,3 +23,16 @@ void ResizeawareListView::resizeEvent(QResizeEvent *event)
     //QListView::resizeEvent(event);
     mResizeTimer->start();
 }
+
+void ResizeawareListView::keyPressEvent(QKeyEvent *event)
+{
+    if (hasFocus() &&
+            (event->key() == Qt::Key_Enter
+             || event->key() == Qt::Key_Return)
+            && event->modifiers() == Qt::NoModifier)  {
+        emit enterPressed();
+        event->accept();
+        return;
+    }
+    QListView::keyPressEvent(event);
+}

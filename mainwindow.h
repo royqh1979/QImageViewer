@@ -22,6 +22,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void open(const QString& path);
+private:
+    void tryOpenSubDirInDirView(const QModelIndex &index);
 private slots:
     void onCurrentDirChanged(const QString& oldPath, const QString& newPath);
     void onCurrentFileChanged(int oldFileId, int currentFileId);
@@ -33,6 +35,7 @@ private slots:
     void updateImageFitType();
     void slideShowNextImage();
     void onImageWidgetContextMenuRequested(const QPoint &pos);
+    void onDirViewEnterPressed();
     void on_actionNext_triggered();
 
     void on_actionPrevious_triggered();

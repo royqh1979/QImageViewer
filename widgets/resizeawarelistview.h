@@ -9,11 +9,14 @@ public:
     explicit ResizeawareListView(QWidget *parent = nullptr);
 signals:
     void resized();
+    void enterPressed();
 private slots:
     void onResizeTimerTimeout();
     // QAbstractItemView interface
 public:
     void resizeEvent(QResizeEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+
 private:
     QTimer *mResizeTimer;
 };
