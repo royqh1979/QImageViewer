@@ -1,99 +1,117 @@
 #include "imagemetainfomodel.h"
-#include "imagemetainfo.h"
+#include <TinyEXIF.h>
 #include <cfloat>
+#include <fstream>
 
-ImageMetaInfoModel::ImageMetaInfoModel(QObject *parent):QStandardItemModel(parent),
-    mMetaInfo{nullptr}
+ImageMetaInfoModel::ImageMetaInfoModel(QObject *parent):QStandardItemModel(parent)
 {
-    setColumnCount(2);
 }
 
 ImageMetaInfoModel::~ImageMetaInfoModel()
 {
-    if (!mMetaInfo)
-        delete mMetaInfo;
 }
 
-void ImageMetaInfoModel::setMetaInfo(ImageMetaInfo *info)
+inline QString fromStdString(const std::string &s) {
+    return QString::fromUtf8(QByteArray::fromStdString(s));
+}
+void ImageMetaInfoModel::setImagePath(const QString& imagePath)
 {
-    if (info!=mMetaInfo) {
+    if (imagePath!=mImagePath) {
         beginResetModel();
         clear();
-        if (!mMetaInfo)
-            delete mMetaInfo;
-        mMetaInfo = info;
-        if (mMetaInfo->valid()) {
+        mImagePath = imagePath;
+        int parseResult{TinyEXIF::ErrorCode::PARSE_ABSENT_DATA};
+        TinyEXIF::EXIFInfo imageEXIF;
+        std::ifstream stream(imagePath.toLocal8Bit(), std::ios::binary);
+        if (stream) {
+            parseResult = imageEXIF.parseFrom(stream);
+        }
+        if (parseResult == TinyEXIF::PARSE_SUCCESS) {
             setColumnCount(2);
             QStandardItem *itemGPSInfos=new QStandardItem(tr("GPS Information"));
-            if (!mMetaInfo->latitude().isEmpty())
+            if (imageEXIF.GeoLocation.LatComponents.direction) {
+                QString latitude = QString("%1°%2'%3\" %4").arg(int(imageEXIF.GeoLocation.LatComponents.degrees))
+                        .arg(int(imageEXIF.GeoLocation.LatComponents.minutes))
+                        .arg(int(imageEXIF.GeoLocation.LatComponents.seconds))
+                        .arg(QChar(imageEXIF.GeoLocation.LatComponents.direction));   // Image latitude expressed as decimal
                 itemGPSInfos->appendRow({
                                             new QStandardItem(tr("Latitude")),
-                                            new QStandardItem(tr("%1").arg(mMetaInfo->latitude()))
+                                            new QStandardItem(latitude)
                                         });
-            if (!mMetaInfo->longitude().isEmpty())
+            }
+            if (imageEXIF.GeoLocation.LonComponents.direction) {
+                QString longitude = QString("%1°%2'%3\" %4").arg(int(imageEXIF.GeoLocation.LonComponents.degrees))
+                        .arg(int(imageEXIF.GeoLocation.LonComponents.minutes))
+                        .arg(int(imageEXIF.GeoLocation.LonComponents.seconds))
+                        .arg(QChar(imageEXIF.GeoLocation.LonComponents.direction));   // Image longitude expressed as decimal
                 itemGPSInfos->appendRow({
                                             new QStandardItem(tr("Longitude")),
-                                            new QStandardItem(tr("%1").arg(mMetaInfo->longitude()))
+                                            new QStandardItem(longitude)
                                         });
-            if (mMetaInfo->altitude()!=DBL_MAX)
+            }
+            if (imageEXIF.GeoLocation.Altitude!=DBL_MAX)
                 itemGPSInfos->appendRow({
                                             new QStandardItem(tr("Altitude")),
-                                            new QStandardItem(tr("%1").arg(mMetaInfo->altitude()))
+                                            new QStandardItem(tr("%1").arg(imageEXIF.GeoLocation.Altitude))
                                         });
             if (itemGPSInfos->rowCount()>0)
                 appendRow(itemGPSInfos);
             else
                 delete itemGPSInfos;
             QStandardItem *itemCameraInfos=new QStandardItem(tr("Camera Information"));
-            if (!mMetaInfo->serialNumber().isEmpty())
+            if (!imageEXIF.SerialNumber.empty())
                 itemCameraInfos->appendRow({
                                             new QStandardItem(tr("Serial Number")),
-                                            new QStandardItem(QString::fromUtf8(mMetaInfo->serialNumber()))
+                                            new QStandardItem(fromStdString(imageEXIF.SerialNumber))
                                         });
-            if (!mMetaInfo->model().isEmpty())
+            if (!imageEXIF.Model.empty())
                 itemCameraInfos->appendRow({
                                             new QStandardItem(tr("Model")),
-                                            new QStandardItem(QString::fromUtf8(mMetaInfo->model()))
+                                            new QStandardItem(fromStdString(imageEXIF.Model))
                                         });
-            if (!mMetaInfo->manufacturer().isEmpty())
+            if (!imageEXIF.Make.empty())
                 itemCameraInfos->appendRow({
                                             new QStandardItem(tr("Manufactor")),
-                                            new QStandardItem(QString::fromUtf8(mMetaInfo->manufacturer()))
+                                            new QStandardItem(fromStdString(imageEXIF.Make))
                                         });
-            if (!mMetaInfo->software().isEmpty())
+            if (!imageEXIF.CameraFirmware.empty())
+                itemCameraInfos->appendRow({
+                                            new QStandardItem(tr("Camera Firmware")),
+                                            new QStandardItem(fromStdString(imageEXIF.CameraFirmware))
+                                        });
+            if (!imageEXIF.Software.empty())
                 itemCameraInfos->appendRow({
                                             new QStandardItem(tr("Software")),
-                                            new QStandardItem(QString::fromUtf8(mMetaInfo->software()))
+                                            new QStandardItem(fromStdString(imageEXIF.Software))
                                         });
-            if (!mMetaInfo->lensModel().isEmpty())
-                itemCameraInfos->appendRow({
-                                            new QStandardItem(tr("Lens Model")),
-                                            new QStandardItem(QString::fromUtf8(mMetaInfo->lensModel()))
-                                        });
-            if (!mMetaInfo->lensSerialNumber().isEmpty())
+            if (!imageEXIF.LensInfo.SerialNumber.empty())
                 itemCameraInfos->appendRow({
                                             new QStandardItem(tr("Lens Serial Number")),
-                                            new QStandardItem(QString::fromUtf8(mMetaInfo->lensSerialNumber()))
+                                            new QStandardItem(fromStdString(imageEXIF.LensInfo.SerialNumber))
                                         });
-            if (!mMetaInfo->lensMake().isEmpty())
+            if (!imageEXIF.LensInfo.Model.empty())
+                itemCameraInfos->appendRow({
+                                            new QStandardItem(tr("Lens Model")),
+                                            new QStandardItem(fromStdString(imageEXIF.LensInfo.Model))
+                                        });
+            if (!imageEXIF.LensInfo.Make.empty())
                 itemCameraInfos->appendRow({
                                             new QStandardItem(tr("Lens Manufactor")),
-                                            new QStandardItem(QString::fromUtf8(mMetaInfo->lensMake()))
+                                            new QStandardItem(fromStdString(imageEXIF.LensInfo.Make))
                                         });
-
-            if (mMetaInfo->minFocalLength()!=0 && mMetaInfo->maxFocalLength()!=0)
+            if (imageEXIF.LensInfo.FocalLengthMin!=0 && imageEXIF.LensInfo.FocalLengthMax!=0)
                 itemCameraInfos->appendRow({
                                             new QStandardItem(tr("Min/Max Focal Length")),
                                             new QStandardItem(QString("%1 / %2")
-                                               .arg(mMetaInfo->minFocalLength())
-                                               .arg(mMetaInfo->maxFocalLength()))
+                                               .arg(imageEXIF.LensInfo.FocalLengthMin)
+                                               .arg(imageEXIF.LensInfo.FocalLengthMax))
                                         });
-            if (mMetaInfo->minFStop()!=0 && mMetaInfo->maxFStop()!=0)
+            if (imageEXIF.LensInfo.FStopMin!=0 && imageEXIF.LensInfo.FStopMax!=0)
                 itemCameraInfos->appendRow({
                                             new QStandardItem(tr("Min/Max FStop")),
                                             new QStandardItem(QString("%1 / %2")
-                                               .arg(mMetaInfo->minFStop())
-                                               .arg(mMetaInfo->maxFStop()))
+                                               .arg(imageEXIF.LensInfo.FStopMin)
+                                               .arg(imageEXIF.LensInfo.FStopMax))
                                         });
             if (itemCameraInfos->rowCount()>0)
                 appendRow(itemCameraInfos);
@@ -101,178 +119,158 @@ void ImageMetaInfoModel::setMetaInfo(ImageMetaInfo *info)
                 delete itemCameraInfos;
     //http://en.wikipedia.org/wiki/Exif#/media/File:DigiKam_EXIF_information_screenshot.png
             QStandardItem *itemImageInfos=new QStandardItem(tr("Image Information"));
-            if (!mMetaInfo->artist().isEmpty())
+            if (!imageEXIF.Artist.empty())
                 itemImageInfos->appendRow({
                                             new QStandardItem(tr("Artist")),
-                                            new QStandardItem(QString::fromUtf8(mMetaInfo->artist()))
+                                            new QStandardItem(fromStdString(imageEXIF.Artist))
                                         });
-            if (!mMetaInfo->copyright().isEmpty())
+            if (!imageEXIF.Copyright.empty())
                 itemImageInfos->appendRow({
                                             new QStandardItem(tr("Copyright")),
-                                            new QStandardItem(QString::fromUtf8(mMetaInfo->copyright()))
+                                            new QStandardItem(fromStdString(imageEXIF.Copyright))
                                         });
-            if (!mMetaInfo->dateTime().isEmpty())
+            if (!imageEXIF.DateTime.empty())
                 itemImageInfos->appendRow({
                                             new QStandardItem(tr("Date Time")),
-                                            new QStandardItem(QString::fromLocal8Bit(mMetaInfo->dateTime()))
+                                            new QStandardItem(fromStdString(imageEXIF.DateTime))
                                         });
-            if (!mMetaInfo->imageTitle().isEmpty())
+            if (!imageEXIF.ImageTitle.empty())
                 itemImageInfos->appendRow({
                                             new QStandardItem(tr("Image Title")),
-                                            new QStandardItem(QString::fromUtf8(mMetaInfo->imageTitle()))
+                                            new QStandardItem(fromStdString(imageEXIF.ImageTitle))
                                         });
-            if (!mMetaInfo->imageDescription().isEmpty())
+            if (!imageEXIF.ImageDescription.empty())
                 itemImageInfos->appendRow({
                                             new QStandardItem(tr("Image Description")),
-                                            new QStandardItem(QString::fromUtf8(mMetaInfo->imageDescription()))
+                                            new QStandardItem(fromStdString(imageEXIF.ImageDescription))
                                         });
-            if (mMetaInfo->rating()!=0)
+            if (imageEXIF.Rating!=0)
                 itemImageInfos->appendRow({
                                             new QStandardItem(tr("Rating")),
-                                            new QStandardItem(tr("%1").arg(mMetaInfo->rating()))
+                                            new QStandardItem(tr("%1").arg(imageEXIF.Rating))
                                         });
-            if (mMetaInfo->ratingPercent()!=0)
+            if (imageEXIF.RatingPercent!=0)
                 itemImageInfos->appendRow({
-                                            new QStandardItem(tr("Rating")),
-                                              new QStandardItem(tr("%1%").arg(mMetaInfo->ratingPercent()))
+                                            new QStandardItem(tr("Rating Percent")),
+                                              new QStandardItem(tr("%1%").arg(imageEXIF.RatingPercent))
                                         });
-
             if (itemImageInfos->rowCount()>0)
                 appendRow(itemImageInfos);
             else
                 delete itemImageInfos;
             QStandardItem *itemPhotoInfos=new QStandardItem(tr("Photo Information"));
-            if (mMetaInfo->focalLength()!=0)
+            if (imageEXIF.FocalLength!=0)
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("Focal Length")),
-                                            new QStandardItem(tr("%1 mm").arg(mMetaInfo->focalLength()))
+                                            new QStandardItem(tr("%1 mm").arg(imageEXIF.FocalLength))
                                         });
-            if (mMetaInfo->focalLengthIn35mm()!=0)
+            if (imageEXIF.LensInfo.FocalLengthIn35mm!=0)
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("Focal length(35m film)")),
-                                            new QStandardItem(tr("%1 mm").arg(mMetaInfo->focalLengthIn35mm()))
+                                            new QStandardItem(tr("%1 mm").arg(imageEXIF.LensInfo.FocalLengthIn35mm))
                                         });
-            if (mMetaInfo->apertureValue() != 0)
+            if (imageEXIF.LensInfo.DigitalZoomRatio!=0)
+                itemPhotoInfos->appendRow({
+                                            new QStandardItem(tr("Digital Zoom Ratio")),
+                                            new QStandardItem(tr("%1").arg(imageEXIF.LensInfo.DigitalZoomRatio))
+                                        });
+            if (imageEXIF.ApertureValue != 0)
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("Aperture")),
-                                            new QStandardItem(tr("%1").arg(mMetaInfo->apertureValue()))
+                                            new QStandardItem(tr("%1").arg(imageEXIF.ApertureValue))
                                         });
-            if (mMetaInfo->fNumber()!=0)
+            if (imageEXIF.FNumber!=0)
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("FNumber")),
-                                            new QStandardItem(tr("f/%1").arg(mMetaInfo->fNumber()))
+                                            new QStandardItem(tr("f/%1").arg(imageEXIF.FNumber))
                                         });
-            if (mMetaInfo->iSOSpeedRatings()!=0)
+            if (imageEXIF.ISOSpeedRatings!=0)
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("ISO Speed Rating")),
-                                            new QStandardItem(tr("%1").arg(mMetaInfo->iSOSpeedRatings()))
+                                            new QStandardItem(tr("%1").arg(imageEXIF.ISOSpeedRatings))
                                         });
-            if (mMetaInfo->shutterSpeedValue()!=0)
+            if (imageEXIF.ShutterSpeedValue!=0)
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("Shutter Speed Value")),
-                                            new QStandardItem(tr("%1").arg(mMetaInfo->shutterSpeedValue()))
+                                            new QStandardItem(tr("%1").arg(imageEXIF.ShutterSpeedValue))
                                         });
 
-            if (mMetaInfo->exposureTime()!=0)
+            if (imageEXIF.ExposureTime!=0)
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("Exposure Time")),
-                                            new QStandardItem(tr("1/%1 Seconds").arg(int(1/mMetaInfo->exposureTime())))
+                                            new QStandardItem(tr("1/%1 Seconds").arg(int(1/imageEXIF.ExposureTime)))
                                         });
-            if (mMetaInfo->brightnessValue()!=0)
+            if (imageEXIF.BrightnessValue!=0)
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("Brightness Value")),
-                                            new QStandardItem(tr("%1").arg(mMetaInfo->exposureBiasValue()))
+                                            new QStandardItem(tr("%1").arg(imageEXIF.BrightnessValue))
                                         });
-            if (mMetaInfo->exposureBiasValue()!=0)
+            if (imageEXIF.C!=0)
+                itemPhotoInfos->appendRow({
+                                            new QStandardItem(tr("Brightness Value")),
+                                            new QStandardItem(tr("%1").arg(imageEXIF.BrightnessValue))
+                                        });
+            if (imageEXIF.ExposureBiasValue!=0)
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("Exposure Bias")),
-                                            new QStandardItem(tr("%1").arg(mMetaInfo->exposureBiasValue()))
+                                            new QStandardItem(tr("%1").arg(imageEXIF.ExposureBiasValue))
                                         });
-            if (mMetaInfo->meteringMode()!=ImageMetaInfo::MeteringMode::Unknown) {
-                QString meteringMode;
-                switch(mMetaInfo->meteringMode()) {
-                case ImageMetaInfo::MeteringMode::Average:
-                    meteringMode = tr("Average");
-                    break;
-                case ImageMetaInfo::MeteringMode::CenterWeightedAverage:
-                    meteringMode = tr("Center Weighted Average");
-                    break;
-                case ImageMetaInfo::MeteringMode::MultiSpot:
-                    meteringMode = tr("Multi-Spot");
-                    break;
-                case ImageMetaInfo::MeteringMode::Partial:
-                    meteringMode = tr("Partial");
-                    break;
-                case ImageMetaInfo::MeteringMode::Pattern:
-                    meteringMode = tr("Pattern");
-                    break;
-                case ImageMetaInfo::MeteringMode::Spot:
-                    meteringMode = tr("Spot");
-                    break;
-                default:
-                    break;
-                }
+            if (imageEXIF.MeteringMode!=0) {
+                QHash<int,QString> meteringModes{
+                    {1,tr("Average")},
+                    {2,tr("Center Weighted Average")},
+                    {3,tr("Spot")},
+                    {4,tr("Multi Spot")},
+                    {5,tr("Pattern")},
+                    {6,tr("Partial")},
+                };
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("Metering Mode")),
-                                            new QStandardItem(tr("%1").arg(meteringMode))
+                                            new QStandardItem(meteringModes.value(imageEXIF.MeteringMode, tr("Unknown")))
                                         });
             }
-            if (mMetaInfo->exposureProgram()!=ImageMetaInfo::ExposureProgram::Unknown) {
-                QString exposureProgram;
-                switch(mMetaInfo->exposureProgram()) {
-                case ImageMetaInfo::ExposureProgram::Manual:
-                    exposureProgram = tr("Manual");
-                    break;
-                case ImageMetaInfo::ExposureProgram::NormalProgram:
-                    exposureProgram = tr("Normal Program");
-                    break;
-                case ImageMetaInfo::ExposureProgram::AperturePriority:
-                    exposureProgram = tr("Aperture Priority");
-                    break;
-                case ImageMetaInfo::ExposureProgram::ShutterPriority:
-                    exposureProgram = tr("Shutter Priority");
-                    break;
-                case ImageMetaInfo::ExposureProgram::CreativeProgram:
-                    exposureProgram = tr("Creative Program");
-                    break;
-                case ImageMetaInfo::ExposureProgram::ActionProgram:
-                    exposureProgram = tr("Action Program");
-                    break;
-                case ImageMetaInfo::ExposureProgram::PortraitMode:
-                    exposureProgram = tr("Portrait Mode");
-                    break;
-                case ImageMetaInfo::ExposureProgram::LandscapeMode:
-                    exposureProgram = tr("Landscape Mode");
-                    break;
-                default:
-                    break;
-                }
+            if (imageEXIF.ExposureProgram!=0) {
+                QHash<int,QString> exposurePrograms{
+                    {1,tr("Manual")},
+                    {2,tr("Normal program")},
+                    {3,tr("Aperture priority")},
+                    {4,tr("Shutter priority")},
+                    {5,tr("Creative program")},
+                    {6,tr("Action program")},
+                    {7,tr("Portrait mode")},
+                    {8,tr("Landscape mode")},
+                };
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("Exposure Program")),
-                                            new QStandardItem(tr("%1").arg(exposureProgram))
+                                            new QStandardItem(exposurePrograms.value(imageEXIF.ExposureProgram,tr("Unknown")))
                                         });
             }
-            if (mMetaInfo->exposureMode()!=0xFFFF) {
+            if (imageEXIF.ExposureMode!=0xFFFF) {
+                QHash<int,QString> exposureModes{
+                    {0,tr("Auto")},
+                    {1,tr("Manual")},
+                    {2,tr("Auto bracket")},
+                };
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("Exposure Mode")),
-                                            new QStandardItem(tr("%1").arg(mMetaInfo->exposureMode()))
+                                            new QStandardItem(exposureModes.value(imageEXIF.ExposureMode,tr("Unknown")))
                                         });
             }
-            if (mMetaInfo->flash())
+            if (imageEXIF.Flash)
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("Flash")),
-                                            new QStandardItem((mMetaInfo->flash()&1)?tr("On"):tr("Off"))
+                                            new QStandardItem((imageEXIF.Flash&1)?tr("On"):tr("Off"))
                                         });
-            if (mMetaInfo->whiteBalance()!=0xFFFF) {
+            if (imageEXIF.WhiteBalance!=0xFFFF) {
+                QHash<int,QString> whiteBalances{
+                    {0,tr("Auto")},
+                    {1,tr("Manual")},
+                };
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("White Balance")),
-                                            new QStandardItem(tr("%1").arg(mMetaInfo->whiteBalance()))
+                                            new QStandardItem(whiteBalances.value(imageEXIF.WhiteBalance,tr("Unknown")))
                                         });
             }
-    //        itemPhotoInfos->appendRow({
-    //                                    new QStandardItem(tr("White Balance")),
-    //                                    new QStandardItem(tr("%1").arg(mMetaInfo->iSOSpeedRatings()))
-    //                                });
             if (itemPhotoInfos->rowCount()>0)
                 appendRow(itemPhotoInfos);
             else
@@ -286,9 +284,4 @@ void ImageMetaInfoModel::setMetaInfo(ImageMetaInfo *info)
         }
         endResetModel();
     }
-}
-
-ImageMetaInfo *ImageMetaInfoModel::metaInfo() const
-{
-    return mMetaInfo;
 }

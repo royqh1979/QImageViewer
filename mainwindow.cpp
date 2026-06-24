@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include "imagewidget.h"
 #include "dirmodel.h"
-#include "imagemetainfo.h"
 #include "imagemetainfomodel.h"
 #include "thumbnailview.h"
 #include "settings.h"
@@ -157,8 +156,7 @@ void MainWindow::onCurrentFileChanged(int oldFileId, int currentFileId)
         ui->dirView->selectionModel()->select(index,QItemSelectionModel::SelectionFlag::Select);
         ui->dirView->setCurrentIndex(index);
         mImageWidget->setImage(mDirModel->imagePath(mDirModel->currentFileIdx()));
-        ImageMetaInfo *info=new ImageMetaInfo(mDirModel->imagePath(mDirModel->currentFileIdx()));
-        mImageMetaInfoModel->setMetaInfo(info);
+        mImageMetaInfoModel->setImagePath(mDirModel->imagePath(mDirModel->currentFileIdx()));
         ui->imageMetaInfoView->setFirstColumnSpanned(0,QModelIndex(),true);
         ui->imageMetaInfoView->setFirstColumnSpanned(1,QModelIndex(),true);
         ui->imageMetaInfoView->setFirstColumnSpanned(2,QModelIndex(),true);
@@ -166,6 +164,7 @@ void MainWindow::onCurrentFileChanged(int oldFileId, int currentFileId)
         ui->imageMetaInfoView->resizeColumnToContents(0);
     } else {
         mImageWidget->setImage("");
+        mImageMetaInfoModel->setImagePath("");
     }
     updateActions();
     updateStatusBar();

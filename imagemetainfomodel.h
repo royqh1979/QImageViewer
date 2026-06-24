@@ -3,18 +3,15 @@
 
 #include <QStandardItemModel>
 
-class ImageMetaInfo;
 class ImageMetaInfoModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
     ImageMetaInfoModel(QObject *parent = nullptr);
     ~ImageMetaInfoModel();
-    void setMetaInfo(ImageMetaInfo *metaInfo);
-    ImageMetaInfo *metaInfo() const;
-
+    void setImagePath(const QString& imagePath);
 private:
-    ImageMetaInfo *mMetaInfo;
+    QString mImagePath;
 };
 
 #endif // IMAGEMETAINFOMODEL_H

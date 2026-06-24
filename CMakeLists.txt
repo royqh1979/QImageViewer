@@ -49,8 +49,6 @@ set(PROJECT_SOURCES
 		aboutdialog.ui
         dirmodel.cpp
         dirmodel.h
-        imagemetainfo.h
-        imagemetainfo.cpp
         imagemetainfomodel.h
         imagemetainfomodel.cpp
         imagewidget.cpp
