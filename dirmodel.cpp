@@ -46,7 +46,7 @@ void DirModel::open(const QString &path)
         if (dirInfo.fileName()!=".") {
             PImageInfo info = std::make_shared<ImageInfo>();
             info->filename = dirInfo.fileName();
-            info->isDir=false;
+            info->isDir=true;
             info->fullPath = dir.absoluteFilePath(info->filename);
             info->thumbnail = mDirThumbnail;
             info->thumbnailTime = QDateTime::currentDateTime();
@@ -203,8 +203,12 @@ void DirModel::setThumbnail(const QString &dirPath, int imageIdx, int thumbnailS
 void DirModel::clearThumbnails()
 {
     QMutexLocker locker{&mMutex};
+    reloadDirThumbnail();
     foreach(PImageInfo info, mImageInfos) {
-        info->thumbnail = QPixmap();
+        if (info->isDir)
+            info->thumbnail = mDirThumbnail;
+        else
+            info->thumbnail = QPixmap();
     }
     QModelIndex top=createIndex(0,0);
     QModelIndex bottom = createIndex(mImageInfos.count()-1,0);
@@ -238,7 +242,6 @@ void DirModel::setThumbnailSize(int newThumbnailSize)
 {
     if (newThumbnailSize!=mThumbnailSize) {
         mThumbnailSize = newThumbnailSize;
-        reloadDirThumbnail();
         clearThumbnails();
     }
 }

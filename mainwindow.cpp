@@ -207,6 +207,7 @@ void MainWindow::onDirViewSizeChanged()
     mThumbnailDelegate->setThumbnailSize(width);
     mDirModel->setThumbnailSize(width);
     ui->dirView->doItemsLayout();
+    ui->dirView->scrollTo(ui->dirView->currentIndex());
 }
 
 void MainWindow::updateImageFitType()
