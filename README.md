@@ -11,3 +11,5 @@ Icons Contribution:
  - Exit by Icon Lauk from <a href="https://thenounproject.com/browse/icons/term/exit/" target="_blank" title="Exit Icons">Noun Project</a> (CC BY 3.0)
  - copy by Rizalwale from <a href="https://thenounproject.com/browse/icons/term/copy/" target="_blank" title="copy Icons">Noun Project</a> (CC BY 3.0)
  - copy image by Arjuna from <a href="https://thenounproject.com/browse/icons/term/copy-image/" target="_blank" title="copy image Icons">Noun Project</a> (CC BY 3.0)
+ - folder by Goran Spasojevic from <a href="https://icon-sets.iconify.design/glyphs-poly/" target="_blank" title="copy image Icons">Iconify</a> (MIT)
+

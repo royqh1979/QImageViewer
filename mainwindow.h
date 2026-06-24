@@ -88,6 +88,8 @@ private slots:
 
     void on_actionAbout_triggered();
 
+    void on_dirView_doubleClicked(const QModelIndex &index);
+
 private:
     void updateStatusBar();
     void applySettings();

@@ -670,3 +670,15 @@ void MainWindow::on_actionAbout_triggered()
     dlg.exec();
 }
 
+
+void MainWindow::on_dirView_doubleClicked(const QModelIndex &index)
+{
+    if (!index.isValid())
+        return;
+    QString path = mDirModel->imagePath(index.row());
+    QFileInfo info{path};
+    if (info.isDir()) {
+        open(path);
+    }
+}
+

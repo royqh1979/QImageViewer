@@ -4,12 +4,15 @@
 #include <QImageReader>
 #include <QMimeData>
 #include <QSemaphore>
+#include <QApplication>
+#include <QStyle>
+
 
 DirModel::DirModel(QObject *parent) : QAbstractListModel(parent),
     mThumbnailSize{256},
     mCurrentFileIdx{-1}
 {
-
+    reloadDirThumbnail();
 }
 
 void DirModel::open(const QString &path)
@@ -30,17 +33,33 @@ void DirModel::open(const QString &path)
     if (oldPath != mPath)
         mCurrentFileIdx = -1;
 
-    QFileInfoList fileInfos =  dir.entryInfoList(QDir::Filter::Files);
+    QFileInfoList fileInfos =  dir.entryInfoList(QDir::Filter::Files );
+    QFileInfoList dirInfos =  dir.entryInfoList(QDir::Filter::Dirs);
     beginResetModel();
     QMutexLocker lock{&mMutex};
     mLoadings.clear();
     mImageInfos.clear();
     mImageInfoIndex.clear();
+    mSubDirCount = 0;
     int idx = -1;
+    foreach(const QFileInfo & dirInfo, dirInfos) {
+        if (dirInfo.fileName()!=".") {
+            PImageInfo info = std::make_shared<ImageInfo>();
+            info->filename = dirInfo.fileName();
+            info->isDir=false;
+            info->fullPath = dir.absoluteFilePath(info->filename);
+            info->thumbnail = mDirThumbnail;
+            info->thumbnailTime = QDateTime::currentDateTime();
+            mImageInfos.append(info);
+            mImageInfoIndex.insert(info->fullPath,info);
+        }
+    }
+    mSubDirCount = mImageInfos.count();
     foreach(const QFileInfo & fileInfo, fileInfos) {
         if (QImageReader::supportedImageFormats().contains(fileInfo.suffix().toLower().toLocal8Bit())) {
             PImageInfo info = std::make_shared<ImageInfo>();
             info->filename = fileInfo.fileName();
+            info->isDir=false;
             info->fullPath = dir.absoluteFilePath(info->filename);
             info->thumbnailTime = QDateTime::currentDateTime();
             if (info->filename == fileName)
@@ -73,6 +92,7 @@ void DirModel::close()
     mLoadings.clear();
     mImageInfos.clear();
     mImageInfoIndex.clear();
+    mSubDirCount = 0;
     mCurrentFileIdx = -1;
     endResetModel();
     emit pathChanged(oldPath, mPath);
@@ -104,17 +124,23 @@ int DirModel::currentFileIdx() const
 
 void DirModel::toNext()
 {
-    setCurrentFileIdx(currentFileIdx()+1);
+    int idx = currentFileIdx()+1;
+    if (idx >= imageCount())
+        idx = mSubDirCount;
+    setCurrentFileIdx(idx);
 }
 
 void DirModel::toPrevious()
 {
-    setCurrentFileIdx(currentFileIdx()-1);
+    int idx = currentFileIdx()-1;
+    if (idx < mSubDirCount)
+        idx = imageCount()-1;
+    setCurrentFileIdx(idx);
 }
 
 void DirModel::toFirst()
 {
-    setCurrentFileIdx(0);
+    setCurrentFileIdx(mSubDirCount);
 }
 
 void DirModel::toLast()
@@ -197,6 +223,12 @@ void DirModel::loadThumbnail(int idx, const QString &path) const
     loader->start();
 }
 
+void DirModel::reloadDirThumbnail()
+{
+    QPixmap thumb{":/icons/images/glyphs-poly--folder.svg"};
+    mDirThumbnail = thumb.scaled(mThumbnailSize,mThumbnailSize);
+}
+
 int DirModel::thumbnailSize() const
 {
     return mThumbnailSize;
@@ -206,6 +238,7 @@ void DirModel::setThumbnailSize(int newThumbnailSize)
 {
     if (newThumbnailSize!=mThumbnailSize) {
         mThumbnailSize = newThumbnailSize;
+        reloadDirThumbnail();
         clearThumbnails();
     }
 }

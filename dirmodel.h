@@ -13,6 +13,7 @@
 #include <memory>
 
 struct ImageInfo {
+    bool isDir;
     QString filename;
     QString fullPath;
     QPixmap thumbnail;
@@ -49,12 +50,15 @@ private slots:
 private:
     void clearThumbnails();
     void loadThumbnail(int idx, const QString& path) const;
+    void reloadDirThumbnail();
 private:
     QString mPath;
     int mThumbnailSize;
     QList<PImageInfo> mImageInfos;
     QHash<QString, PImageInfo> mImageInfoIndex;
+    int mSubDirCount;
     int mCurrentFileIdx;
+    QPixmap mDirThumbnail;
     mutable QSet<int> mLoadings;
     mutable QRecursiveMutex mMutex;
 

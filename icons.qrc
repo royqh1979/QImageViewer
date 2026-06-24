@@ -31,5 +31,6 @@
         <file>images/noun-exit.svg</file>
         <file>images/noun-copy.svg</file>
         <file>images/noun-copy-image.svg</file>
+        <file>images/glyphs-poly--folder.svg</file>
     </qresource>
 </RCC>
