@@ -29,7 +29,7 @@ void ImageMetaInfoModel::setImagePath(const QString& imagePath)
         if (parseResult == TinyEXIF::PARSE_SUCCESS) {
             setColumnCount(2);
             QStandardItem *itemGPSInfos=new QStandardItem(tr("GPS Information"));
-            if (imageEXIF.GeoLocation.LatComponents.direction) {
+            if (imageEXIF.GeoLocation.hasLatLon()) {
                 QString latitude = QString("%1°%2'%3\" %4").arg(int(imageEXIF.GeoLocation.LatComponents.degrees))
                         .arg(int(imageEXIF.GeoLocation.LatComponents.minutes))
                         .arg(int(imageEXIF.GeoLocation.LatComponents.seconds))
@@ -39,7 +39,7 @@ void ImageMetaInfoModel::setImagePath(const QString& imagePath)
                                             new QStandardItem(latitude)
                                         });
             }
-            if (imageEXIF.GeoLocation.LonComponents.direction) {
+            if (imageEXIF.GeoLocation.hasLatLon()) {
                 QString longitude = QString("%1°%2'%3\" %4").arg(int(imageEXIF.GeoLocation.LonComponents.degrees))
                         .arg(int(imageEXIF.GeoLocation.LonComponents.minutes))
                         .arg(int(imageEXIF.GeoLocation.LonComponents.seconds))
@@ -49,7 +49,7 @@ void ImageMetaInfoModel::setImagePath(const QString& imagePath)
                                             new QStandardItem(longitude)
                                         });
             }
-            if (imageEXIF.GeoLocation.Altitude!=DBL_MAX)
+            if (imageEXIF.GeoLocation.hasAltitude())
                 itemGPSInfos->appendRow({
                                             new QStandardItem(tr("Altitude")),
                                             new QStandardItem(tr("%1").arg(imageEXIF.GeoLocation.Altitude))
