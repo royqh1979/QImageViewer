@@ -43,7 +43,9 @@ public:
     QSize imageSize() const;
     QString imagePath() const;
 
-    QPixmap currentFrame() const;
+    QImage currentFrame() const;
+    int currentFrameNumber() const;
+    int frameCount() const;
 
     const QColor &background() const;
     void setBackground(const QColor &newBackground);
@@ -66,6 +68,8 @@ public:
     void nextFrame();
     void prevFrame();
     bool isAnimation() const;
+    bool playing() const;
+    bool canPlay() const;
 signals:
     void imageUpdated();
     void fitTypeChanged();
@@ -86,8 +90,8 @@ private:
     AutoFitType mFitType;
     AutoFitType mWorkingFitType;
     QString mImagePath;
-    QPixmap mImage;
-    QPixmap mCachedImage;
+    QImage mImage;
+    QImage mCachedImage;
     QTransform mTransform;
     std::unique_ptr<QImageReader> mImageReader;
     int mImageFrameCount;

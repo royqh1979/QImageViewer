@@ -43,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::slideShowNextImage);
 
     mInFullScreen = false;
+    mImageNameInfo = new QLabel(this);
+    ui->statusbar->addWidget(mImageNameInfo);
     mPageInfo = new QLabel(this);
     mPageInfo->setText(" ");
     ui->statusbar->addPermanentWidget(mPageInfo);
@@ -66,6 +68,8 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::onRequestNextImage);
     connect(mImageWidget, &ImageWidget::imageUpdated,
             this, &MainWindow::updateStatusBar);
+    connect(mImageWidget, &ImageWidget::imageUpdated,
+            this, &MainWindow::updateActions);
     connect(mImageWidget, &QWidget::customContextMenuRequested,
             this , &MainWindow::onImageWidgetContextMenuRequested);
     mImageWidget->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -286,7 +290,7 @@ void MainWindow::updateStatusBar()
         mZoomFactor->setEnabled(false);
         mImageSizeInfo->setText(" ");
         mPageInfo->setText(" ");
-        ui->statusbar->clearMessage();
+        mImageNameInfo->setText("");
     } else {
         mZoomFactor->blockSignals(true);
         mZoomFactor->setValue(mImageWidget->ratio()*100);
@@ -295,7 +299,17 @@ void MainWindow::updateStatusBar()
         mImageSizeInfo->setText(QString(" %1x%2 ").arg(mImageWidget->imageSize().width()).arg(mImageWidget->imageSize().height()));
         mPageInfo->setText(QString("%1/%2").arg(mDirModel->currentFileIdx()+1)
                                .arg(mDirModel->imageCount()));
-        ui->statusbar->showMessage(mDirModel->imageFileName(mDirModel->currentFileIdx()));
+        QString s;
+        QString imageName = mDirModel->imageFileName(mDirModel->currentFileIdx());
+        if (mImageWidget->isAnimation()) {
+            s=QString("%1[%2/%3]")
+                    .arg(imageName)
+                    .arg(mImageWidget->currentFrameNumber()+1)
+                    .arg(mImageWidget->frameCount());
+        } else {
+            s=imageName;
+        }
+        mImageNameInfo->setText(s);
     }
 }
 
@@ -333,6 +347,12 @@ void MainWindow::updateActions()
     bool isAnimation = mImageWidget->isAnimation();
     ui->menuAnimation->menuAction()->setVisible(isAnimation);
     ui->menuAnimation->menuAction()->setEnabled(isAnimation);
+    bool isPlayingAnimation = mImageWidget->playing();
+    bool canPlayingAnimation = mImageWidget->canPlay();
+    ui->actionPause_Animation->setEnabled(canPlayingAnimation);
+    ui->actionStop_Animation->setEnabled(isPlayingAnimation);
+    ui->actionNext_Frame->setEnabled(isAnimation && !isPlayingAnimation);
+    ui->actionPrev_Frame->setEnabled(isAnimation && !isPlayingAnimation);
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -519,7 +539,7 @@ void MainWindow::on_actionPrint_triggered()
 
     QPainter painter(&printer);
 
-    QPixmap pixmap = mImageWidget->currentFrame();
+    QPixmap pixmap = QPixmap::fromImage(mImageWidget->currentFrame());
     // 计算缩放比例，让图片完整打印在页面内（保持宽高比）
     QRect rect = painter.viewport();
     QSize size = pixmap.size();
@@ -538,7 +558,7 @@ void MainWindow::on_actionPrint_Preview_triggered()
     QPrinter printer(QPrinter::HighResolution);
     QPrintPreviewDialog preview(&printer, this);
 
-    QPixmap pixmap = mImageWidget->currentFrame();
+    QPixmap pixmap = QPixmap::fromImage(mImageWidget->currentFrame());
 
     QObject::connect(&preview, &QPrintPreviewDialog::paintRequested,
                      [&pixmap](QPrinter *printer) {
@@ -559,7 +579,7 @@ void MainWindow::on_actionPrint_Preview_triggered()
 
 void MainWindow::on_actionCopy_triggered()
 {
-    QPixmap pixmap = mImageWidget->currentFrame();
+    QPixmap pixmap = QPixmap::fromImage(mImageWidget->currentFrame());
     if (!pixmap.isNull()) {
         QApplication::clipboard()->setPixmap(pixmap);
     }

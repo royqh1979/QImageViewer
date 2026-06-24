@@ -99,6 +99,7 @@ private:
     QSpinBox *mZoomFactor;
     QLabel *mImageSizeInfo;
     QLabel *mPageInfo;
+    QLabel *mImageNameInfo;
     ImageMetaInfoModel *mImageMetaInfoModel;
     ThumbnailDelegate *mThumbnailDelegate;
     bool mInFullScreen;
