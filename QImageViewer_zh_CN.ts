@@ -71,7 +71,7 @@
 <context>
     <name>ImageMetaInfoModel</name>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="282"/>
+        <location filename="imagemetainfomodel.cpp" line="277"/>
         <source>No Information</source>
         <translation>无信息</translation>
     </message>
@@ -94,7 +94,6 @@
         <location filename="imagemetainfomodel.cpp" line="195"/>
         <location filename="imagemetainfomodel.cpp" line="206"/>
         <location filename="imagemetainfomodel.cpp" line="211"/>
-        <location filename="imagemetainfomodel.cpp" line="216"/>
         <source>%1</source>
         <translation>%1</translation>
     </message>
@@ -226,12 +225,11 @@
     </message>
     <message>
         <location filename="imagemetainfomodel.cpp" line="205"/>
-        <location filename="imagemetainfomodel.cpp" line="210"/>
         <source>Brightness Value</source>
         <translation>亮度值</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="215"/>
+        <location filename="imagemetainfomodel.cpp" line="210"/>
         <source>Exposure Bias</source>
         <translation>曝光补偿</translation>
     </message>
@@ -246,9 +244,9 @@
         <translation>1/%1 秒</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="234"/>
-        <location filename="imagemetainfomodel.cpp" line="251"/>
-        <location filename="imagemetainfomodel.cpp" line="267"/>
+        <location filename="imagemetainfomodel.cpp" line="229"/>
+        <location filename="imagemetainfomodel.cpp" line="246"/>
+        <location filename="imagemetainfomodel.cpp" line="262"/>
         <source>Manual</source>
         <translation>手动</translation>
     </message>
@@ -277,13 +275,13 @@
         <translation type="vanished">人像模式</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="255"/>
+        <location filename="imagemetainfomodel.cpp" line="250"/>
         <source>Exposure Mode</source>
         <oldsource>Landscape Mode</oldsource>
         <translation>曝光模式</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="244"/>
+        <location filename="imagemetainfomodel.cpp" line="239"/>
         <source>Exposure Program</source>
         <translation>曝光程序</translation>
     </message>
@@ -293,81 +291,81 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="223"/>
+        <location filename="imagemetainfomodel.cpp" line="218"/>
         <source>Multi Spot</source>
         <translation>多点测光</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="229"/>
-        <location filename="imagemetainfomodel.cpp" line="245"/>
-        <location filename="imagemetainfomodel.cpp" line="256"/>
-        <location filename="imagemetainfomodel.cpp" line="271"/>
+        <location filename="imagemetainfomodel.cpp" line="224"/>
+        <location filename="imagemetainfomodel.cpp" line="240"/>
+        <location filename="imagemetainfomodel.cpp" line="251"/>
+        <location filename="imagemetainfomodel.cpp" line="266"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="235"/>
+        <location filename="imagemetainfomodel.cpp" line="230"/>
         <source>Normal program</source>
         <translation>普通程序</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="236"/>
+        <location filename="imagemetainfomodel.cpp" line="231"/>
         <source>Aperture priority</source>
         <translation>光圈优先</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="237"/>
+        <location filename="imagemetainfomodel.cpp" line="232"/>
         <source>Shutter priority</source>
         <translation>快门优先</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="238"/>
+        <location filename="imagemetainfomodel.cpp" line="233"/>
         <source>Creative program</source>
         <translation>创意</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="239"/>
+        <location filename="imagemetainfomodel.cpp" line="234"/>
         <source>Action program</source>
         <translation>动作</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="240"/>
+        <location filename="imagemetainfomodel.cpp" line="235"/>
         <source>Portrait mode</source>
         <translation>人像(背景虚化)</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="241"/>
+        <location filename="imagemetainfomodel.cpp" line="236"/>
         <source>Landscape mode</source>
         <translation>风景</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="250"/>
-        <location filename="imagemetainfomodel.cpp" line="266"/>
+        <location filename="imagemetainfomodel.cpp" line="245"/>
+        <location filename="imagemetainfomodel.cpp" line="261"/>
         <source>Auto</source>
         <translation>自动</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="252"/>
+        <location filename="imagemetainfomodel.cpp" line="247"/>
         <source>Auto bracket</source>
         <translation>自动包围曝光</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="261"/>
+        <location filename="imagemetainfomodel.cpp" line="256"/>
         <source>Flash</source>
         <translation>闪光灯</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="262"/>
+        <location filename="imagemetainfomodel.cpp" line="257"/>
         <source>On</source>
         <translation>开</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="262"/>
+        <location filename="imagemetainfomodel.cpp" line="257"/>
         <source>Off</source>
         <translation>关</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="270"/>
+        <location filename="imagemetainfomodel.cpp" line="265"/>
         <source>White Balance</source>
         <translation>白平衡模式</translation>
     </message>
@@ -382,12 +380,12 @@
         <translation>f/%1</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="220"/>
+        <location filename="imagemetainfomodel.cpp" line="215"/>
         <source>Average</source>
         <translation>平均测光</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="221"/>
+        <location filename="imagemetainfomodel.cpp" line="216"/>
         <source>Center Weighted Average</source>
         <translation>中央重点测光</translation>
     </message>
@@ -396,22 +394,22 @@
         <translation type="vanished">多重区域测光</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="225"/>
+        <location filename="imagemetainfomodel.cpp" line="220"/>
         <source>Partial</source>
         <translation>局部测光</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="224"/>
+        <location filename="imagemetainfomodel.cpp" line="219"/>
         <source>Pattern</source>
         <translation>模式</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="222"/>
+        <location filename="imagemetainfomodel.cpp" line="217"/>
         <source>Spot</source>
         <translation>点测光</translation>
     </message>
     <message>
-        <location filename="imagemetainfomodel.cpp" line="228"/>
+        <location filename="imagemetainfomodel.cpp" line="223"/>
         <source>Metering Mode</source>
         <translation>测光模式</translation>
     </message>

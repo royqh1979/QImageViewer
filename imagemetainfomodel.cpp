@@ -205,11 +205,6 @@ void ImageMetaInfoModel::setImagePath(const QString& imagePath)
                                             new QStandardItem(tr("Brightness Value")),
                                             new QStandardItem(tr("%1").arg(imageEXIF.BrightnessValue))
                                         });
-            if (imageEXIF.C!=0)
-                itemPhotoInfos->appendRow({
-                                            new QStandardItem(tr("Brightness Value")),
-                                            new QStandardItem(tr("%1").arg(imageEXIF.BrightnessValue))
-                                        });
             if (imageEXIF.ExposureBiasValue!=0)
                 itemPhotoInfos->appendRow({
                                             new QStandardItem(tr("Exposure Bias")),
