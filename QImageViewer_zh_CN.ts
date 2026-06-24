@@ -288,7 +288,7 @@
     <message>
         <location filename="imagemetainfomodel.cpp" line="174"/>
         <source>Digital Zoom Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>数码变焦比</translation>
     </message>
     <message>
         <location filename="imagemetainfomodel.cpp" line="218"/>
@@ -401,7 +401,7 @@
     <message>
         <location filename="imagemetainfomodel.cpp" line="219"/>
         <source>Pattern</source>
-        <translation>模式</translation>
+        <translation>多重区域测光</translation>
     </message>
     <message>
         <location filename="imagemetainfomodel.cpp" line="217"/>
