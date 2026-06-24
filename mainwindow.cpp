@@ -300,8 +300,8 @@ void MainWindow::updateStatusBar()
         mImageSizeInfo->setText(QString(" %1x%2 ").arg(mImageWidget->imageSize().width()).arg(mImageWidget->imageSize().height()));
         mPageInfo->setText(QString("%1/%2").arg(mDirModel->currentFileIdx()+1)
                                .arg(mDirModel->imageCount()));
-        QString s;
         QString imageName = mDirModel->imageFileName(mDirModel->currentFileIdx());
+        QString s;
         if (mImageWidget->isAnimation()) {
             s=QString("%1[%2/%3]")
                     .arg(imageName)
