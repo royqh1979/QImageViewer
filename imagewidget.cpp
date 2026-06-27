@@ -411,6 +411,10 @@ void ImageWidget::jumpToFrame(std::unique_ptr<QImageReader> &reader, int frameNu
     if (!isOk) {    
         reader = std::make_unique<QImageReader>(mImagePath);
         reader->setAutoTransform(true);
+        Q_ASSERT(reader->supportsAnimation());
+        //fail safe
+        if (!reader->supportsAnimation())
+            return;
         while(reader->canRead()) {
             reader->read();
             if (frameNumber == reader->currentImageNumber()+1)
