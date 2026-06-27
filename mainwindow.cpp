@@ -371,7 +371,7 @@ void MainWindow::updateActions()
     bool isPlayingAnimation = mImageWidget->playing();
     bool canPlayingAnimation = mImageWidget->canPlay();
     ui->actionPause_Animation->setEnabled(canPlayingAnimation);
-    ui->actionStop_Animation->setEnabled(isPlayingAnimation);
+    ui->actionStop_Animation->setEnabled(canPlayingAnimation && mImageWidget->currentFrameNumber()!=0);
     ui->actionNext_Frame->setEnabled(isAnimation && !isPlayingAnimation);
     ui->actionPrev_Frame->setEnabled(isAnimation && !isPlayingAnimation);
 }

@@ -99,19 +99,12 @@ void ImageWidget::setImage(const QString &newPath)
         mImageFrameCount = 1;
         loadImage();
     } else {
-        mImageFrameCount = reader->imageCount();        
-        mImage = reader->read();
-        mCurrentImageDelay = reader->nextImageDelay();
-        mCurrentFrameNumber = reader->currentImageNumber();
-        qDebug()<<mCurrentImageDelay<<mCurrentFrameNumber;
-
-        postProcessImage();
-        updateImage();
+        mImageFrameCount = reader->imageCount();
         // start play
         mImageReader = std::move(reader);
-        mFrameTimer->setInterval(mCurrentImageDelay);
-        mFrameTimer->start();
-        emit playingChanged();
+        loadImage();
+        if (mImageReader->supportsAnimation())
+            playNextFrame();
     }
     horizontalScrollBar()->setValue(0);
     verticalScrollBar()->setValue(0);
@@ -214,7 +207,6 @@ void ImageWidget::loadImage()
         mImage = mImageReader->read();
         mCurrentImageDelay = mImageReader->nextImageDelay();
         mCurrentFrameNumber = mImageReader->currentImageNumber();
-        qDebug()<<mCurrentImageDelay<<mCurrentFrameNumber;
     } else {
         QImageReader reader{mImagePath};
         reader.setAutoTransform(true);
@@ -353,15 +345,11 @@ void ImageWidget::pause()
 {
     if (mImageFrameCount<=1)
         return;
-    if (!mImageReader) {
-        mImageReader = std::make_unique<QImageReader>(mImagePath);
-        mImageReader->setAutoTransform(true);
-        jumpToFrame(mImageReader, mCurrentFrameNumber);
+    if (!mFrameTimer->isActive()) {
         emit playingChanged();
         playNextFrame();
     } else {
         mFrameTimer->stop();
-        mImageReader = nullptr;
         emit playingChanged();
     }
 }
@@ -371,60 +359,47 @@ void ImageWidget::stop()
     if (mImageFrameCount<=1)
         return;
     mFrameTimer->stop();
-    mImageReader = nullptr;
     emit playingChanged();
-    std::unique_ptr<QImageReader> reader = std::make_unique<QImageReader>(mImagePath);
-    reader->setAutoTransform(true);
-    mImage = reader->read();
-    mCurrentImageDelay = reader->nextImageDelay();
-    mCurrentFrameNumber = 0;
-    postProcessImage();
-    updateImage();
+    mImageReader = std::make_unique<QImageReader>(mImagePath);
+    mImageReader->setAutoTransform(true);
+    loadImage();
 }
 
 
 void ImageWidget::nextFrame()
 {
-    if (mImageReader || mImageFrameCount<=1)
+    if (playing() || mImageFrameCount<=1)
         return;
-    std::unique_ptr<QImageReader> reader=std::make_unique<QImageReader>(mImagePath);
-    reader->setAutoTransform(true);
-    if (mCurrentFrameNumber!=mImageFrameCount-1)
-        jumpToFrame(reader,mCurrentFrameNumber);
-    mImage = reader->read();
-    mCurrentImageDelay = reader->nextImageDelay();
-    mCurrentFrameNumber = reader->currentImageNumber();
-    postProcessImage();
-    updateImage();
+    if (!mImageReader)
+        return;
+    if (canPlay()) {
+        loadImage();
+    } else {
+        if (mCurrentFrameNumber!=mImageFrameCount-1)
+            jumpToFrame(mImageReader,mCurrentFrameNumber+1);
+        else
+            jumpToFrame(mImageReader,0);
+        loadImage();
+    }
 }
 
 void ImageWidget::prevFrame()
 {
-    if (mImageReader || mImageFrameCount<=1)
+    if (playing() || mImageFrameCount<=1)
         return;
-    std::unique_ptr<QImageReader> reader=std::make_unique<QImageReader>(mImagePath);
-    reader->setAutoTransform(true);
-    mCurrentFrameNumber--;
-    if (mCurrentFrameNumber<0)
-        mCurrentFrameNumber = mImageFrameCount-1;
-    if (mCurrentFrameNumber!=0)
-        jumpToFrame(reader,mCurrentFrameNumber-1);
-    mImage = reader->read();
-    mCurrentImageDelay = reader->nextImageDelay();
-    mCurrentFrameNumber = reader->currentImageNumber();
-    postProcessImage();
-    updateImage();
+    if (!mImageReader)
+        return;
+    if (mCurrentFrameNumber==0)
+        jumpToFrame(mImageReader,mImageFrameCount-1);
+    else
+        jumpToFrame(mImageReader,mCurrentFrameNumber-1);
+    loadImage();
 }
 
 void ImageWidget::playNextFrame()
 {
-    if (!mImageReader || mImageFrameCount<=1)
+    if (mImageFrameCount<=1)
         return;
-    if (mCurrentImageDelay<=0) {
-        mImageReader = nullptr;
-        emit playingChanged();
-        return;
-    }
     mFrameTimer->setInterval(mCurrentImageDelay);
     mFrameTimer->start();
     loadImage();
@@ -432,11 +407,13 @@ void ImageWidget::playNextFrame()
 
 void ImageWidget::jumpToFrame(std::unique_ptr<QImageReader> &reader, int frameNumber)
 {
-    bool isOk = reader->jumpToImage(frameNumber+1);
-    if (!isOk) {
+    bool isOk = reader->jumpToImage(frameNumber);
+    if (!isOk) {    
+        reader = std::make_unique<QImageReader>(mImagePath);
+        reader->setAutoTransform(true);
         while(reader->canRead()) {
             reader->read();
-            if (frameNumber == reader->currentImageNumber())
+            if (frameNumber == reader->currentImageNumber()+1)
                 break;
         }
     }
@@ -449,7 +426,7 @@ bool ImageWidget::isAnimation() const
 
 bool ImageWidget::playing() const
 {
-    return mImageFrameCount>1 && mImageReader;
+    return mImageFrameCount>1 && mFrameTimer->isActive();
 }
 
 bool ImageWidget::canPlay() const
