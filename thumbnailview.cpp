@@ -31,8 +31,8 @@ void ThumbnailDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     if (!icon.isNull()) {
         painter->drawPixmap(option.rect.left()+std::max(0,mThumbnailSize-icon.width())/2,
                             option.rect.top()+std::max(0,mThumbnailSize-icon.height())/2,icon);
-        painter->drawRect(option.rect.left()+std::max(0,mThumbnailSize-icon.width())/2,
-                          option.rect.top()+std::max(0,mThumbnailSize-icon.height())/2,icon.width(),icon.height());
+//        painter->drawRect(option.rect.left()+std::max(0,mThumbnailSize-icon.width())/2,
+//                          option.rect.top()+std::max(0,mThumbnailSize-icon.height())/2,icon.width(),icon.height());
     }
 
     // 2. 根据选中状态设置正确的文本颜色

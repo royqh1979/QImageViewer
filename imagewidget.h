@@ -62,7 +62,6 @@ public:
     void scrollToLeft();
     void scrollToRight();
 
-    void play();
     void pause();
     void stop();
     void nextFrame();
@@ -71,6 +70,7 @@ public:
     bool playing() const;
     bool canPlay() const;
 signals:
+    bool playingChanged();
     void imageUpdated();
     void fitTypeChanged();
     void requestPrevImage(bool scrollToBottom);
