@@ -1,0 +1,30 @@
+diff -urN qtimageformats-everywhere-src-5.15.18.orig/src/plugins/imageformats/webp/qwebphandler.cpp qtimageformats-everywhere-src-5.15.18/src/plugins/imageformats/webp/qwebphandler.cpp
+--- qtimageformats-everywhere-src-5.15.18.orig/src/plugins/imageformats/webp/qwebphandler.cpp	2025-03-30 11:49:40.000000000 +0800
++++ qtimageformats-everywhere-src-5.15.18/src/plugins/imageformats/webp/qwebphandler.cpp	2026-06-30 17:43:13.430977100 +0800
+@@ -428,3 +428,15 @@
+ 
+     return m_iter.duration;
+ }
++
++bool QWebpHandler::jumpToImage(int frame)
++{
++    if (!ensureScanned() || device()->isSequential() || !ensureDemuxer())
++        return false;
++    if (frame == 0) {
++        m_iter.frame_num = 0;
++        return true;
++    } else {
++        return !WebPDemuxGetFrame(m_demuxer, frame, &m_iter);
++    }
++}
+diff -urN qtimageformats-everywhere-src-5.15.18.orig/src/plugins/imageformats/webp/qwebphandler_p.h qtimageformats-everywhere-src-5.15.18/src/plugins/imageformats/webp/qwebphandler_p.h
+--- qtimageformats-everywhere-src-5.15.18.orig/src/plugins/imageformats/webp/qwebphandler_p.h	2025-03-30 11:49:40.000000000 +0800
++++ qtimageformats-everywhere-src-5.15.18/src/plugins/imageformats/webp/qwebphandler_p.h	2026-06-30 17:47:16.065391500 +0800
+@@ -72,6 +72,7 @@
+     QRect currentImageRect() const override;
+     int loopCount() const override;
+     int nextImageDelay() const override;
++    bool jumpToImage(int frame) override;
+ 
+ private:
+     bool ensureScanned() const;
