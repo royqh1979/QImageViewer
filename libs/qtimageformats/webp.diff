@@ -1,6 +1,6 @@
 diff -urN qtimageformats-everywhere-src-5.15.18.orig/src/plugins/imageformats/webp/qwebphandler.cpp qtimageformats-everywhere-src-5.15.18/src/plugins/imageformats/webp/qwebphandler.cpp
 --- qtimageformats-everywhere-src-5.15.18.orig/src/plugins/imageformats/webp/qwebphandler.cpp	2025-03-30 11:49:40.000000000 +0800
-+++ qtimageformats-everywhere-src-5.15.18/src/plugins/imageformats/webp/qwebphandler.cpp	2026-06-30 17:43:13.430977100 +0800
++++ qtimageformats-everywhere-src-5.15.18/src/plugins/imageformats/webp/qwebphandler.cpp	2026-06-30 18:09:10.705185700 +0800
 @@ -428,3 +428,15 @@
  
      return m_iter.duration;
@@ -14,7 +14,7 @@ diff -urN qtimageformats-everywhere-src-5.15.18.orig/src/plugins/imageformats/we
 +        m_iter.frame_num = 0;
 +        return true;
 +    } else {
-+        return !WebPDemuxGetFrame(m_demuxer, frame, &m_iter);
++        return WebPDemuxGetFrame(m_demuxer, frame, &m_iter);
 +    }
 +}
 diff -urN qtimageformats-everywhere-src-5.15.18.orig/src/plugins/imageformats/webp/qwebphandler_p.h qtimageformats-everywhere-src-5.15.18/src/plugins/imageformats/webp/qwebphandler_p.h
