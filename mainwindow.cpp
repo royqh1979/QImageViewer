@@ -81,6 +81,8 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::onCurrentFileChanged);
     connect(mDirModel, &DirModel::pathChanged,
             this, &MainWindow::onCurrentDirChanged);
+    connect(mDirModel, &DirModel::pathChanged,
+            this, &MainWindow::updateStatusBar);
 
     mThumbnailDelegate = new ThumbnailDelegate(this);
     ui->dirView->setItemDelegate(mThumbnailDelegate);
@@ -602,7 +604,13 @@ void MainWindow::on_actionCopy_triggered()
 {
     QPixmap pixmap = QPixmap::fromImage(mImageWidget->currentFrame());
     if (!pixmap.isNull()) {
-        QApplication::clipboard()->setPixmap(pixmap);
+        QMimeData * mimeData = new QMimeData;
+        QList<QUrl> urls;
+        urls.append(QUrl::fromLocalFile(mImageWidget->imagePath()));
+        mimeData->setImageData(pixmap);
+        mimeData->setUrls(urls);
+        QGuiApplication::clipboard()->clear();
+        QGuiApplication::clipboard()->setMimeData(mimeData);
     }
 }
 
@@ -695,5 +703,22 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::on_dirView_doubleClicked(const QModelIndex &index)
 {
     tryOpenSubDirInDirView(index);
+}
+
+
+void MainWindow::on_actionDelete_triggered()
+{
+    if (QFileInfo::exists(mImageWidget->imagePath())) {
+        if (QMessageBox::warning(this, tr("Deleting File"), tr("File '%1' will be deleted, are you sure?").arg(mImageWidget->imagePath()),
+                                 QMessageBox::Yes | QMessageBox::No,
+                                 QMessageBox::No) == QMessageBox::Yes) {
+            if (QFile::remove(mImageWidget->imagePath())){
+                on_actionPrevious_triggered();
+                on_actionRefresh_triggered();
+            } else {
+                QMessageBox::critical(this,tr("Deletion failed"),tr("Failed to delete file '%1'!").arg(mImageWidget->imagePath()));
+            }
+        }
+    }
 }
 
